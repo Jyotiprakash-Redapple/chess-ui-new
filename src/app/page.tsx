@@ -1,36 +1,51 @@
-
 "use client";
 import Image from "next/image";
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from "react";
+import { app } from "@/config/appConfig";
 
 export default function SplashScreen() {
+	const router = useRouter()
+
+
+
+	// check query string 
+	const checkQuery = async () => {
+		const search = window.location.search;
+
+		if (search) {
+			const searchParams = await new URLSearchParams(search);
+			// game mode online
+			console.log('execute')
+			if (searchParams.get("auth_token")) {
+				let queryVar = searchParams.get("auth_token");
+				localStorage.setItem('auth_token', queryVar)
+				router.push('/search-player', { scroll: false })
+			} else {
+				// game mode offlien
+				if (searchParams.get("mode")) {
+					let queryVar = searchParams.get("mode");
+					localStorage.setItem('game-mode', queryVar)
+				}
+			}
+		} else {
+			console.log("%cAuthentication Faild", "background-color: white; color: red; font-size: larger; font-weight: 700");
+		}
+	};
+	useEffect(() => {
+		let timer = setTimeout(() => {
+			checkQuery();
+		}, 1000);
+		return () => {
+			window.clearTimeout(timer);
+		};
+	}, []);
 	return (
 		<main>
-			<div
-				className="w-screen h-screen md:flex items-center justify-center "
-				style={{ backgroundColor: "black" }}>
-				<div className="md:w-full md:h-full sm:w-full sm:h-full xs:w-full xs:h-full">
-					{/* <div></div> */}
-					<Image
-						src={"/bg.png"}
-						alt="Just Game"
-						width={1080}
-						height={1900}
-						priority={true}
-						className="h-full w-full object-contain"
-					/>
-					<Image
-						src={"/title_art.png"}
-						alt="Just Game"
-						width={611}
-						height={652}
-						priority={true}
-						className="w-2/12 object-contain"
-						style={{
-							position: "absolute",
-							top: 0,
-							right: 0,
-						}}
-					/>
+			<div className='view_container'>
+				<div className='splash_wrapper'>
+					<div className='splash_background'></div>
+					<div className='splash_logo'></div>
 				</div>
 			</div>
 		</main>
