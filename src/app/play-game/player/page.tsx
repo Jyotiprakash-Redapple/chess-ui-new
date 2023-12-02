@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Board from "@/components/board/board";
 import Image from "next/image";
 function page() {
 	return (
@@ -38,6 +39,7 @@ function page() {
 								width={80}
 								height={80}
 							/>
+							<Board />
 						</div>
 					</div>
 				</div>

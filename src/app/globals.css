@@ -38,42 +38,42 @@ html::before {
 }
 
 /*===============================chess board set image ======================================*/
-/* .piece.bk {
-	background-image: url("../src/assets/bk.png");
+.piece.bk {
+	background-image: url("/game_play/bk.png");
 }
 .piece.bq {
-	background-image: url("../src/assets/bq.png");
+	background-image: url("/game_play/bq.png");
 }
 .piece.br {
-	background-image: url("../src/assets/br.png");
+	background-image: url("/game_play/br.png");
 }
 .piece.bb {
-	background-image: url("../src/assets/bb.png");
+	background-image: url("/game_play/bb.png");
 }
 .piece.bn {
-	background-image: url("../src/assets/bn.png");
+	background-image: url("/game_play/bn.png");
 }
 .piece.bp {
-	background-image: url("../src/assets/bp.png");
+	background-image: url("/game_play/bp.png");
 }
 .piece.wk {
-	background-image: url("../src/assets/wk.png");
+	background-image: url("/game_play/wk.png");
 }
 .piece.wq {
-	background-image: url("../src/assets/wq.png");
+	background-image: url("/game_play/wq.png");
 }
 .piece.wr {
-	background-image: url("../src/assets/wr.png");
+	background-image: url("/game_play/wr.png");
 }
 .piece.wb {
-	background-image: url("../src/assets/wb.png");
+	background-image: url("/game_play/wb.png");
 }
 .piece.wn {
-	background-image: url("../src/assets/wn.png");
+	background-image: url("/game_play/wn.png");
 }
 .piece.wp {
-	background-image: url("../src/assets/wp.png");
-} */
+	background-image: url("/game_play/wp.png");
+}
 
 /*===============================chess board style move x = 100 each box======================================*/
 
@@ -643,6 +643,12 @@ html::before {
 	left: -54px;
 	bottom: -25px;
 }
+.boards {
+	position: relative;
+	display: grid;
+	grid-template-columns: calc(0.25 * var(--tile-size)) calc(8 * var(--tile-size));
+	grid-template-rows: calc(8 * var(--tile-size)) calc(0.25 * var(--tile-size));
+}
 
 .tiles {
 	display: grid;
@@ -684,19 +690,22 @@ html::before {
 	left: calc(0.25 * var(--tile-size));
 	right: 0;
 	top: 0;
+	/* top: -8px; */
 	bottom: calc(0.25 * var(--tile-size));
-	box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+
+	/* box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
 		rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
 		rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
 		rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
 		rgba(0, 0, 0, 0.09) 0px 32px 16px;
-	border-style: inset;
+	border-style: inset; */
 }
 
 .piece {
 	width: 12.5%;
 	height: 12.5%;
-	background-size: 100%;
+	background-size: contain;
+	background-repeat: no-repeat;
 	background-color: transparent;
 	position: absolute;
 	cursor: pointer;
