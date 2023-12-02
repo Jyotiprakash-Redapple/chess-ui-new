@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { app } from "@/config/appConfig";
-import { localStorage } from "@/typo/typo";
+import { _localStorage } from "@/typo/typo";
 export default function SplashScreen() {
 	const router = useRouter();
 
@@ -16,7 +16,7 @@ export default function SplashScreen() {
 			// game mode online
 			console.log("execute");
 			if (searchParams.get("auth_token")) {
-				let queryVar = searchParams.get("auth_token") as localStorage;
+				let queryVar = searchParams.get("auth_token") as _localStorage;
 				localStorage.setItem("auth_token", queryVar);
 				router.push("/search-player", { scroll: false });
 			} else {
@@ -33,6 +33,8 @@ export default function SplashScreen() {
 			);
 		}
 	};
+
+	/* run when component mount in dom */
 	useEffect(() => {
 		let timer = setTimeout(() => {
 			checkQuery();
@@ -41,6 +43,7 @@ export default function SplashScreen() {
 			window.clearTimeout(timer);
 		};
 	}, []);
+	/* run when component mount in dom */
 	return (
 		<main>
 			<div className="view_container">

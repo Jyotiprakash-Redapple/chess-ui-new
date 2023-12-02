@@ -13,7 +13,7 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 
-	--tile-size: 60px;
+	--tile-size: 40px;
 	/* --light-tiles: #f0d8b7;
 	--dark-tiles: #b48764; */
 	--light-tiles: #fffafa;
@@ -495,9 +495,10 @@ html::before {
 	justify-content: center;
 }
 .splash_wrapper,
-.search_wrapper {
+.search_wrapper,
+.play_wrapper {
 	position: relative;
-	width: 396px;
+	width: 390px;
 	height: 100%;
 	background-color: white;
 	display: flex;
@@ -537,8 +538,9 @@ html::before {
 	justify-content: center;
 }
 .search_banner_bg > .inner_wrapper {
-	width: 300px;
+	width: 330px;
 	height: 300px;
+	margin-bottom: 60px;
 	/* background-color: wheat; */
 	display: flex;
 	flex-direction: column;
@@ -546,11 +548,11 @@ html::before {
 	justify-content: center;
 }
 .match_macking {
-	width: 80%;
+	width: 100%;
 	height: 20%;
 	position: relative;
-	background-color: black;
 	display: flex;
+
 	align-items: center;
 }
 
@@ -571,14 +573,174 @@ html::before {
 	background-repeat: no-repeat;
 	position: absolute;
 	top: 23px;
-	left: 20px;
+	left: 30px;
 }
 
 .match_make_player {
 	width: 100%;
 	height: 80%;
-	background-color: gray;
+	/* background-color: gray; */
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	position: relative;
 }
+.match_make_player > .player_vs_op {
+	width: 70px;
+	height: 70px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-image: url("/match_making/VS.png");
+	background-size: contain !important;
+	background-repeat: no-repeat;
+	z-index: 3;
+}
+
+/* ====================================== Game Play Component ===============================*/
+.play_player_bg {
+	width: 100%;
+	height: 100%;
+	background-image: url("/game_play/bg.png");
+	background-size: contain !important;
+	background-repeat: no-repeat;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.play_player_bg > .game_board {
+	position: relative;
+	display: grid;
+	grid-template-columns: calc(0.25 * var(--tile-size)) calc(8 * var(--tile-size));
+	grid-template-rows: calc(8 * var(--tile-size)) calc(0.25 * var(--tile-size));
+	/* background-color: red; */
+}
+.play_player_bg > .game_board > .fire_left_top {
+	object-fit: contain;
+	position: absolute;
+	left: -56px;
+	top: -73px;
+}
+.play_player_bg > .game_board > .fire_right_top {
+	object-fit: contain;
+	position: absolute;
+	right: -42px;
+	top: -75px;
+}
+.play_player_bg > .game_board > .fire_right_btm {
+	object-fit: contain;
+	position: absolute;
+	right: -44px;
+	bottom: -25px;
+}
+.play_player_bg > .game_board > .fire_left_btm {
+	object-fit: contain;
+	position: absolute;
+	left: -54px;
+	bottom: -25px;
+}
+
+.tiles {
+	display: grid;
+	grid-template-columns: repeat(8, var(--tile-size));
+	grid-template-rows: repeat(8, var(--tile-size));
+	width: calc(var(8 * --tile-size));
+}
+.tile {
+	position: relative;
+}
+.tile--light {
+	background-color: var(--light-tiles);
+}
+.tile--dark {
+	background-color: var(--dark-tiles);
+}
+.rank {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	color: var(--light-tiles);
+	margin-right: 25px;
+}
+
+.file {
+	grid-column: 2;
+	display: flex;
+	margin-top: 10px;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	height: calc(0.25 * var(--tile-size));
+	color: var(--light-tiles);
+}
+
+.pieces {
+	position: absolute;
+	left: calc(0.25 * var(--tile-size));
+	right: 0;
+	top: 0;
+	bottom: calc(0.25 * var(--tile-size));
+	box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+		rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
+		rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
+		rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
+		rgba(0, 0, 0, 0.09) 0px 32px 16px;
+	border-style: inset;
+}
+
+.piece {
+	width: 12.5%;
+	height: 12.5%;
+	background-size: 100%;
+	background-color: transparent;
+	position: absolute;
+	cursor: pointer;
+}
+.highlight::after {
+	display: block;
+
+	position: absolute;
+	content: "";
+
+	width: calc(0.5 * 60px);
+	height: calc(0.5 * 60px);
+	background-color: green;
+	border-radius: 50%;
+	left: 25%;
+	top: 25%;
+}
+
+.attacking::after {
+	display: block;
+	position: absolute;
+	content: "";
+
+	border: 3px solid red;
+	width: calc(60px - 10px);
+	height: calc(60px - 10px);
+	border-radius: 50%;
+	left: 6px;
+	top: 6px;
+}
+.checked::after {
+	display: block;
+	position: absolute;
+	content: "";
+	background-color: red;
+	/* z-index: 1; */
+	border: 3px solid rgb(255, 247, 0);
+	width: calc(60px - 10px);
+	height: calc(60px - 10px);
+	border-radius: 50%;
+	left: 6px;
+	top: 6px;
+}
+
 /* @media (min-width: 992px) and (max-width: 1199px) {
 	.board-b72b1 {
 		width: 500px;
@@ -609,6 +771,10 @@ html::before {
 @media only screen and (max-width: 600px) {
 	:root {
 		--tile-size: 40px;
+	}
+	.play_player_bg > .game_board {
+		flex: none;
+		margin-bottom: 199px;
 	}
 	.splash_wrapper,
 	.search_wrapper {
