@@ -612,6 +612,51 @@ html::before {
 	align-items: center;
 	justify-content: center;
 }
+.play_player_bg > .profile {
+	position: absolute;
+	top: 97px;
+	width: 90%;
+	height: 53px;
+	display: flex;
+	align-items: center;
+	/* justify-content: space-between; */
+}
+.play_player_bg > .profile > .player_profile,
+.play_player_bg > .profile > .opponent_profile {
+	width: 45%;
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+}
+.play_player_bg > .profile > .player_profile > .player_name,
+.play_player_bg > .profile > .opponent_profile > .player_name {
+	width: 75%;
+	height: 25px;
+	border-radius: 5px;
+	background-color: #131a50;
+
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding-right: 5px;
+	font-size: 15px;
+	font-weight: 600;
+
+	color: #ffffff95;
+	/* background-size: contain;
+	background-repeat: no-repeat;
+	background-image: url("/game_play/Rectangle\ 1\ .png"); */
+}
+.play_player_bg > .profile > .plyar_vs_op {
+	width: 10%;
+	height: 100%;
+}
+.play_player_bg > .profile > .opponent_profile {
+	width: 45%;
+	height: 100%;
+}
 .play_player_bg > .game_board {
 	position: relative;
 	display: grid;

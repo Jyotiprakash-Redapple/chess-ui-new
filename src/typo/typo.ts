@@ -1,4 +1,9 @@
-export type _localStorage = string | undefined | null;
+import { type } from "os";
+
+export type String = string;
+export type Boolean = boolean;
+export type Number = number;
+
 export interface App {
 	gameMode: {
 		online: string;

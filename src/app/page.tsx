@@ -1,29 +1,27 @@
 "use client";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { app } from "@/config/appConfig";
-import { _localStorage } from "@/typo/typo";
+
 export default function SplashScreen() {
 	const router = useRouter();
 
 	// check query string
 	const checkQuery = async () => {
 		const search = window.location.search;
-
 		if (search) {
 			const searchParams = await new URLSearchParams(search);
 			// game mode online
 			console.log("execute");
 			if (searchParams.get("auth_token")) {
-				let queryVar = searchParams.get("auth_token") as _localStorage;
-				localStorage.setItem("auth_token", queryVar);
+				let queryVar = searchParams.get("auth_token");
+				localStorage.setItem("auth_token", JSON.stringify(queryVar));
 				router.push("/search-player", { scroll: false });
 			} else {
 				// game mode offlien
 				if (searchParams.get("mode")) {
-					let queryVar = searchParams.get("mode") as localStorage;
-					localStorage.setItem("game-mode", queryVar);
+					let queryVar = searchParams.get("mode");
+					localStorage.setItem("game-mode", JSON.stringify(queryVar));
 				}
 			}
 		} else {

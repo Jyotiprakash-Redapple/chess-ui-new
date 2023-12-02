@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { app } from "@/config/appConfig";
 import Player from "@/components/player/player";
 import Opponent from "@/components/opponent/opponent";
-function page() {
+function MatchMackeing() {
 	const { player, opponent, imageArray } = app;
 	return (
 		<main>
@@ -19,15 +19,17 @@ function page() {
 								<div className="match_macking_bg"></div>
 								<div className="match_macking_logo"></div>
 							</div>
-							{/*<--start::match making text box ---->*/}
+							{/*<--end::match making text box ---->*/}
+							{/*<--start::match making playr pic and op pic box ---->*/}
 							<div className="match_make_player">
 								<Player name={player.name} image={player.image} />
 								<Opponent name={opponent.name} image={opponent.image} imageArray={imageArray} />
 								<span className="player_vs_op"></span>
 							</div>
+							{/*<--end::match making playr pic and op pic box ---->*/}
 						</div>
 					</div>
-					{/*<--start::match making wrapper bg---->*/}
+					{/*<--end::match making wrapper bg---->*/}
 				</div>
 				{/*<--end::match making wrapper---->*/}
 			</div>
@@ -35,4 +37,4 @@ function page() {
 	);
 }
 
-export default page;
+export default MatchMackeing;
