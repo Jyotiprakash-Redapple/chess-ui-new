@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { app } from "@/config/appConfig";
+import { app } from "../config/appConfig";
 
 export default function SplashScreen() {
 	const router = useRouter();
@@ -12,7 +12,6 @@ export default function SplashScreen() {
 		if (search) {
 			const searchParams = await new URLSearchParams(search);
 			// game mode online
-			console.log("execute");
 			if (searchParams.get("auth_token")) {
 				let queryVar = searchParams.get("auth_token");
 				localStorage.setItem("auth_token", JSON.stringify(queryVar));
@@ -22,6 +21,7 @@ export default function SplashScreen() {
 				if (searchParams.get("mode")) {
 					let queryVar = searchParams.get("mode");
 					localStorage.setItem("game-mode", JSON.stringify(queryVar));
+					router.push("/play-game/ai", { scroll: false });
 				}
 			}
 		} else {

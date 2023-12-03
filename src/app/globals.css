@@ -30,6 +30,64 @@ html::before {
 	margin: 0;
 	padding: 0;
 }
+
+/* ==========================Chess Board ==============================*/
+/*! chessboard.js v1.0.0 | (c) 2019 Chris Oakman | MIT License chessboardjs.com/license */
+
+/* .clearfix-7da63 {
+	clear: both;
+}
+
+.board-b72b1 {
+	border: 2px solid #404040;
+	box-sizing: content-box;
+}
+
+.square-55d63 {
+	float: left;
+	position: relative; */
+
+/* disable any native browser highlighting */
+/* -webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.white-1e1d7 {
+	background-color: #f0d9b5;
+	color: #b58863;
+}
+
+.black-3c85d {
+	background-color: #b58863;
+	color: #f0d9b5;
+}
+
+.highlight1-32417,
+.highlight2-9c5d2 {
+	box-shadow: inset 0 0 3px 3px yellow;
+}
+
+.notation-322f9 {
+	cursor: default;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	position: absolute;
+}
+
+.alpha-d2270 {
+	bottom: 1px;
+	right: 3px;
+}
+
+.numeric-fc462 {
+	top: 2px;
+	left: 2px;
+} */
+
 /* Mobile Target Device*/
 @media all and (max-width: 450px) {
 	:root {
@@ -496,7 +554,8 @@ html::before {
 }
 .splash_wrapper,
 .search_wrapper,
-.play_wrapper {
+.play_wrapper,
+.load_wrapper {
 	position: relative;
 	width: 390px;
 	height: 100%;
@@ -688,6 +747,9 @@ html::before {
 	left: -54px;
 	bottom: -25px;
 }
+
+/* ====================================== Game Board Component ===============================*/
+
 .boards {
 	position: relative;
 	display: grid;
@@ -795,6 +857,54 @@ html::before {
 	top: 6px;
 }
 
+/* Loading component */
+.load_background {
+	width: 100%;
+	height: 100%;
+	background-image: url("/loding/bg.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	position: relative;
+}
+.load_background > .inner_wrapper {
+	width: 90%;
+	height: 300px;
+	position: absolute;
+	top: 40%;
+	left: 40%;
+	transform: translate(-40%, -40%);
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.load_background > .inner_wrapper > .loadeing_text {
+	width: 150px;
+	height: 30px;
+	background-image: url("/loding/loding.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+.load_background > .inner_wrapper > .loadeing_bg {
+	width: 100%;
+	height: 20px;
+	background-image: url("/loding/loding\ bar\ 2.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.load_background > .inner_wrapper > .loadeing_bg > .loading_bg_active {
+	width: 99%;
+	height: 100%;
+	margin-top: 8px;
+	background-image: url("/loding/loding\ bar.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+}
 /* @media (min-width: 992px) and (max-width: 1199px) {
 	.board-b72b1 {
 		width: 500px;

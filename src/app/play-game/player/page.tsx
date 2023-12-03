@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Board from "@/components/board/board";
+import Board from "../../../components/board/board";
 import Image from "next/image";
-import { app } from "@/config/appConfig";
+import { app } from "../../../config/appConfig";
 function PlayWithPlayer() {
 	const { player, opponent } = app;
 	return (
