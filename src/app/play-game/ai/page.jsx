@@ -1,15 +1,15 @@
 "use client";
+import "@/style/game.css";
 import { useEffect, useState, useRef } from "react";
 import React from "react";
 import $ from "jquery";
-import "./ai.css";
-import { Chess } from "../../../arbitar/lib/chess";
-// import { ChessBoard } from "@/arbitar/lib/chessboard";
-// import Chessboard from "chessboardjs";
-import { ChessBoard } from "../../../../public/chessboard";
+
+import { Chess } from "@/arbitar/lib/chess";
+
+import { ChessBoard } from "@/arbitar/lib/chessboard";
 import Image from "next/image";
-import { app } from "../../../config/appConfig";
-var STACK_SIZE = 50;
+import { app } from "@/config/appConfig";
+
 function AIboard() {
 	const { player, opponent } = app;
 	const boardRef = useRef();
@@ -32,7 +32,7 @@ function AIboard() {
 	var globalSum = 0; // always from black's perspective. Negative for white's perspective.
 	var whiteSquareGrey = "#a9a9a9";
 	var blackSquareGrey = "#696969";
-
+	var STACK_SIZE = 50;
 	var squareClass = "square-55d63";
 	var squareToHighlight = null;
 	var colorToHighlight = null;
@@ -506,33 +506,19 @@ function AIboard() {
 		game.load("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
 		board.position(game.fen());
 	};
-	// $("#sicilianDefenseBtn").on("click", function () {
-	// 	reset();
-	// 	game.load("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
-	// 	board.position(game.fen());
-	// });
 
 	const handelStartBtn = () => {
 		reset();
 	};
-	// $("#startBtn").on("click", function () {
-	// 	reset();
-	// });
+
 	const handelComVsComBtn = () => {
 		reset();
 		compVsComp("w");
 	};
-	// $("#compVsCompBtn").on("click", function () {
-	// 	reset();
-	// 	compVsComp("w");
-	// });
 
 	const handelResetBtn = () => {
 		reset();
 	};
-	// $("#resetBtn").on("click", function () {
-	// 	reset();
-	// });
 
 	var undo_stack = [];
 
@@ -565,24 +551,6 @@ function AIboard() {
 			alert("Nothing to undo.");
 		}
 	};
-	// $("#undoBtn").on("click", function () {
-	// 	if (game.history().length >= 2) {
-	// 		$board.find("." + squareClass).removeClass("highlight-white");
-	// 		$board.find("." + squareClass).removeClass("highlight-black");
-	// 		$board.find("." + squareClass).removeClass("highlight-hint");
-
-	// 		// Undo twice: Opponent's latest move, followed by player's latest move
-	// 		undo();
-	// 		window.setTimeout(function () {
-	// 			undo();
-	// 			window.setTimeout(function () {
-	// 				showHint();
-	// 			}, 250);
-	// 		}, 250);
-	// 	} else {
-	// 		alert("Nothing to undo.");
-	// 	}
-	// });
 
 	function redo() {
 		game.move(undo_stack.pop());
@@ -603,20 +571,6 @@ function AIboard() {
 			alert("Nothing to redo.");
 		}
 	};
-	// $("#redoBtn").on("click", function () {
-	// 	if (undo_stack.length >= 2) {
-	// 		// Redo twice: Player's last move, followed by opponent's last move
-	// 		redo();
-	// 		window.setTimeout(function () {
-	// 			redo();
-	// 			window.setTimeout(function () {
-	// 				showHint();
-	// 			}, 250);
-	// 		}, 250);
-	// 	} else {
-	// 		alert("Nothing to redo.");
-	// 	}
-	// });
 
 	$("#showHint").change(function () {
 		window.setTimeout(showHint, 250);
@@ -1048,16 +1002,45 @@ function AIboard() {
 								</div>
 							</div> */}
 							<div id="myBoard" className="board_ai" ref={boardRef}></div>{" "}
-							{/* <div class="row my-3 text-align-center">
+							{/* <div
+								style={{
+									backgroundColor: "red",
+									position: "absolute",
+									top: "100%",
+									transform: 
+								}}>
+								{" "}
+								<div className="col-md-6 my-2 col-6">
 									{" "}
-									<div class="col-md-6 my-2 col-6">
-										{" "}
-										<button class="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}></button>
-									</div>
-									<div class="col-md-6 my-2 col-6">
-										<button class="btn btn-success" id="redoBtn" onClick={handelRedoBtn}></button>
-									</div>
-								</div> */}
+									<button className="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}></button>
+								</div>
+								<div className="col-md-6 my-2 col-6">
+									<button className="btn btn-success" id="redoBtn" onClick={handelRedoBtn}></button>
+								</div>
+							</div> */}
+						</div>
+
+						<div
+							style={{
+								width: "280px",
+
+								display: "flex",
+								justifyContent: "space-between",
+								position: "absolute",
+								bottom: "100px",
+								right: "30px",
+							}}>
+							<div className="col-md-6 my-2 col-6">
+								{" "}
+								<button className="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}>
+									Undo
+								</button>
+							</div>
+							<div className="col-md-6 my-2 col-6">
+								<button className="btn btn-success" id="redoBtn" onClick={handelRedoBtn}>
+									Redo
+								</button>
+							</div>
 						</div>
 						{/*<--start::game_board  with player wrapper---->*/}
 					</div>

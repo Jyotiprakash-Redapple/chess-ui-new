@@ -1,4 +1,5 @@
 import React from "react";
+import "@/style/game.css";
 import Pieces from "../pieces/pieces";
 let createPosition = () => {
 	const position = new Array(8).fill("").map((x) => new Array(8).fill(""));

@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { app } from "../config/appConfig";
+import { app } from "@/config/appConfig";
 
 export default function SplashScreen() {
 	const router = useRouter();

@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { app } from "../../config/appConfig";
-import Player from "../../components/player/player";
-import Opponent from "../../components/opponent/opponent";
+import { app } from "@/config/appConfig";
+import Player from "@/components/player/player";
+import Opponent from "@/components/opponent/opponent";
 function MatchMackeing() {
 	const { player, opponent, imageArray } = app;
 	return (

@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const withOptimizedImages = require("next-optimized-images");
 
-module.exports = {
+module.exports = withOptimizedImages({
+	// webpack for know it is server | client
 	webpack: (config, { isServer }) => {
 		if (!isServer) {
 			config.module.rules.push({
@@ -15,4 +16,9 @@ module.exports = {
 
 		return config;
 	},
-};
+
+	// optimise image in production
+	optimizeImages: true,
+	handleImages: ["jpeg", "png", "webp"],
+	optimizeImagesInDev: false,
+});

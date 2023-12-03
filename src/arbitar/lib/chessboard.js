@@ -652,7 +652,7 @@ var ChessBoard = function () {
 	// Constructor
 	// ---------------------------------------------------------------------------
 
-	function constructor(containerElOrString, config) {
+	var _initNewBoard = function constructor(containerElOrString, config) {
 		// first things first: check basic dependencies
 		if (!checkJQuery()) return null;
 		var $container = checkContainerArg(containerElOrString);
@@ -1444,12 +1444,12 @@ var ChessBoard = function () {
 		// Public Methods
 		// -------------------------------------------------------------------------
 
-		// clear the board
+		// clear the board ++++++++++++++++++>
 		widget.clear = function (useAnimation) {
 			widget.position({}, useAnimation);
 		};
 
-		// remove the widget from the page
+		// remove the widget from the page ========================>
 		widget.destroy = function () {
 			// remove markup
 			$container.html("");
@@ -1459,17 +1459,17 @@ var ChessBoard = function () {
 			$container.unbind();
 		};
 
-		// shorthand method to get the current FEN
+		// shorthand method to get the current FEN =================>
 		widget.fen = function () {
 			return widget.position("fen");
 		};
 
-		// flip orientation
+		// flip orientation ====================>
 		widget.flip = function () {
 			return widget.orientation("flip");
 		};
 
-		// move pieces
+		// move pieces ======================
 		// TODO: this method should be variadic as well as accept an array of moves
 		widget.move = function () {
 			// no need to throw an error here; just do nothing
@@ -1507,6 +1507,8 @@ var ChessBoard = function () {
 			return newPos;
 		};
 
+		// orinitation ==============>
+
 		widget.orientation = function (arg) {
 			// no arguments, return the current orientation
 			if (arguments.length === 0) {
@@ -1529,6 +1531,8 @@ var ChessBoard = function () {
 
 			error(5482, "Invalid value passed to the orientation method.", arg);
 		};
+
+		// position ======================
 
 		widget.position = function (position, useAnimation) {
 			// no arguments, return the current position
@@ -1574,6 +1578,7 @@ var ChessBoard = function () {
 			}
 		};
 
+		// resize =====================>
 		widget.resize = function () {
 			// calulate the new square size
 			squareSize = calculateSquareSize();
@@ -1598,6 +1603,7 @@ var ChessBoard = function () {
 			drawBoard();
 		};
 
+		// start =======================?
 		// set the starting position
 		widget.start = function (useAnimation) {
 			widget.position("start", useAnimation);
@@ -1821,17 +1827,17 @@ var ChessBoard = function () {
 
 		// return the widget object
 		return widget;
-	} // end constructor
+	}; // end constructor
 
-	// TODO: do module exports here
-	window["Chessboard"] = constructor;
+	// // TODO: do module exports here
+	// window["Chessboard"] = constructor;
 
-	// support legacy ChessBoard name
-	window["ChessBoard"] = window["Chessboard"];
+	// // support legacy ChessBoard name
+	// window["ChessBoard"] = window["Chessboard"];
 
-	// expose util functions
-	window["Chessboard"]["fenToObj"] = fenToObj;
-	window["Chessboard"]["objToFen"] = objToFen;
+	// // expose util functions
+	// window["Chessboard"]["fenToObj"] = fenToObj;
+	// window["Chessboard"]["objToFen"] = objToFen;
+	return _initNewBoard;
 }; // end anonymous wrapper
-
-export default ChessBoard;
+export { ChessBoard };
