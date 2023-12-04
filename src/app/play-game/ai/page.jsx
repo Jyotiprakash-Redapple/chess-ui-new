@@ -1001,7 +1001,7 @@ function AIboard() {
 									</div>
 								</div>
 							</div> */}
-							<div id="myBoard" className="board_ai" ref={boardRef}></div>{" "}
+							<div id="myBoard"  ref={boardRef}></div>{" "}
 							{/* <div
 								style={{
 									backgroundColor: "red",
@@ -1027,7 +1027,7 @@ function AIboard() {
 								display: "flex",
 								justifyContent: "space-between",
 								position: "absolute",
-								bottom: "100px",
+								bottom: "110px",
 								right: "30px",
 							}}>
 							<div className="col-md-6 my-2 col-6">
