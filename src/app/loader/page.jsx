@@ -27,7 +27,7 @@ function Loadeing() {
 					}
 					clearInterval(timer);
 				}
-			}, 600);
+			}, 100);
 		};
 	
 		const handleLoadPage = () => {
