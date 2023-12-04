@@ -11,7 +11,7 @@ const app: App = {
 	},
 	opponent: {
 		name: "Rony",
-		image: "/search_avatar/avatar4.png",
+		image: "/search_avatar/avatar7.jpg",
 	},
 	imageArray: [
 		"/search_avatar/avatar1.jpg",

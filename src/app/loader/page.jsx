@@ -3,41 +3,46 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-const loader = 96;
 function Loadeing() {
     const gameMode = localStorage.getItem('game_mode')
-    console.log(gameMode)
-	const [loadeingWidth, setLoadeingWidth] = React.useState(2);
+	console.log(gameMode)
+	const widthRef = React.useRef(0)
+	 const [loadingWidth, setLoadingWidth] = React.useState(2);
     const router = useRouter()
 	React.useEffect(() => {
-		// loadeing bar
-		const loder = () => {
-			console.log("loader");
-			const timer = window.setInterval(() => {
-				setLoadeingWidth(loadeingWidth + 1);
-				if (loadeingWidth === loader) {
-                    setLoadeingWidth(97);
-                    if (gameMode === 'offline') {
-                        router.push('/play-game/player', { scroll: false })
-                    } else {
-                        if (gameMode === "online") {
-                            router.push("/play-game/ai", { scroll: false });
-                        }
-                    }
-				}
-			}, 400);
-			return () => {
-				window.clearInterval(timer);
-			};
-		};
-		const handelLoadPage = () => {
+		// loading bar
+		let timer = 0;
+		const loader = () => {
 		
-			loder();
+			 timer = setInterval(() => {
+				 widthRef.current = widthRef.current + 1
+				 setLoadingWidth(widthRef.current)
+				
+				if (widthRef.current === 100) {
+					widthRef.current = 97
+					if (gameMode === 'offline') {
+						router.push("/play-game/ai", { scroll: false });
+					} else if (gameMode === "online") {
+						router.push('/play-game/player', { scroll: false });
+					}
+					clearInterval(timer);
+				}
+			}, 600);
 		};
+	
+		const handleLoadPage = () => {
+			loader();
+		};
+	
+		handleLoadPage();
+	
+		return () => {
+			// cleanup function to clear interval if component unmounts
+			clearInterval(timer);
+		};
+	}, [widthRef.current , gameMode, router]);;
 
-        handelLoadPage();
-        return ()=>{}
-	}, []);
+	// fix loder active bar image 
 
 	return (
 		<main>
@@ -47,14 +52,15 @@ function Loadeing() {
 						<div className="inner_wrapper">
 							<div className="loadeing_text"></div>
 							<div className="loadeing_bg">
-								<Image
+								<img
+									key={widthRef.current}
 									src="/loding/loding bar.png"
 									width={20}
-									height={20}
+									height={30}
 									alt="load"
 									style={{
-										width: `${loadeingWidth}%`,
-										objectFit: "contain",
+										width: `${loadingWidth}%`,
+										objectFit: "cover",
 										height: "100%",
 										borderRadius: "10px",
 									}}
@@ -70,3 +76,6 @@ function Loadeing() {
 }
 
 export default Loadeing;
+
+
+

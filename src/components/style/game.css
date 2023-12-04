@@ -578,10 +578,17 @@
 	font-size: 20px;
 	font-weight: bold;
 }
+.square-55d63{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+}
 .piece-417db {
 	width: 27px !important;
 	height: 38px !important;
-	margin-left: 5px !important;
+	margin-left: 10px !important;
+	margin-bottom: 5px !important;
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
