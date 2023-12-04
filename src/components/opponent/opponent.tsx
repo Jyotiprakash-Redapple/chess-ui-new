@@ -8,6 +8,8 @@ type Props = {
 	image: string | null;
 	imageArray: string[];
 };
+
+
 function Opponent({ name, image, imageArray }: Props) {
 	const [avtars, setAvtars] = useState(imageArray);
 	const [nameOpponet, setNameOpponet] = useState(["avik", "ruhul", "lixa", "ebey"]);
@@ -24,7 +26,7 @@ function Opponent({ name, image, imageArray }: Props) {
 			return () => clearInterval(interval);
 		} else {
 			setTimeout(() => {
-				router.push("/play-game/player", { scroll: false });
+				router.push("/loader", { scroll: false });
 			}, 2000);
 		}
 	}, [avtars]);

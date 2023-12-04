@@ -279,7 +279,7 @@ html::before {
 	position: relative;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 }
 .load_background > .inner_wrapper > .loadeing_bg > .loading_bg_active {
 	width: 99%;

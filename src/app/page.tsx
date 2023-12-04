@@ -15,13 +15,15 @@ export default function SplashScreen() {
 			if (searchParams.get("auth_token")) {
 				let queryVar = searchParams.get("auth_token");
 				localStorage.setItem("auth_token", JSON.stringify(queryVar));
-				router.push("/search-player", { scroll: false });
+				localStorage.setItem("game_mode", "online")
+				router.push("/match-make", { scroll: false });
 			} else {
 				// game mode offlien
 				if (searchParams.get("mode")) {
 					let queryVar = searchParams.get("mode");
 					localStorage.setItem("game-mode", JSON.stringify(queryVar));
-					router.push("/play-game/ai", { scroll: false });
+					localStorage.setItem("game_mode", "offline")
+					router.push("/loader", { scroll: false });
 				}
 			}
 		} else {
