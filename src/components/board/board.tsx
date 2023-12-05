@@ -30,19 +30,30 @@ let createPosition = () => {
 	return position;
 };
 function Board() {
+	/**
+	 * get class dynamically
+	 */
+	const getClassName = (i, j) => {
+		let c = "tile";
+		c += (i + j) % 2 === 0 ? " tile--dark " : " tile--light ";
+		// if (appState.candidateMove.find((m) => m[0] === i && m[1] === j)) {
+		// 	if (currentPosition[i][j]) {
+		// 		c += " attacking";
+		// 	} else {
+		// 		c += " highlight";
+		// 	}
+		// }
+
+		// if (isChecked && isChecked[0] == i && isChecked[1] == j) {
+		// 	c += " checked";
+		// }
+		return c;
+	};
 	return (
 		<>
 			{" "}
 			{/* <Rank rank={appState.opponent === "w" ? ranks.reverse() : ranks} /> */}
-			<div className="tiles">
-				{/* {createPosition().map((r, rank) =>
-					r.map((f, file) => (
-						<div key={file + "" + rank} className={`${getClassName(7 - rank, file)}`}>
-							
-						</div>
-					))
-				)} */}
-			</div>
+			<div className='tiles'>{createPosition().map((r, rank) => r.map((f, file) => <div key={file + "" + rank} className={`${getClassName(7 - rank, file)}`}></div>))}</div>
 			{/* <Pupup /> */}
 			<Pieces />
 			{/* <File file={appState.opponent === "w" ? files.reverse() : files} /> */}

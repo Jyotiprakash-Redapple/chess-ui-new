@@ -17,10 +17,12 @@
 	position: relative;
 }
 .tile--light {
-	background-color: var(--light-tiles);
+	background-image: url("/game_play/Layer\ 4\ copy\ 5.png");
+	background-size: contain;
 }
 .tile--dark {
-	background-color: var(--dark-tiles);
+	background-image: url("/game_play/Layer\ 4\ copy\ 6.png");
+	background-size: contain;
 }
 .rank {
 	display: flex;
@@ -582,11 +584,10 @@
 	font-size: 20px;
 	font-weight: bold;
 }
-.square-55d63{
+.square-55d63 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	
 }
 .piece-417db {
 	width: 27px !important;

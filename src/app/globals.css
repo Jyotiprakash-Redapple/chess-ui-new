@@ -33,9 +33,9 @@ html::before {
 
 /* Mobile Target Device*/
 @media all and (max-width: 450px) {
-	:root {
+	/* :root {
 		--tile-size: 50px;
-	}
+	} */
 }
 
 /*================================ Splash Screen ======================================*/
@@ -55,7 +55,7 @@ html::before {
 	position: relative;
 	width: 390px;
 	height: 100%;
-	background-color :#000;
+	background-color: #000;
 	display: flex;
 	justify-content: center;
 }
@@ -78,6 +78,149 @@ html::before {
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
+}
+/* ===============================Game Play Componenet ==============================*/
+.player_bg {
+	width: 100%;
+	height: 100%;
+	background-image: url("/game_play/bg.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.card_over_lay {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-image: url("/game_play/shadow.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	display: flex;
+	flex-direction: column;
+
+	/* justify-content: space-around; */
+	align-items: center;
+}
+.card_over_lay > .top_sec_board {
+	height: 25%;
+	width: 100%;
+}
+.card_over_lay > .buttom_sec_board {
+	height: 50%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card_over_lay > .top_sec_board > .global_timer {
+	width: 100%;
+	height: 70px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	/* background-color: RED; */
+	justify-self: flex-start;
+	justify-content: space-between;
+	/* position: absolute;
+	top: 30px;
+	left: 0; */
+}
+.global_timer > .quit_game {
+	width: 30px;
+	height: 100%;
+	background-image: url("/game_play/back.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-left: 5px;
+}
+.global_timer > .g_timer_wrapper {
+	width: 120px;
+	height: 100%;
+	background-image: url("/game_play/Time_base.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.g_timer_wrapper > .g_timer_stopwatch {
+	width: 100%;
+	height: 15px;
+	background-image: url("/game_play/stopwatch_icon.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.g_timer_wrapper > .g_timer_text {
+	margin-bottom: 5px;
+	width: 40px;
+	height: 25px;
+	font-size: 12px;
+	border: 2px solid whitesmoke;
+	border-radius: 5px;
+	color: #fffafa;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.global_timer > .sound_wrapper {
+	width: 30px;
+	height: 100%;
+	margin-right: 5px;
+	background-image: url("/game_play/sound_off.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.card_over_lay > .top_sec_board > .palyer_profile {
+	width: 100%;
+	height: 50px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+}
+.card_over_lay > .top_sec_board > .palyer_profile > .p_profile_wrapper {
+	width: 150px;
+	height: 100%;
+	background-image: url("/game_play/left_player.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-left: 5px;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.card_over_lay > .top_sec_board > .palyer_profile > .o_profile_wrapper {
+	width: 150px;
+	height: 100%;
+	background-image: url("/game_play/Right_player.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-left: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.card_over_lay > .top_sec_board > .palyer_profile > .vs_wrapper {
+	width: 50px;
+	height: 100%;
+	background-image: url("/game_play/VS.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 /* ================================ matchMaking Component =============================*/
@@ -155,101 +298,8 @@ html::before {
 }
 
 /* ====================================== Game Play Component ===============================*/
-.play_player_bg {
-	width: 100%;
-	height: 100%;
-	background-image: url("/game_play/bg.png");
-	background-size: contain !important;
-	background-repeat: no-repeat;
 
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-}
-.play_player_bg > .profile {
-	position: absolute;
-	top: 97px;
-	width: 90%;
-	height: 53px;
-	display: flex;
-	align-items: center;
-	/* justify-content: space-between; */
-}
-.play_player_bg > .profile > .player_profile,
-.play_player_bg > .profile > .opponent_profile {
-	width: 40%;
-	height: 100%;
-
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-
-}
-.play_player_bg > .profile > .player_profile > .player_name,
-.play_player_bg > .profile > .opponent_profile > .player_name {
-	width: 75%;
-	height: 25px;
-	border-radius: 5px;
-	background-color: #131a50;
-
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	padding-right: 5px;
-	font-size: 15px;
-	font-weight: 600;
-margin: 4px;
-	color: #ffffff95;
-}
-.play_player_bg > .profile > .plyar_vs_op {
-	width: 15%;
-	height: 100%;
-
-	background-image: url('/game_play/VS.png');
-	background-position: center;
-	background-size: 25px 25px;
-	background-repeat: no-repeat;
-
-}
-.play_player_bg > .profile > .opponent_profile {
-	width: 45%;
-	height: 100%;
-
-}
-.play_player_bg > .game_board {
-	position: relative;
-	display: grid;
-	grid-template-columns: calc(0.25 * var(--tile-size)) calc(8 * var(--tile-size));
-	grid-template-rows: calc(8 * var(--tile-size)) calc(0.25 * var(--tile-size));
-	/* background-color: red; */
-}
-.play_player_bg > .game_board > .fire_left_top {
-	object-fit: contain;
-	position: absolute;
-	left: -56px;
-	top: -73px;
-}
-.play_player_bg > .game_board > .fire_right_top {
-	object-fit: contain;
-	position: absolute;
-	right: -42px;
-	top: -75px;
-}
-.play_player_bg > .game_board > .fire_right_btm {
-	object-fit: contain;
-	position: absolute;
-	right: -44px;
-	bottom: -25px;
-}
-.play_player_bg > .game_board > .fire_left_btm {
-	object-fit: contain;
-	position: absolute;
-	left: -54px;
-	bottom: -25px;
-}
-
-/* Loading component */
+/* ====================================== Loader Componenet Component ===============================*/
 .load_background {
 	width: 100%;
 	height: 100%;
@@ -328,10 +378,7 @@ margin: 4px;
 	:root {
 		--tile-size: 40px;
 	}
-	.play_player_bg > .game_board {
-		flex: none;
-		margin-bottom: 199px;
-	}
+
 	.splash_wrapper,
 	.search_wrapper {
 		position: relative;
