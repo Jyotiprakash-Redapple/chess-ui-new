@@ -1,11 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { app } from "@/config/appConfig";
-
+import { useEffect } from "react";
+import Client from "src/socket/client";
+import { newSocketConnect } from "@/arbitar/context/reducer/move";
+import { useAppContext } from "@/arbitar/context/Provider";
 export default function SplashScreen() {
 	const router = useRouter();
-
+	const { appState, dispatch } = useAppContext();
 	// check query string
 	const checkQuery = async () => {
 		const search = window.location.search;
@@ -14,6 +15,8 @@ export default function SplashScreen() {
 			// game mode online
 			if (searchParams.get("auth_token")) {
 				let queryVar = searchParams.get("auth_token");
+				const socket = new Client();
+				dispatch(newSocketConnect({ socket }));
 				localStorage.setItem("auth_token", JSON.stringify(queryVar));
 				localStorage.setItem("game_mode", "online");
 				router.push("/loader", { scroll: false });
@@ -21,9 +24,10 @@ export default function SplashScreen() {
 				// game mode offlien
 				if (searchParams.get("mode")) {
 					let queryVar = searchParams.get("mode");
-					localStorage.setItem("mode", JSON.stringify(queryVar));
-					localStorage.setItem("game_mode", "offline");
-					router.push("/loader", { scroll: false });
+					if (queryVar === "offline") {
+						localStorage.setItem("game_mode", "offline");
+						router.push("/loader", { scroll: false });
+					}
 				}
 			}
 		} else {
@@ -36,6 +40,10 @@ export default function SplashScreen() {
 
 	/* run when component mount in dom */
 	useEffect(() => {
+		localStorage.removeItem("game_status");
+		localStorage.removeItem("socketId");
+		localStorage.removeItem("auth_token");
+		localStorage.removeItem("game_mode");
 		let timer = setTimeout(() => {
 			checkQuery();
 		}, 1000);

@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { useAppContext } from "@/arbitar/context/Provider";
 import { useRouter } from "next/navigation";
 function Loadeing() {
+	const router = useRouter();
 	const gameMode = localStorage.getItem("game_mode");
-	console.log(gameMode);
+	const { appState, dispatch } = useAppContext();
+
 	const widthRef = React.useRef(0);
 	const [loadingWidth, setLoadingWidth] = React.useState(2);
-	const router = useRouter();
 
 	// Loadeing Timer Screen
 	React.useEffect(() => {
@@ -16,14 +17,20 @@ function Loadeing() {
 		let timer = 0;
 		const loader = () => {
 			timer = setInterval(() => {
+				if (widthRef.current === 100) return;
 				widthRef.current = widthRef.current + 1;
 				setLoadingWidth(widthRef.current);
-
 				if (widthRef.current === 100) {
 					if (gameMode === "offline") {
 						router.push("/play-game/ai", { scroll: false });
 					} else if (gameMode === "online") {
-						router.push("/match-make", { scroll: false });
+						console.log(appState.socket, "run this==============>");
+						if (appState.socket) {
+							// redom match queue emit
+
+							appState.socket.onRendomMatch();
+							router.push("/match-make", { scroll: false });
+						}
 					}
 					clearInterval(timer);
 				}
@@ -41,7 +48,6 @@ function Loadeing() {
 			clearInterval(timer);
 		};
 	}, [widthRef.current, gameMode, router]);
-
 	// fix loder active bar image
 
 	return (

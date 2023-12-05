@@ -1,10 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { app } from "@/config/appConfig";
 import Player from "@/components/player/player";
 import Opponent from "@/components/opponent/opponent";
+import { useAppContext } from "@/arbitar/context/Provider";
 function MatchMackeing() {
+	const { appState, dispatch } = useAppContext();
 	const { player, opponent, imageArray } = app;
+	const router = useRouter();
+	useEffect(() => {
+		if (appState.socket) {
+			appState.socket.getGameInitFromServer(dispatch);
+		} else {
+			router.push("/");
+		}
+	}, []);
 	return (
 		<main>
 			<div className="view_container">
