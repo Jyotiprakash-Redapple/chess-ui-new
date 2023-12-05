@@ -3,8 +3,10 @@
 .boards {
 	position: relative;
 	display: grid;
-	grid-template-columns: calc(0.25 * var(--tile-size)) calc(8 * var(--tile-size));
-	grid-template-rows: calc(8 * var(--tile-size)) calc(0.25 * var(--tile-size));
+	/* grid-template-columns: calc(0.25 * var(--tile-size)) calc(8 * var(--tile-size));
+	grid-template-rows: calc(8 * var(--tile-size)) calc(0.25 * var(--tile-size)); */
+	grid-template-columns: calc(8 * var(--tile-size));
+	grid-template-rows: calc(8 * var(--tile-size));
 }
 
 .tiles {
@@ -47,6 +49,7 @@
 .pieces {
 	position: absolute;
 	left: calc(0.25 * var(--tile-size));
+	left: 0;
 	right: 0;
 	top: 0;
 	bottom: calc(0.25 * var(--tile-size));
@@ -60,6 +63,7 @@
 	background-color: transparent;
 	position: absolute;
 	cursor: pointer;
+	background-position: 8px -0.9px;
 }
 .highlight::after {
 	display: block;

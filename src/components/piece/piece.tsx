@@ -14,7 +14,7 @@ function piece({ file, rank, piece }: Props) {
 			// 		onDragEnd={handelDragEnd}
 			//   onClick={handelClick}
 		>
-			{file}-{rank}
+			{/* {file}-{rank} */}
 		</div>
 	);
 }
