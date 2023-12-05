@@ -25,7 +25,7 @@ function Opponent({ name, image, imageArray }: Props) {
 			return () => clearInterval(interval);
 		} else {
 			setTimeout(() => {
-				router.push("/loader", { scroll: false });
+				router.push("/play-game/player", { scroll: false });
 			}, 2000);
 		}
 	}, [avtars]);
@@ -48,7 +48,7 @@ function Opponent({ name, image, imageArray }: Props) {
 									src={image}
 									width={20}
 									height={20}
-									alt='image'
+									alt="image"
 									style={{
 										width: "100%",
 										height: "100%",
@@ -59,12 +59,12 @@ function Opponent({ name, image, imageArray }: Props) {
 						) : (
 							<>
 								{avtars.map((avatar, index) => (
-									<div className='avatar_opponent' key={index}>
+									<div className="avatar_opponent" key={index}>
 										<Image
 											src={avatar}
 											width={20}
 											height={20}
-											alt='image'
+											alt="image"
 											style={{
 												width: "100%",
 												height: "100%",
@@ -89,7 +89,7 @@ function Opponent({ name, image, imageArray }: Props) {
 							<>
 								{nameOpponet.map((el, idx) => {
 									return (
-										<div key={idx} className='name_opponent'>
+										<div key={idx} className="name_opponent">
 											<span
 												style={{
 													fontWeight: 600,

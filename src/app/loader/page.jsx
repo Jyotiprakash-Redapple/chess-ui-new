@@ -9,6 +9,8 @@ function Loadeing() {
 	const widthRef = React.useRef(0);
 	const [loadingWidth, setLoadingWidth] = React.useState(2);
 	const router = useRouter();
+
+	// Loadeing Timer Screen
 	React.useEffect(() => {
 		// loading bar
 		let timer = 0;
@@ -18,11 +20,10 @@ function Loadeing() {
 				setLoadingWidth(widthRef.current);
 
 				if (widthRef.current === 100) {
-					widthRef.current = 97;
 					if (gameMode === "offline") {
 						router.push("/play-game/ai", { scroll: false });
 					} else if (gameMode === "online") {
-						router.push("/play-game/player", { scroll: false });
+						router.push("/match-make", { scroll: false });
 					}
 					clearInterval(timer);
 				}
@@ -45,18 +46,18 @@ function Loadeing() {
 
 	return (
 		<main>
-			<div className='view_container'>
-				<div className='load_wrapper'>
-					<div className='load_background'>
-						<div className='inner_wrapper'>
-							<div className='loadeing_text'></div>
-							<div className='loadeing_bg'>
+			<div className="view_container">
+				<div className="load_wrapper">
+					<div className="load_background">
+						<div className="inner_wrapper">
+							<div className="loadeing_text"></div>
+							<div className="loadeing_bg">
 								<img
 									key={widthRef.current}
-									src='/loding/loding bar.png'
+									src="/loding/loding bar.png"
 									width={20}
 									height={30}
-									alt='load'
+									alt="loader"
 									style={{
 										width: `${loadingWidth}%`,
 										objectFit: "cover",
@@ -67,7 +68,7 @@ function Loadeing() {
 							</div>
 						</div>
 					</div>
-					<div className='splash_logo'></div>
+					<div className="splash_logo"></div>
 				</div>
 			</div>
 		</main>

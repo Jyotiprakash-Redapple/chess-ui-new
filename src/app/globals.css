@@ -105,6 +105,13 @@ html::before {
 .card_over_lay > .top_sec_board {
 	height: 25%;
 	width: 100%;
+	/* background-color: red; */
+
+	/* For Laptop */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	/* For Laptop */
 }
 .card_over_lay > .buttom_sec_board {
 	height: 50%;
