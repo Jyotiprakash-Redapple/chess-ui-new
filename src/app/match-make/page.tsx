@@ -5,6 +5,7 @@ import { app } from "@/config/appConfig";
 import Player from "@/components/player/player";
 import Opponent from "@/components/opponent/opponent";
 import { useAppContext } from "@/arbitar/context/Provider";
+import Countdown from "@/components/countdown/countdown";
 function MatchMackeing() {
 	const { appState, dispatch } = useAppContext();
 	const { player, opponent, imageArray } = app;
@@ -39,9 +40,13 @@ function MatchMackeing() {
 							</div>
 							{/*<--end::match making playr pic and op pic box ---->*/}
 						</div>
+						<div style={{ position: "absolute" }}>
+							<Countdown />
+						</div>
 					</div>
 					{/*<--end::match making wrapper bg---->*/}
 				</div>
+
 				{/*<--end::match making wrapper---->*/}
 			</div>
 		</main>

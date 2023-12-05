@@ -17,7 +17,7 @@ export default function SplashScreen() {
 				let queryVar = searchParams.get("auth_token");
 				const socket = new Client();
 				dispatch(newSocketConnect({ socket }));
-				localStorage.setItem("auth_token", JSON.stringify(queryVar));
+				localStorage.setItem("auth_token", queryVar);
 				localStorage.setItem("game_mode", "online");
 				router.push("/loader", { scroll: false });
 			} else {

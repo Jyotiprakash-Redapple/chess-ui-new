@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import style from "./opponent.module.css";
 import Image from "next/image";
-import Router from "next/router";
+import { useAppContext } from "@/arbitar/context/Provider";
+import { gameStatus } from "@/arbitar/context/reducer/constant";
 import { useRouter } from "next/navigation";
 type Props = {
 	name: string | null | undefined;
@@ -12,11 +13,11 @@ type Props = {
 function Opponent({ name, image, imageArray }: Props) {
 	const [avtars, setAvtars] = useState(imageArray);
 	const [nameOpponet, setNameOpponet] = useState(["avik", "ruhul", "lixa", "ebey"]);
-	const [gameStatus, setGameStatus] = useState("pending");
+	const { appState, dispatch } = useAppContext();
 	// reverse the image array
 	const router = useRouter();
 	useEffect(() => {
-		if (gameStatus === "pending") {
+		if (appState.status === gameStatus.pending) {
 			const interval = setInterval(() => {
 				setAvtars([...avtars.slice(1), avtars[0]]);
 				setNameOpponet([...nameOpponet.slice(1), nameOpponet[0]]); // Rotate avatars
@@ -24,25 +25,20 @@ function Opponent({ name, image, imageArray }: Props) {
 
 			return () => clearInterval(interval);
 		} else {
-			setTimeout(() => {
-				router.push("/play-game/player", { scroll: false });
-			}, 2000);
+			if (appState.status === gameStatus.ongoing) {
+				setTimeout(() => {
+					router.push("/play-game/player", { scroll: false });
+				}, 2000);
+			}
 		}
 	}, [avtars]);
-
-	// socket game start listen
-	useEffect(() => {
-		setTimeout(() => {
-			setGameStatus("ongoing");
-		}, 15000);
-	}, []);
 
 	return (
 		<div className={style.opponent}>
 			<div className={style.opponent_wrapper}>
 				<div className={style.inner_wrapper}>
 					<div className={style.image_wrapper}>
-						{gameStatus !== "pending" ? (
+						{appState.status !== gameStatus.pending ? (
 							<>
 								<Image
 									src={image}
@@ -77,7 +73,7 @@ function Opponent({ name, image, imageArray }: Props) {
 						)}
 					</div>
 					<div className={style.name_wrapper}>
-						{gameStatus !== "pending" ? (
+						{appState.status !== gameStatus.pending ? (
 							<span
 								style={{
 									fontWeight: 600,
