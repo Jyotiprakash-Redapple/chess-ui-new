@@ -30,12 +30,17 @@ let initGame = {
 	}, // object
 	pl: {},
 	op: {},
+	turnTime: {}, // turn time | counter | life
+	gameTime: 0,
 };
 
 Object.freeze(initGame);
 
 let actionTypes = {
 	NEW_GAME_INIT: "NEW_GAME_INIT",
+	GAME_TIME: "GAME_TIME",
+	TURN_TIME: "TURN_TIME",
+	UPDATE_TURN: "UPDATE_TURN",
 	BOARD_UPDATE: "BOARD_UPDATE",
 	NEW_MOVE: "NEW_MOVE",
 	PIECES_SQOURE_INFO: "PIECES_SQOURE_INFO",

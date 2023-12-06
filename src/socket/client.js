@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { gameInit, updateBoard } from "../arbitar/context/reducer/move";
+import { gameInit, updateBoard, gameTimer, turnTimer, turnUpdate } from "../arbitar/context/reducer/move";
 class Client {
 	constructor(gameSceneInstance) {
 		this.gameSceneRefence = gameSceneInstance;
@@ -36,7 +36,7 @@ class Client {
 	getGameInitFromServer(dispatch) {
 		this.socket.on("game-start", (arg) => {
 			dispatch(gameInit({ arg }));
-			console.log("game start receive from server", arg);
+			console.log(arg, "game start from server========>");
 		});
 	}
 	getUpdateDetailsFromServer(dispatch) {
@@ -45,7 +45,21 @@ class Client {
 			console.log("Game Update Details From Server", arg);
 		});
 	}
-
+	onGmaeTime(dispatch) {
+		this.socket.on("gameTimer", (arg) => {
+			dispatch(gameTimer(arg));
+		});
+	}
+	onTurnTimer(dispatch) {
+		this.socket.on("turnTimer", (arg) => {
+			dispatch(turnTimer(arg));
+		});
+	}
+	onTurnChange(dispatch) {
+		this.socket.on("game-updateTurn", (arg) => {
+			dispatch(turnUpdate(arg));
+		});
+	}
 	onUpdateMove(cur_game) {
 		console.log("current game move", cur_game);
 		this.socket.emit("update-move", cur_game);

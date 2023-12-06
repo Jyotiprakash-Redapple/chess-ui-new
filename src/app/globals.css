@@ -229,7 +229,9 @@ html::before {
 	align-items: center;
 	justify-content: center;
 }
-
+.player_dp {
+	position: relative;
+}
 /* ================================ matchMaking Component =============================*/
 .search_banner_bg {
 	width: 100%;

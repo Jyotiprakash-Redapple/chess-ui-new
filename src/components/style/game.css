@@ -9,6 +9,7 @@
 	grid-template-rows: calc(8 * var(--tile-size));
 	border-style: groove;
 	box-shadow: rgba(1, 7, 15, 0.3) 0px 0px 0px 3px;
+	background-color: red;
 }
 
 .tiles {
@@ -50,11 +51,11 @@
 
 .pieces {
 	position: absolute;
-	left: calc(0.25 * var(--tile-size));
+	left: 0;
 	left: 0;
 	right: 0;
 	top: 0;
-	bottom: calc(0.25 * var(--tile-size));
+	bottom: 0;
 }
 
 .piece {
@@ -65,7 +66,8 @@
 	background-color: transparent;
 	position: absolute;
 	cursor: pointer;
-	background-position: 8px -0.9px;
+	/* background-position: 8px -0.9px; */
+	background-position: center;
 }
 .highlight::after {
 	display: block;
@@ -77,8 +79,8 @@
 	height: calc(0.5 * 60px);
 	background-color: green;
 	border-radius: 50%;
-	left: 25%;
-	top: 25%;
+	left: 15%;
+	top: 21%;
 }
 
 .attacking::after {

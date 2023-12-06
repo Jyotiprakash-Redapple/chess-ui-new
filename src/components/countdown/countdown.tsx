@@ -20,6 +20,7 @@ function Countdown() {
 
 	React.useEffect(() => {
 		const timer = window.setInterval(() => {
+			if (countRef.current === 0) return;
 			let currentTime = countRef.current;
 			countRef.current = Number(currentTime) - 1;
 			setTime(currentTime);
@@ -43,9 +44,9 @@ function Countdown() {
 		}
 	}, [appState.position]);
 	return (
-		<div className="_cont">
-			<div className="_spinner"></div>
-			<span className="_number">{time}</span>
+		<div className='_cont'>
+			<div className='_spinner'></div>
+			<span className='_number'>{time}</span>
 		</div>
 	);
 }

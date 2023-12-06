@@ -1,14 +1,5 @@
 import { actionTypes, initGame } from "./constant";
-import {
-	Makenewmove,
-	Setpicessqoureinfo,
-	MakecandidateMove,
-	Openpromotionbox,
-	Savekillpices,
-	Newsocketconnect,
-	Newgameinit,
-	Updateboard,
-} from "../type";
+import { Makenewmove, Setpicessqoureinfo, MakecandidateMove, Openpromotionbox, Savekillpices, Newsocketconnect, Newgameinit, Updateboard } from "../type";
 /**
  * make new move with darg and drop
  */
@@ -193,6 +184,37 @@ let updateAdvantage = (arg: any) => {
 		payload: arg,
 	};
 };
+
+/**
+ * receive Global Timer
+ */
+let gameTimer = (arg: any) => {
+	return {
+		type: actionTypes.GAME_TIME,
+		payload: arg,
+	};
+};
+
+/**
+ * receive turn timer
+ */
+let turnTimer = (arg: any) => {
+	return {
+		type: actionTypes.TURN_TIME,
+		payload: arg,
+	};
+};
+
+/**
+ * turn updated
+ */
+
+let turnUpdate = (arg: any) => {
+	return {
+		type: actionTypes.UPDATE_TURN,
+		payload: arg,
+	};
+};
 export {
 	makeNewMove,
 	makeCandidateMoves,
@@ -212,4 +234,7 @@ export {
 	gameInit,
 	updateBoard,
 	updateAdvantage,
+	gameTimer,
+	turnTimer,
+	turnUpdate,
 };
