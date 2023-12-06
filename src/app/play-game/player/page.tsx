@@ -12,7 +12,6 @@ function PlayWithPlayer() {
 	const { player, opponent } = app;
 	const router = useRouter();
 	const { appState, dispatch } = useAppContext();
-	console.log(appState, "app State============>");
 
 	/**
 	 * function for calculkate progress bar
@@ -67,7 +66,7 @@ function PlayWithPlayer() {
 							{/*<--start:: top section ---->*/}
 							<div className="top_sec_board">
 								<div className="global_timer">
-									<div className="quit_game"></div>
+									<div className="quit_game" onClick={() => setQuitGame(true)}></div>
 									<div className="g_timer_wrapper">
 										<div className="g_timer_stopwatch"></div>
 										<div className="g_timer_text">
@@ -76,7 +75,119 @@ function PlayWithPlayer() {
 									</div>
 									<div className="sound_wrapper"></div>
 								</div>
-								{appState.opponent === "b" ? (
+								<div className="palyer_profile">
+									<div className="p_profile_wrapper">
+										<div
+											className="palyer_name"
+											style={{
+												width: "70%",
+												display: "flex",
+												justifyContent: "flex-end",
+												color: "#fff",
+												fontSize: "15px",
+												fontWeight: "500",
+												marginRight: "3px",
+											}}>
+											{appState.pl.user_name}
+										</div>
+										<div className="player_dp">
+											{appState.pl.id === appState.turnTime.current_player_id ? (
+												<div
+													className="progress_bar"
+													style={{
+														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
+															appState.turnTime.counter
+														)}%, #cdc7c89c 0deg)`,
+														position: "relative",
+														width: "47px",
+														height: "50px",
+														borderRadius: "10px",
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "center",
+													}}>
+													<Image
+														src={player.image}
+														width={20}
+														height={20}
+														alt="i"
+														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
+													/>
+												</div>
+											) : (
+												<Image
+													src={player.image}
+													width={20}
+													height={20}
+													alt="i"
+													style={{
+														width: "40px",
+														height: "40px",
+														border: "2px solid #076aa2",
+														borderRadius: "6px",
+													}}
+												/>
+											)}
+										</div>
+									</div>
+									<div className="vs_wrapper"></div>
+									<div className="o_profile_wrapper">
+										<div className="player_dp">
+											{appState.op.id === appState.turnTime.current_player_id ? (
+												<div
+													className="progress_bar"
+													style={{
+														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
+															appState.turnTime.counter
+														)}%, #cdc7c89c 0deg)`,
+														position: "relative",
+														width: "47px",
+														height: "50px",
+														borderRadius: "10px",
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "center",
+													}}>
+													<Image
+														src={opponent.image}
+														width={20}
+														height={20}
+														alt="i"
+														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
+													/>
+												</div>
+											) : (
+												<Image
+													src={opponent.image}
+													width={20}
+													height={20}
+													alt="i"
+													style={{
+														width: "40px",
+														height: "40px",
+														border: "2px solid #076aa2",
+														borderRadius: "6px",
+													}}
+												/>
+											)}
+										</div>
+										<div
+											className="palyer_name"
+											style={{
+												width: "70%",
+												display: "flex",
+												justifyContent: "flex-start",
+
+												color: "#fff",
+												fontSize: "15px",
+												fontWeight: "500",
+												marginLeft: "3px",
+											}}>
+											{appState.op.user_name}
+										</div>
+									</div>
+								</div>
+								{/* {appState.opponent === "b" ? (
 									<>
 										<div className="palyer_profile">
 											<div className="p_profile_wrapper">
@@ -287,7 +398,7 @@ function PlayWithPlayer() {
 											</div>
 										</div>
 									</>
-								)}
+								)} */}
 							</div>
 							{/*<--end:: top section ---->*/}
 							{/*<--start:: buttom section ---->*/}

@@ -9,10 +9,12 @@ import { Chess } from "@/arbitar/lib/chess";
 import { ChessBoard } from "@/arbitar/lib/chessboard";
 import Image from "next/image";
 import { app } from "@/config/appConfig";
-
+import moment from "moment";
 function AIboard() {
 	const { player, opponent } = app;
 	const boardRef = useRef();
+	const timeRef = useRef("700.00");
+	const [quitGame, setQuitGame] = useState(false);
 
 	/*
 	 * A simple chess AI, by someone who doesn't know how to play chess.
@@ -51,6 +53,12 @@ function AIboard() {
 		};
 		let new_ = ChessBoard();
 		board = new new_(document.getElementById("myBoard"), config);
+
+		setInterval(() => {
+			let init = timeRef.current;
+			if (init == "0.00") return;
+			timeRef.current = Number(init) - 1;
+		}, 1000);
 	}, []);
 
 	let timer = null;
@@ -686,6 +694,12 @@ function AIboard() {
 		board.position(game.fen());
 	}
 
+	/**
+	 * quit game API end call
+	 */
+	const handelQuitGame = () => {
+		alert("Api Call ");
+	};
 	return (
 		// <div className="board_container">
 		// 	{" "}
@@ -915,304 +929,358 @@ function AIboard() {
 			<div className="view_container">
 				{/*<--start::play with player wrapper---->*/}
 				<div className="play_wrapper">
-					<div className="play_player_bg">
-						{/*<--start::profile  with player wrapper---->*/}
-						<div className="profile">
-							<div className="player_profile">
-								<span className="player_name">AVIK</span>
-								<Image
-									src={player.image}
-									width={100}
-									height={100}
-									alt="imahe"
-									style={{
-										width: "30%",
-										height: "90%",
-										borderRadius: "10px",
-										border: "3px solid #131a50",
-									}}
-								/>
-							</div>
-							<div className="plyar_vs_op"></div>
-							<div className="opponent_profile">
-								<Image
-									src={opponent.image}
-									width={100}
-									height={100}
-									alt="imahe"
-									style={{
-										width: "30%",
-										height: "90%",
-										borderRadius: "10px",
-										border: "3px solid #131a50",
-									}}
-								/>
-								<span
-									className="player_name"
-									style={{ justifyContent: "flex-start", paddingInline: "5px" }}>
-									{opponent.name}
-								</span>
-							</div>
-						</div>
-						{/*<--end::profile  with player wrapper---->*/}
-						{/*<--start::game_board  with player wrapper---->*/}
-						<div className="game_board">
-							<Image
-								src={"/game_play/fire 1.png"}
-								className={"fire_left_top"}
-								alt="l"
-								width={80}
-								height={80}
-							/>
-							<Image
-								src={"/game_play/fire 1.png"}
-								className={"fire_right_top"}
-								alt="l"
-								width={80}
-								height={80}
-							/>
-							<Image
-								src={"/game_play/fire 1.png"}
-								className={"fire_right_btm"}
-								alt="l"
-								width={90}
-								height={90}
-							/>
-							<Image
-								src={"/game_play/fire 1.png"}
-								className={"fire_left_btm"}
-								alt="l"
-								width={80}
-								height={80}
-							/>
-							{/* <div className="ai_chess_board">
-								{" "}
-								<div class="col-md-6 col-sm-12">
-									<div id="myBoard"></div>{" "}
-									<div class="row my-3 text-align-center">
-										{" "}
-										<div class="col-md-6 my-2 col-6">
+					{/*<--start::bg screen---->*/}
+					<div className="player_bg">
+						{/*<--start::shadow overlay ---->*/}
+						<div className="card_over_lay">
+							{quitGame && (
+								<div className="quit_game_bg">
+									<div className="quit_game_wrapper">
+										<div className="quit_game_text"></div>
+										<div className="quit_game_btn">
 											{" "}
-											<button class="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}></button>
-										</div>
-										<div class="col-md-6 my-2 col-6">
-											<button class="btn btn-success" id="redoBtn" onClick={handelRedoBtn}></button>
+											<button className="yes" onClick={() => handelQuitGame()}>
+												Yes
+											</button>
+											<button className="no" onClick={() => setQuitGame(false)}>
+												No
+											</button>
 										</div>
 									</div>
 								</div>
-							</div> */}
-							<div id="myBoard"  ref={boardRef}></div>{" "}
-							{/* <div
-								style={{
-									backgroundColor: "red",
-									position: "absolute",
-									top: "100%",
-									transform: 
-								}}>
-								{" "}
-								<div className="col-md-6 my-2 col-6">
-									{" "}
-									<button className="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}></button>
-								</div>
-								<div className="col-md-6 my-2 col-6">
-									<button className="btn btn-success" id="redoBtn" onClick={handelRedoBtn}></button>
-								</div>
-							</div> */}
-						</div>
+							)}
 
-						<div
-							style={{
-								width: "280px",
+							{/*<--start:: top section ---->*/}
+							<div className="top_sec_board">
+								<div className="global_timer">
+									<div className="quit_game" onClick={() => setQuitGame(true)}></div>
+									<div className="g_timer_wrapper">
+										<div className="g_timer_stopwatch"></div>
+										<div className="g_timer_text">{moment.utc(timeRef.current * 1000).format("mm:ss")}</div>
+									</div>
+									<div className="sound_wrapper"></div>
+								</div>
+								<div className="palyer_profile">
+									<div className="p_profile_wrapper">
+										<div
+											className="palyer_name"
+											style={{
+												width: "70%",
+												display: "flex",
+												justifyContent: "flex-end",
+												color: "#fff",
+												fontSize: "15px",
+												fontWeight: "500",
+												marginRight: "3px",
+											}}>
+											{"Test 0"}
+										</div>
+										<div className="player_dp">
+											{/* {appState.pl.id === appState.turnTime.current_player_id ? (
+												<div
+													className="progress_bar"
+													style={{
+														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
+															appState.turnTime.counter
+														)}%, #cdc7c89c 0deg)`,
+														position: "relative",
+														width: "47px",
+														height: "50px",
+														borderRadius: "10px",
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "center",
+													}}>
+													<Image
+														src={player.image}
+														width={20}
+														height={20}
+														alt="i"
+														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
+													/>
+												</div>
+											) : (
+												<Image
+													src={player.image}
+													width={20}
+													height={20}
+													alt="i"
+													style={{
+														width: "40px",
+														height: "40px",
+														border: "2px solid #076aa2",
+														borderRadius: "6px",
+													}}
+												/>
+											)} */}
+											<Image
+												src={player.image}
+												width={20}
+												height={20}
+												alt="i"
+												style={{
+													width: "40px",
+													height: "40px",
+													border: "2px solid #076aa2",
+													borderRadius: "6px",
+												}}
+											/>
+										</div>
+									</div>
+									<div className="vs_wrapper"></div>
+									<div className="o_profile_wrapper">
+										<div className="player_dp">
+											{/* {false ? (
+												<div
+													className="progress_bar"
+													style={{
+														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
+															appState.turnTime.counter
+														)}%, #cdc7c89c 0deg)`,
+														position: "relative",
+														width: "47px",
+														height: "50px",
+														borderRadius: "10px",
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "center",
+													}}>
+													<Image
+														src={opponent.image}
+														width={20}
+														height={20}
+														alt="i"
+														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
+													/>
+												</div>
+											) : (
+												<Image
+													src={opponent.image}
+													width={20}
+													height={20}
+													alt="i"
+													style={{
+														width: "40px",
+														height: "40px",
+														border: "2px solid #076aa2",
+														borderRadius: "6px",
+													}}
+												/>
+											)} */}
+											<Image
+												src={opponent.image}
+												width={20}
+												height={20}
+												alt="i"
+												style={{
+													width: "40px",
+													height: "40px",
+													border: "2px solid #076aa2",
+													borderRadius: "6px",
+												}}
+											/>
+										</div>
+										<div
+											className="palyer_name"
+											style={{
+												width: "70%",
+												display: "flex",
+												justifyContent: "flex-start",
 
-								display: "flex",
-								justifyContent: "space-between",
-								position: "absolute",
-								bottom: "110px",
-								right: "30px",
-							}}>
-							<div className="col-md-6 my-2 col-6">
-								{" "}
-								<button className="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}>
-									Undo
-								</button>
+												color: "#fff",
+												fontSize: "15px",
+												fontWeight: "500",
+												marginLeft: "3px",
+											}}>
+											{"AI Bot"}
+										</div>
+									</div>
+								</div>
 							</div>
-							<div className="col-md-6 my-2 col-6">
-								<button className="btn btn-success" id="redoBtn" onClick={handelRedoBtn}>
-									Redo
-								</button>
+							{/*<--end:: top section ---->*/}
+							{/*<--start:: buttom section ---->*/}
+							<div className="buttom_sec_board">
+								{/*<--start:: game board section ---->*/}
+								<div className="boards">
+									<div id="myBoard"></div>
+								</div>
+								{/*<--start:: layer hide ---->*/}
+								<nav
+									className="main-menu"
+									style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
+									<ul>
+										<div id="accordion">
+											<li>
+												<i className={`fa fa-gear  fa-2x `}></i>
+												<span className="nav-text">
+													{" "}
+													<div class="card">
+														<div class="card-header" id="settingsHeading">
+															<h2 class="text-align-center">
+																<button
+																	class="btn btn-header no-outline"
+																	data-toggle="collapse"
+																	data-target="#settings"
+																	aria-expanded="true"
+																	aria-controls="settings">
+																	Settings
+																</button>
+															</h2>
+														</div>
+													</div>{" "}
+													<div
+														id="settings"
+														class="collapse"
+														aria-labelledby="settingsHeading"
+														data-parent="#accordion">
+														<div class="card-body">
+															<div class="row align-items-center justify-content-center">
+																<div class="form-group">
+																	<label for="search-depth">Search Depth (Black):</label>
+																	<select id="search-depth">
+																		<option value="1">1</option>
+																		<option value="2">2</option>
+																		<option value="3" selected>
+																			3
+																		</option>
+																		<option value="4">4</option>
+																		<option value="5">5</option>
+																	</select>
+																</div>
+															</div>
+															<div class="row align-items-center justify-content-center">
+																<div class="form-group">
+																	<label for="search-depth-white">Search Depth (White):</label>
+																	<select id="search-depth-white">
+																		<option value="1">1</option>
+																		<option value="2">2</option>
+																		<option value="3" selected>
+																			3
+																		</option>
+																		<option value="4">4</option>
+																		<option value="5">5</option>
+																	</select>
+																</div>
+															</div>
+															<div class="row align-items-center justify-content-center">
+																<div class="form-group">
+																	<input type="checkbox" id="showHint" name="showHint" value="showHint" />
+																	<label for="showHint">Show Suggested Move (White)</label>
+																</div>
+															</div>
+														</div>
+													</div>
+												</span>
+											</li>
+
+											<li>
+												<i class="fa fa-map-marker fa-2x"></i>
+												<span className="nav-text">
+													{" "}
+													<div class="card">
+														<div class="card-header" id="openingPositionsHeading">
+															<h2 class="text-align-center">
+																<button
+																	class="btn btn-header no-outline"
+																	data-toggle="collapse"
+																	data-target="#openingPositions"
+																	aria-expanded="true"
+																	aria-controls="openingPositions">
+																	Opening Positions
+																</button>
+															</h2>
+														</div>
+													</div>
+													<div
+														id="openingPositions"
+														class="collapse"
+														aria-labelledby="openingPositionsHeading"
+														data-parent="#accordion">
+														<div class="card-body">
+															<div class="row my-3 text-align-center">
+																<div class="col-md-6 my-2">
+																	<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
+																		Ruy Lopez
+																	</button>
+																</div>
+																<div class="col-md-6 my-2">
+																	<button
+																		class="btn btn-primary"
+																		id="italianGameBtn"
+																		onClick={handelItalianGameBtn}>
+																		Italian Game
+																	</button>
+																</div>
+															</div>
+															<div class="row my-3 text-align-center">
+																<div class="col-md-6 my-2">
+																	<button
+																		class="btn btn-primary"
+																		id="sicilianDefenseBtn"
+																		onClick={handelSicilianDefenseBtn}>
+																		Sicilian Defense
+																	</button>
+																</div>
+																<div class="col-md-6 my-2">
+																	<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
+																		Start Position
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</span>
+											</li>
+											<li>
+												<i class="fa fa-desktop fa-2x"></i>
+												<span className="nav-text">
+													<div class="card">
+														<div class="card-header" id="compVsCompHeading">
+															<h2 class="text-align-center">
+																<button
+																	class="btn btn-header no-outline"
+																	data-toggle="collapse"
+																	data-target="#compVsComp"
+																	aria-expanded="true"
+																	aria-controls="compVsComp">
+																	Computer vs. Computer
+																</button>
+															</h2>
+														</div>
+													</div>
+													<div
+														id="compVsComp"
+														class="collapse"
+														aria-labelledby="compVsCompHeading"
+														data-parent="#accordion">
+														<div class="card-body">
+															<div class="row text-align-center">
+																<div class="col-md-6 my-2">
+																	<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
+																		Start Game
+																	</button>
+																</div>
+																<div class="col-md-6 my-2">
+																	<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
+																		Stop and Reset
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</span>
+											</li>
+										</div>
+									</ul>
+								</nav>
+								{/*<--end:: layer hide ---->*/}
+								{/*<--end:: game board section ---->*/}
 							</div>
+							{/*<--end:: buttom section ---->*/}
 						</div>
-						{/*<--start::game_board  with player wrapper---->*/}
+						{/*<--end::shadow overlay ---->*/}
 					</div>
-					<nav
-						className="main-menu"
-						style={{
-							position: "absolute",
-							top: "0",
-							opacity: 0,
-						}}>
-						<ul>
-							<div id="accordion">
-								<li>
-									<i className={`fa fa-gear  fa-2x `}></i>
-									<span className="nav-text">
-										{" "}
-										<div class="card">
-											<div class="card-header" id="settingsHeading">
-												<h2 class="text-align-center">
-													<button
-														class="btn btn-header no-outline"
-														data-toggle="collapse"
-														data-target="#settings"
-														aria-expanded="true"
-														aria-controls="settings">
-														Settings
-													</button>
-												</h2>
-											</div>
-										</div>{" "}
-										<div
-											id="settings"
-											class="collapse"
-											aria-labelledby="settingsHeading"
-											data-parent="#accordion">
-											<div class="card-body">
-												<div class="row align-items-center justify-content-center">
-													<div class="form-group">
-														<label for="search-depth">Search Depth (Black):</label>
-														<select id="search-depth">
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3" selected>
-																3
-															</option>
-															<option value="4">4</option>
-															<option value="5">5</option>
-														</select>
-													</div>
-												</div>
-												<div class="row align-items-center justify-content-center">
-													<div class="form-group">
-														<label for="search-depth-white">Search Depth (White):</label>
-														<select id="search-depth-white">
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3" selected>
-																3
-															</option>
-															<option value="4">4</option>
-															<option value="5">5</option>
-														</select>
-													</div>
-												</div>
-												<div class="row align-items-center justify-content-center">
-													<div class="form-group">
-														<input type="checkbox" id="showHint" name="showHint" value="showHint" />
-														<label for="showHint">Show Suggested Move (White)</label>
-													</div>
-												</div>
-											</div>
-										</div>
-									</span>
-								</li>
-
-								<li>
-									<i class="fa fa-map-marker fa-2x"></i>
-									<span className="nav-text">
-										{" "}
-										<div class="card">
-											<div class="card-header" id="openingPositionsHeading">
-												<h2 class="text-align-center">
-													<button
-														class="btn btn-header no-outline"
-														data-toggle="collapse"
-														data-target="#openingPositions"
-														aria-expanded="true"
-														aria-controls="openingPositions">
-														Opening Positions
-													</button>
-												</h2>
-											</div>
-										</div>
-										<div
-											id="openingPositions"
-											class="collapse"
-											aria-labelledby="openingPositionsHeading"
-											data-parent="#accordion">
-											<div class="card-body">
-												<div class="row my-3 text-align-center">
-													<div class="col-md-6 my-2">
-														<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
-															Ruy Lopez
-														</button>
-													</div>
-													<div class="col-md-6 my-2">
-														<button class="btn btn-primary" id="italianGameBtn" onClick={handelItalianGameBtn}>
-															Italian Game
-														</button>
-													</div>
-												</div>
-												<div class="row my-3 text-align-center">
-													<div class="col-md-6 my-2">
-														<button
-															class="btn btn-primary"
-															id="sicilianDefenseBtn"
-															onClick={handelSicilianDefenseBtn}>
-															Sicilian Defense
-														</button>
-													</div>
-													<div class="col-md-6 my-2">
-														<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
-															Start Position
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</span>
-								</li>
-								<li>
-									<i class="fa fa-desktop fa-2x"></i>
-									<span className="nav-text">
-										<div class="card">
-											<div class="card-header" id="compVsCompHeading">
-												<h2 class="text-align-center">
-													<button
-														class="btn btn-header no-outline"
-														data-toggle="collapse"
-														data-target="#compVsComp"
-														aria-expanded="true"
-														aria-controls="compVsComp">
-														Computer vs. Computer
-													</button>
-												</h2>
-											</div>
-										</div>
-										<div
-											id="compVsComp"
-											class="collapse"
-											aria-labelledby="compVsCompHeading"
-											data-parent="#accordion">
-											<div class="card-body">
-												<div class="row text-align-center">
-													<div class="col-md-6 my-2">
-														<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
-															Start Game
-														</button>
-													</div>
-													<div class="col-md-6 my-2">
-														<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
-															Stop and Reset
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</span>
-								</li>
-							</div>
-						</ul>
-					</nav>
+					{/*<--end::bg screen---->*/}
 				</div>
 				{/*<--end::play with player wrapper---->*/}
 			</div>
