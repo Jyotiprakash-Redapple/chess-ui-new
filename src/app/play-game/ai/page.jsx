@@ -7,15 +7,26 @@ import $ from "jquery";
 import { Chess } from "@/arbitar/lib/chess";
 
 import { ChessBoard } from "@/arbitar/lib/chessboard";
+import Chessboard from "chessboardjsx";
 import Image from "next/image";
 import { app } from "@/config/appConfig";
 import moment from "moment";
 function AIboard() {
 	const { player, opponent } = app;
 	const boardRef = useRef();
+
 	const timeRef = useRef("700.00");
 	const [quitGame, setQuitGame] = useState(false);
-
+	const [chessMove, setChessMove] = useState({
+		fen: "start",
+		squareStyles: {},
+		// square with the currently clicked piece
+		pieceSquare: "",
+		// currently clicked square
+		square: "",
+		// array of past game moves
+		history: [],
+	});
 	/*
 	 * A simple chess AI, by someone who doesn't know how to play chess.
 	 * Uses the chessboard.js and chess.js libraries.
@@ -50,9 +61,11 @@ function AIboard() {
 			onSnapEnd: onSnapEnd,
 			// pieceTheme: metro_theme,
 			// boardTheme: metro_board_theme,
+			onSquareClick: onSquareClick,
+			onSquareRightClick: onSquareRightClick,
 		};
-		let new_ = ChessBoard();
-		board = new new_(document.getElementById("myBoard"), config);
+		// let new_ = Chessboard();
+		// board = new new_(document.getElementById("myBoard"), config);
 
 		setInterval(() => {
 			let init = timeRef.current;
@@ -63,6 +76,79 @@ function AIboard() {
 
 	let timer = null;
 
+	const squareStyling = ({ pieceSquare, history }) => {
+		const sourceSquare = history.length && history[history.length - 1].from;
+		const targetSquare = history.length && history[history.length - 1].to;
+
+		return {
+			[pieceSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)" },
+			...(history.length && {
+				[sourceSquare]: {
+					backgroundColor: "rgba(255, 255, 0, 0.4)",
+				},
+			}),
+			...(history.length && {
+				[targetSquare]: {
+					backgroundColor: "rgba(255, 255, 0, 0.4)",
+				},
+			}),
+		};
+	};
+	const onSquareClick = (square) => {
+		setChessMove((history) => {
+			return {
+				squareStyles: squareStyling({ pieceSquare: square, history }),
+				pieceSquare: square,
+			};
+		});
+
+		let move = game.move({
+			from: chessMove.pieceSquare,
+			to: square,
+			promotion: "q", // always promote to a queen for example simplicity
+		});
+
+		// Illegal move
+		if (move === null) return "snapback";
+
+		setChessMove(() => {
+			return {
+				fen: game.fen(),
+				history: game.history({ verbose: true }),
+				pieceSquare: "",
+			};
+		});
+
+		// undo_stack = [];
+
+		globalSum = evaluateBoard(game, move, globalSum, "b");
+		updateAdvantage();
+
+		// Highlight latest move
+		$board.find("." + squareClass).removeClass("highlight-white");
+
+		$board.find(".square-" + move.from).addClass("highlight-white");
+		squareToHighlight = move.to;
+		colorToHighlight = "white";
+
+		$board.find(".square-" + squareToHighlight).addClass("highlight-" + colorToHighlight);
+
+		if (!checkStatus("black"));
+		{
+			// Make the best move for black
+			window.setTimeout(function () {
+				makeBestMove("b");
+				window.setTimeout(function () {
+					showHint();
+				}, 250);
+			}, 250);
+		}
+	};
+
+	const onSquareRightClick = (square) =>
+		setChessMove({
+			squareStyles: { [square]: { backgroundColor: "deepPink" } },
+		});
 	/*
 	 * Piece Square Tables, adapted from Sunfish.py:
 	 * https://github.com/thomasahle/sunfish/blob/master/sunfish.py
@@ -483,14 +569,6 @@ function AIboard() {
 			makeBestMove("b");
 		}, 250);
 	};
-	// $("#ruyLopezBtn").on("click", function () {
-	// 	reset();
-	// 	game.load("r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1");
-	// 	board.position(game.fen());
-	// 	window.setTimeout(function () {
-	// 		makeBestMove("b");
-	// 	}, 250);
-	// });
 
 	const handelItalianGameBtn = () => {
 		reset();
@@ -500,14 +578,6 @@ function AIboard() {
 			makeBestMove("b");
 		}, 250);
 	};
-	// $("#italianGameBtn").on("click", function () {
-	// 	reset();
-	// 	game.load("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1");
-	// 	board.position(game.fen());
-	// 	window.setTimeout(function () {
-	// 		makeBestMove("b");
-	// 	}, 250);
-	// });
 
 	const handelSicilianDefenseBtn = () => {
 		reset();
@@ -1102,7 +1172,24 @@ function AIboard() {
 							<div className="buttom_sec_board">
 								{/*<--start:: game board section ---->*/}
 								<div className="boards">
-									<div id="myBoard"></div>
+									{/* <div id="myBoard"></div> */}
+									<Chessboard
+										width={320}
+										position={chessMove.fen}
+										onDrop={onDrop}
+										onMouseOverSquare={onMouseoverSquare}
+										onMouseOutSquare={onMouseoutSquare}
+										boardStyle={{
+											borderRadius: "5px",
+											boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+										}}
+										onSnapEnd={onSnapEnd}
+										// squareStyles={squareStyles}
+										// dropSquareStyle={dropSquareStyle}
+										// onDragOverSquare={onDragOverSquare}
+										onSquareClick={onSquareClick}
+										onSquareRightClick={onSquareRightClick}
+									/>
 								</div>
 								{/*<--start:: layer hide ---->*/}
 								<nav
