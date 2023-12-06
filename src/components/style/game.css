@@ -9,7 +9,6 @@
 	grid-template-rows: calc(8 * var(--tile-size));
 	border-style: groove;
 	box-shadow: rgba(1, 7, 15, 0.3) 0px 0px 0px 3px;
-	background-color: red;
 }
 
 .tiles {
@@ -89,11 +88,11 @@
 	content: "";
 
 	border: 3px solid red;
-	width: calc(60px - 10px);
-	height: calc(60px - 10px);
+	width: calc(50px - 10px);
+	height: calc(50px - 10px);
 	border-radius: 50%;
-	left: 6px;
-	top: 6px;
+	left: -0.5px;
+	top: -0.5px;
 }
 .checked::after {
 	display: block;
@@ -102,11 +101,11 @@
 	background-color: red;
 	/* z-index: 1; */
 	border: 3px solid rgb(255, 247, 0);
-	width: calc(60px - 10px);
-	height: calc(60px - 10px);
+	width: calc(50px - 10px);
+	height: calc(50px - 10px);
 	border-radius: 50%;
-	left: 6px;
-	top: 6px;
+	left: -0.5px;
+	top: -0.5px;
 }
 /*===============================chess board set image ======================================*/
 .piece.bk {

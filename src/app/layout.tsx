@@ -25,12 +25,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<link rel="preload" href="/title.png" as="image" />
 				<link rel="preload" href="/splashScreen/bg.png" as="image" />
 				<link rel="preload" href="/splashScreen/title.png" as="image" />
-				<link rel="preload" href="/game_play/bg.png" as="image" />
+				{/* match makeing */}
 				<link rel="preload" href="/match_making/bg.png" as="image" />
 				<link rel="preload" href="/match_making/banner.png" as="image" />
 				<link rel="preload" href="/match_making/blue flag.png" as="image" />
 				<link rel="preload" href="/match_making/red flag.png" as="image" />
 				<link rel="preload" href="/match_making/text.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/game_play/back.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/game_play/bg.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/game_play/VS.png" as="image" crossOrigin="anonymous" />
 
 				<title>chess</title>
 				{/* <!-- Bootstrap CSS --> */}

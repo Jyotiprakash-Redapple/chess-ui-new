@@ -21,7 +21,6 @@ function Board() {
 	const isChecked = (() => {
 		const isChecked = arbitar.isPlayerChecked({
 			positionAfterMove: currentPosition,
-			position: appState.position[appState.position.length - 2],
 			player: appState.turn,
 		});
 
@@ -54,7 +53,7 @@ function Board() {
 		<>
 			{" "}
 			{/* <Rank rank={appState.opponent === "w" ? ranks.reverse() : ranks} /> */}
-			<div className='tiles'>
+			<div className="tiles">
 				{currentPosition.map((r, rank) =>
 					r.map((f, file) => (
 						<div key={file + "" + rank} className={`${getClassName(7 - rank, file)}`}>

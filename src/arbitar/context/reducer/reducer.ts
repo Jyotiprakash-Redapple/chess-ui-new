@@ -8,7 +8,9 @@ let reducer = (state: any, action: any) => {
 			let gameInit = {
 				opponent: gameObject.player.colour === "white" ? "b" : "w",
 				position: [createPosition()],
-				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn
+					? gameObject.player.colour.charAt(0).toLowerCase()
+					: gameObject.opponent.colour.charAt(0).toLowerCase(),
 				status: gameStatus.ongoing,
 				turnTime: {
 					currentPlayerId: gameObject.turn ? gameObject.player.id : gameObject.opponent.id,
@@ -16,8 +18,6 @@ let reducer = (state: any, action: any) => {
 					life: 3,
 				},
 			};
-			console.log(gameInit, "init game in online mode==========>");
-
 			return {
 				...state,
 				opponent: gameInit.opponent,
@@ -38,14 +38,15 @@ let reducer = (state: any, action: any) => {
 
 		case actionTypes.UPDATE_TURN: {
 			const gameObject = action.payload;
-
-			console.log(gameObject, "game Object");
-			return { ...state, turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase() };
+			return {
+				...state,
+				turn: gameObject.turn
+					? gameObject.player.colour.charAt(0).toLowerCase()
+					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+			};
 		}
 		case actionTypes.BOARD_UPDATE: {
 			let board = action.payload.arg.board;
-
-			console.log("board Update move=====================");
 			if (board.turn !== state.opponent) {
 				if (board?.status) {
 					if (board.status === gameStatus.newGameInit) {
@@ -76,7 +77,6 @@ let reducer = (state: any, action: any) => {
 						...state,
 						position: newposition,
 						advantage: board.advantage,
-						turn: board.turn,
 						moveList: [...board.moveList],
 						kill_pices: [...board.kill_pices],
 						castlingdir: board.castlingDirection,
@@ -107,14 +107,11 @@ let reducer = (state: any, action: any) => {
 					newMoveList = [...state.moveList, [action.payload.newMove]];
 				}
 			}
-
-			// const turn = state.turn === "w" ? "b" : "w";
 			const newposition = [...state.position, action.payload.newPosition];
 
 			state.socket.onUpdateMove({
 				board: {
 					position: action.payload.newPosition,
-					// turn,
 					moveList: newMoveList,
 					advantage: state.advantage,
 					kill_pices: state.kill_pices,
@@ -127,7 +124,6 @@ let reducer = (state: any, action: any) => {
 			});
 			return {
 				...state,
-				// turn,
 				position: newposition,
 				moveList: newMoveList,
 			};
@@ -174,7 +170,6 @@ let reducer = (state: any, action: any) => {
 		case actionTypes.CLEAR_PROMOTION_SQOUR_INFO: {
 			return {
 				...state,
-
 				promotion_square_info: null,
 			};
 		}
@@ -314,7 +309,6 @@ let reducer = (state: any, action: any) => {
 				},
 			};
 		}
-
 		// socket
 		case actionTypes.NEW_SOCKET_CONNECTION: {
 			return {
