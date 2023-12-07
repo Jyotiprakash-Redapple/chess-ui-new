@@ -6,7 +6,7 @@
 .opponent_wrapper {
 	width: 190px;
 	height: 100%;
-	background-image: url("/match_making/red\ flag.png");
+	background-image: url("/match_making/red_flag.png");
 	background-repeat: no-repeat;
 	background-size: contain;
 	position: absolute;

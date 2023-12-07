@@ -21,11 +21,11 @@
 	position: relative;
 }
 .tile--light {
-	background-image: url("/game_play/Layer\ 4\ copy\ 5.png");
+	background-image: url("/game_play/white_layer.png");
 	background-size: contain;
 }
 .tile--dark {
-	background-image: url("/game_play/Layer\ 4\ copy\ 6.png");
+	background-image: url("/game_play/black_layer.png");
 	background-size: contain;
 }
 .rank {
@@ -629,7 +629,7 @@
 	align-items: center;
 	justify-content: center;
 	background-color: transparent;
-	background-image: url("/game_play/Layer\ 4\ copy\ 5.png");
+	background-image: url("/game_play/white_layer.png");
 	background-size: contain !important;
 	background-position: center !important;
 }
@@ -640,7 +640,7 @@
 	align-items: center;
 	justify-content: center;
 	background-color: transparent;
-	background-image: url("/game_play/Layer\ 4\ copy\ 6.png");
+	background-image: url("/game_play/black_layer.png");
 	background-size: contain;
 	background-position: center !important;
 }

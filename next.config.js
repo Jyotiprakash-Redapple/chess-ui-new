@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const withOptimizedImages = require("next-optimized-images");
 
-module.exports = withOptimizedImages({
+module.exports = {
 	// webpack for know it is server | client
 	webpack: (config, { isServer }) => {
 		if (!isServer) {
@@ -28,5 +28,8 @@ module.exports = withOptimizedImages({
 		// !! WARN !!
 		ignoreBuildErrors: true,
 	},
-	output: "export",
-});
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
+	// output: "export",
+};

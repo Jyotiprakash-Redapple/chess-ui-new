@@ -317,7 +317,7 @@ html::before {
 	left: 0;
 	z-index: 1000;
 	position: absolute;
-	background-image: url("/gameQuit/Layer\ 796.png");
+	background-image: url("/gameQuit/layer.png");
 	background-size: cover;
 	background-repeat: no-repeat;
 	display: flex;
@@ -339,7 +339,7 @@ html::before {
 .quit_game_text {
 	width: 250px;
 	height: 40px;
-	background-image: url("/gameQuit/DO\ YOU\ WANT\ To\ QUIT\ \ _.png");
+	background-image: url("/gameQuit/do_you_want_quit.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 }
@@ -408,7 +408,7 @@ html::before {
 .load_background > .inner_wrapper > .loadeing_bg {
 	width: 100%;
 	height: 20px;
-	background-image: url("/loding/loding\ bar\ 2.png");
+	background-image: url("/loding/lodeing_bg.png");
 	background-repeat: no-repeat;
 	background-size: contain;
 	position: relative;
@@ -420,7 +420,7 @@ html::before {
 	width: 99%;
 	height: 100%;
 	margin-top: 8px;
-	background-image: url("/loding/loding\ bar.png");
+	background-image: url("/loding/lodeing_bg_active.png");
 	background-repeat: no-repeat;
 	background-size: contain;
 }

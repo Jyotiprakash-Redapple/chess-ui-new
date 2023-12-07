@@ -28,13 +28,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				{/* match makeing */}
 				<link rel="preload" href="/match_making/bg.png" as="image" />
 				<link rel="preload" href="/match_making/banner.png" as="image" />
-				<link rel="preload" href="/match_making/blue flag.png" as="image" />
-				<link rel="preload" href="/match_making/red flag.png" as="image" />
+				<link rel="preload" href="/match_making/blue_flag.png" as="image" />
+				<link rel="preload" href="/match_making/red_flag.png" as="image" />
+				<link rel="preload" href="/match_making/VS.png" as="image" />
 				<link rel="preload" href="/match_making/text.png" as="image" crossOrigin="anonymous" />
+
 				<link rel="preload" href="/game_play/back.png" as="image" crossOrigin="anonymous" />
 				<link rel="preload" href="/game_play/bg.png" as="image" crossOrigin="anonymous" />
 				<link rel="preload" href="/game_play/VS.png" as="image" crossOrigin="anonymous" />
-
+				<link rel="preload" href="/game_play/Right_player.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/game_play/left_player.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/game_play/black_layer.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/game_play/shadow.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/gameQuit/banner.png" as="image" crossOrigin="anonymous" />
+				<link rel="preload" href="/gameQuit/layer.png" as="image" crossOrigin="anonymous" />
 				<title>chess</title>
 				{/* <!-- Bootstrap CSS --> */}
 				<link

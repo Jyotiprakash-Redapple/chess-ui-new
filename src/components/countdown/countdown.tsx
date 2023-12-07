@@ -46,9 +46,9 @@ function Countdown() {
 		}
 	}, [appState.position]);
 	return (
-		<div className='_cont'>
-			<div className='_spinner'></div>
-			<span className='_number'>{time}</span>
+		<div className="_cont">
+			<div className="_spinner"></div>
+			<span className="_number">{time}</span>
 		</div>
 	);
 }
