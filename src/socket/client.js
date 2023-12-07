@@ -1,11 +1,6 @@
 import { io } from "socket.io-client";
-import {
-	gameInit,
-	updateBoard,
-	gameTimer,
-	turnTimer,
-	turnUpdate,
-} from "../arbitar/context/reducer/move";
+import { gameInit, updateBoard, gameTimer, turnTimer, turnUpdate, gameEnd } from "../arbitar/context/reducer/move";
+
 class Client {
 	constructor(gameSceneInstance) {
 		this.gameSceneRefence = gameSceneInstance;
@@ -54,19 +49,19 @@ class Client {
 	onGmaeTime(dispatch) {
 		this.socket.on("gameTimer", (arg) => {
 			dispatch(gameTimer(arg));
-			console.log("Game Timer From Server=============>", arg);
+			// console.log("Game Timer From Server=============>", arg);
 		});
 	}
 	onTurnTimer(dispatch) {
 		this.socket.on("turnTimer", (arg) => {
 			dispatch(turnTimer(arg));
-			console.log("GameTurnTimer From Server===========>", arg);
+			// console.log("GameTurnTimer From Server===========>", arg);
 		});
 	}
 	onTurnChange(dispatch) {
 		this.socket.on("game-updateTurn", (arg) => {
 			dispatch(turnUpdate(arg));
-			console.log("Game-upadteTurn From server", arg);
+			console.log("Game-upadteTurn From server=============>", arg);
 		});
 	}
 	onUpdateMove(cur_game) {
@@ -75,7 +70,7 @@ class Client {
 	}
 	onUpdateWin(data) {
 		console.log("result emit ============>", data);
-		this.socket.emit("update-scrore", data);
+		this.socket.emit("update-score", data);
 	}
 	onRendomMatch() {
 		console.log("queue-join Emit ============>");
@@ -87,6 +82,12 @@ class Client {
 	}
 	emitDisConnect() {
 		this.socket.disconnect();
+	}
+	onGameEnd(dispatch) {
+		this.socket.on("game-end", (arg) => {
+			console.log("game end  =============>");
+			dispatch(gameEnd(arg));
+		});
 	}
 }
 // let client = new Client();

@@ -8,9 +8,8 @@ let reducer = (state: any, action: any) => {
 			let gameInit = {
 				opponent: gameObject.player.colour === "white" ? "b" : "w",
 				position: [createPosition()],
-				turn: gameObject.turn
-					? gameObject.player.colour.charAt(0).toLowerCase()
-					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+				movementTurn: gameObject.player.colour === "white" ? true : false,
 				status: gameStatus.ongoing,
 				turnTime: {
 					currentPlayerId: gameObject.turn ? gameObject.player.id : gameObject.opponent.id,
@@ -27,6 +26,7 @@ let reducer = (state: any, action: any) => {
 				pl: action.payload.arg.player,
 				op: action.payload.arg.opponent,
 				turnTime: gameInit.turnTime,
+				movementTurn: gameInit.movementTurn,
 			};
 		}
 		case actionTypes.GAME_TIME: {
@@ -40,51 +40,109 @@ let reducer = (state: any, action: any) => {
 			const gameObject = action.payload;
 			return {
 				...state,
-				turn: gameObject.turn
-					? gameObject.player.colour.charAt(0).toLowerCase()
-					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+			};
+		}
+		case actionTypes.GAME_END: {
+			let gameEndObj = action.payload;
+			state.socket.onUpdateWin({
+				player: {
+					id: gameEndObj.player.id,
+					score: gameEndObj.player.score,
+					colour: gameEndObj.player.colour,
+				},
+				opponent: {
+					id: gameEndObj.opponent.id,
+					score: gameEndObj.opponent.score,
+					colour: gameEndObj.opponent.colour,
+				},
+				winner: gameEndObj.winner,
+			});
+			return {
+				...state,
+				status: gameStatus.gameEnd,
 			};
 		}
 		case actionTypes.BOARD_UPDATE: {
 			let board = action.payload.arg.board;
-			if (board.turn !== state.opponent) {
-				if (board?.status) {
-					if (board.status === gameStatus.newGameInit) {
-						return {
-							...state,
-							opponent: state.opponent === "w" ? "b" : "w",
-							advantage: 0,
-							position: [createPosition()],
-							status: gameStatus.ongoing,
-							turn: "w",
-							moveList: [], // array
-							kill_pices: [],
-							castlingdir: {
-								w: "both",
-								b: "both",
-							},
-						};
-					}
+			console.log(board, "updated board===================================>");
+			// if (state.turn !== state.opponent) {
+			// 	if (board?.status) {
+			// 		if (board.status === gameStatus.newGameInit) {
+			// 			return {
+			// 				...state,
+			// 				movementTurn: state.opponent === "w" ? false : true,
+			// 				opponent: state.opponent === "w" ? "b" : "w",
+			// 				advantage: 0,
+			// 				position: [createPosition()],
+			// 				status: gameStatus.ongoing,
+			// 				turn: "w",
+			// 				moveList: [], // array
+			// 				kill_pices: [],
+			// 				castlingdir: {
+			// 					w: "both",
+			// 					b: "both",
+			// 				},
+			// 			};
+			// 		}
+			// 		let movementTurn = state.movementTurn === true ? false : true;
+			// 		return {
+			// 			...state,
+			// 			status: board.status,
+			// 			advantage: board.advantage,
+			// 		};
+			// 	} else {
+			// 		const newposition = [...state.position, board.position];
+			// 		let movementTurn = state.movementTurn === true ? false : true;
+			// 		return {
+			// 			...state,
+			// 			position: newposition,
+			// 			advantage: board.advantage,
+			// 			moveList: [...board.moveList],
+			// 			kill_pices: [...board.kill_pices],
+			// 			castlingdir: board.castlingDirection,
+			// 		};
+			// 	}
+			// } else {
+			// 	return {
+			// 		...state,
+			// 	};
+			// }
+			console.log("update board run ===============>");
+			if (board?.status) {
+				if (board.status === gameStatus.newGameInit) {
 					return {
 						...state,
-						status: board.status,
-						advantage: board.advantage,
-					};
-				} else {
-					const newposition = [...state.position, board.position];
-
-					return {
-						...state,
-						position: newposition,
-						advantage: board.advantage,
-						moveList: [...board.moveList],
-						kill_pices: [...board.kill_pices],
-						castlingdir: board.castlingDirection,
+						movementTurn: state.opponent === "w" ? false : true,
+						opponent: state.opponent === "w" ? "b" : "w",
+						advantage: 0,
+						position: [createPosition()],
+						status: gameStatus.ongoing,
+						turn: "w",
+						moveList: [], // array
+						kill_pices: [],
+						castlingdir: {
+							w: "both",
+							b: "both",
+						},
 					};
 				}
-			} else {
+				let movementTurn = state.movementTurn === true ? false : true;
 				return {
 					...state,
+					status: board.status,
+					advantage: board.advantage,
+				};
+			} else {
+				const newposition = [...state.position, board.position];
+				let movementTurn = state.movementTurn === true ? false : true;
+				return {
+					...state,
+					position: newposition,
+					advantage: board.advantage,
+					moveList: [...board.moveList],
+					kill_pices: [...board.kill_pices],
+					castlingdir: board.castlingDirection,
 				};
 			}
 		}
@@ -94,7 +152,7 @@ let reducer = (state: any, action: any) => {
 			//! if last index two size push an element other wise pus new arr
 
 			let newMoveList = [];
-
+			let movementTurn = state.movementTurn === true ? false : true;
 			if (!state.moveList.length) {
 				newMoveList = [[action.payload.newMove]];
 			} else {
@@ -122,6 +180,7 @@ let reducer = (state: any, action: any) => {
 					advantage: state.advantage === 0 ? "Neither side" : state.advantage > 0 ? "Black" : "White",
 				},
 			});
+
 			return {
 				...state,
 				position: newposition,

@@ -16,7 +16,7 @@ module.exports = withOptimizedImages({
 
 		return config;
 	},
-
+	reactStrictMode: false,
 	// optimise image in production
 	optimizeImages: true,
 	handleImages: ["jpeg", "png", "webp"],

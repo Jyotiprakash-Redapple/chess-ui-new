@@ -7,6 +7,8 @@ import { app } from "@/config/appConfig";
 import { useAppContext } from "@/arbitar/context/Provider";
 import { useRouter } from "next/navigation";
 import moment from "moment";
+import { IoMdHeart } from "react-icons/io";
+import { FaHeartBroken } from "react-icons/fa";
 function PlayWithPlayer() {
 	const [quitGame, setQuitGame] = useState(false);
 	const { player, opponent } = app;
@@ -35,27 +37,28 @@ function PlayWithPlayer() {
 			appState.socket.onGmaeTime(dispatch);
 			appState.socket.onTurnTimer(dispatch);
 			appState.socket.onTurnChange(dispatch);
+			appState.socket.onGameEnd(dispatch);
 		}
 	}, []);
 	return (
 		<main>
-			<div className="view_container">
+			<div className='view_container'>
 				{/*<--start::play with player wrapper---->*/}
-				<div className="play_wrapper">
+				<div className='play_wrapper'>
 					{/*<--start::bg screen---->*/}
-					<div className="player_bg">
+					<div className='player_bg'>
 						{/*<--start::shadow overlay ---->*/}
-						<div className="card_over_lay">
+						<div className='card_over_lay'>
 							{quitGame && (
-								<div className="quit_game_bg">
-									<div className="quit_game_wrapper">
-										<div className="quit_game_text"></div>
-										<div className="quit_game_btn">
+								<div className='quit_game_bg'>
+									<div className='quit_game_wrapper'>
+										<div className='quit_game_text'></div>
+										<div className='quit_game_btn'>
 											{" "}
-											<button className="yes" onClick={() => handelQuitGame()}>
+											<button className='yes' onClick={() => handelQuitGame()}>
 												Yes
 											</button>
-											<button className="no" onClick={() => setQuitGame(false)}>
+											<button className='no' onClick={() => setQuitGame(false)}>
 												No
 											</button>
 										</div>
@@ -64,21 +67,19 @@ function PlayWithPlayer() {
 							)}
 
 							{/*<--start:: top section ---->*/}
-							<div className="top_sec_board">
-								<div className="global_timer">
-									<div className="quit_game" onClick={() => setQuitGame(true)}></div>
-									<div className="g_timer_wrapper">
-										<div className="g_timer_stopwatch"></div>
-										<div className="g_timer_text">
-											{moment.utc(appState.gameTime * 1000).format("mm:ss")}
-										</div>
+							<div className='top_sec_board'>
+								<div className='global_timer'>
+									<div className='quit_game' onClick={() => setQuitGame(true)}></div>
+									<div className='g_timer_wrapper'>
+										<div className='g_timer_stopwatch'></div>
+										<div className='g_timer_text'>{moment.utc(appState.gameTime * 1000).format("mm:ss")}</div>
 									</div>
-									<div className="sound_wrapper"></div>
+									<div className='sound_wrapper'></div>
 								</div>
-								<div className="palyer_profile">
-									<div className="p_profile_wrapper">
+								<div className='palyer_profile'>
+									<div className='p_profile_wrapper'>
 										<div
-											className="palyer_name"
+											className='palyer_name'
 											style={{
 												width: "70%",
 												display: "flex",
@@ -90,10 +91,17 @@ function PlayWithPlayer() {
 											}}>
 											{appState.pl.user_name}
 										</div>
-										<div className="player_dp">
-											{appState.pl.id === appState.turnTime.current_player_id ? (
+										<div style={{ position: "absolute", buttom: "0" }}>
+											{appState.pl.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
+												<FaHeartBroken style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											) : (
+												<IoMdHeart style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											)}
+										</div>
+										<div className='player_dp'>
+											{appState.pl.id === appState.turnTime.current_player_id && appState.turnTime.life ? (
 												<div
-													className="progress_bar"
+													className='progress_bar'
 													style={{
 														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
 															appState.turnTime.counter
@@ -106,20 +114,14 @@ function PlayWithPlayer() {
 														alignItems: "center",
 														justifyContent: "center",
 													}}>
-													<Image
-														src={player.image}
-														width={20}
-														height={20}
-														alt="i"
-														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
-													/>
+													<Image src={player.image} width={20} height={20} alt='i' style={{ width: "40px", height: "40px", borderRadius: "10px" }} />
 												</div>
 											) : (
 												<Image
 													src={player.image}
 													width={20}
 													height={20}
-													alt="i"
+													alt='i'
 													style={{
 														width: "40px",
 														height: "40px",
@@ -130,12 +132,12 @@ function PlayWithPlayer() {
 											)}
 										</div>
 									</div>
-									<div className="vs_wrapper"></div>
-									<div className="o_profile_wrapper">
-										<div className="player_dp">
-											{appState.op.id === appState.turnTime.current_player_id ? (
+									<div className='vs_wrapper'></div>
+									<div className='o_profile_wrapper'>
+										<div className='player_dp'>
+											{appState.op.id === appState.turnTime.current_player_id && appState.turnTime.life ? (
 												<div
-													className="progress_bar"
+													className='progress_bar'
 													style={{
 														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
 															appState.turnTime.counter
@@ -148,20 +150,14 @@ function PlayWithPlayer() {
 														alignItems: "center",
 														justifyContent: "center",
 													}}>
-													<Image
-														src={opponent.image}
-														width={20}
-														height={20}
-														alt="i"
-														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
-													/>
+													<Image src={opponent.image} width={20} height={20} alt='i' style={{ width: "40px", height: "40px", borderRadius: "10px" }} />
 												</div>
 											) : (
 												<Image
 													src={opponent.image}
 													width={20}
 													height={20}
-													alt="i"
+													alt='i'
 													style={{
 														width: "40px",
 														height: "40px",
@@ -172,7 +168,7 @@ function PlayWithPlayer() {
 											)}
 										</div>
 										<div
-											className="palyer_name"
+											className='palyer_name'
 											style={{
 												width: "70%",
 												display: "flex",
@@ -185,8 +181,16 @@ function PlayWithPlayer() {
 											}}>
 											{appState.op.user_name}
 										</div>
+										<div style={{ position: "absolute", buttom: "0", right: 0 }}>
+											{appState.op.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
+												<FaHeartBroken style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											) : (
+												<IoMdHeart style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											)}
+										</div>
 									</div>
 								</div>
+
 								{/* {appState.opponent === "b" ? (
 									<>
 										<div className="palyer_profile">
@@ -402,10 +406,10 @@ function PlayWithPlayer() {
 							</div>
 							{/*<--end:: top section ---->*/}
 							{/*<--start:: buttom section ---->*/}
-							<div className="buttom_sec_board">
+							<div className='buttom_sec_board'>
 								{/*<--start:: game board section ---->*/}
 								<div
-									className="boards"
+									className='boards'
 									style={{
 										transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 									}}>

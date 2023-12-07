@@ -13,7 +13,8 @@ function Countdown() {
 	const handelBack = () => {
 		console.log(appState.position);
 		if (!Object.keys(appState.position).length) {
-			router.push(`/?auth_token=${auth_token}`, { scroll: false });
+			// router.push(`/?auth_token=${auth_token}`, { scroll: false });
+			router.push("/", { scroll: false });
 			appState.socket.onQueueLeave();
 		}
 	};

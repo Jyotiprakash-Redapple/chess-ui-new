@@ -1,5 +1,6 @@
 import { createPosition } from "../../helper/helper";
 let gameStatus = {
+	gameEnd: "game end",
 	pending: "pending",
 	stalemet: "game draws due to stalemet", // no check but no move
 	insufficiant: "game draw due to insufficient mating material.",
@@ -32,6 +33,7 @@ let initGame = {
 	op: {},
 	turnTime: {}, // turn time | counter | life
 	gameTime: 0,
+	movementTurn: false,
 };
 
 Object.freeze(initGame);
@@ -56,6 +58,7 @@ let actionTypes = {
 	WIN: "WIN",
 	SAVE_KILL_PICES: "SAVE_KILL_PICES",
 	NEW_GAME: "NEW_GAME",
+	GAME_END: "GAME_END",
 
 	UPDATE_ADVANTAGE: "UPDATE_ADVANTAGE",
 	//socket

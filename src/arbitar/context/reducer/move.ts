@@ -215,6 +215,17 @@ let turnUpdate = (arg: any) => {
 		payload: arg,
 	};
 };
+
+/**
+ * game end
+ */
+
+let gameEnd = (arg: any) => {
+	return {
+		type: actionTypes.GAME_END,
+		payload: arg,
+	};
+};
 export {
 	makeNewMove,
 	makeCandidateMoves,
@@ -237,4 +248,5 @@ export {
 	gameTimer,
 	turnTimer,
 	turnUpdate,
+	gameEnd,
 };

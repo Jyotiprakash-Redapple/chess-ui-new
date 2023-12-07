@@ -34,7 +34,7 @@ function Loadeing() {
 					}
 					clearInterval(timer);
 				}
-			}, 100);
+			}, 50);
 		};
 
 		const handleLoadPage = () => {
@@ -52,18 +52,18 @@ function Loadeing() {
 
 	return (
 		<main>
-			<div className="view_container">
-				<div className="load_wrapper">
-					<div className="load_background">
-						<div className="inner_wrapper">
-							<div className="loadeing_text"></div>
-							<div className="loadeing_bg">
+			<div className='view_container'>
+				<div className='load_wrapper'>
+					<div className='load_background'>
+						<div className='inner_wrapper'>
+							<div className='loadeing_text'></div>
+							<div className='loadeing_bg'>
 								<img
 									key={widthRef.current}
-									src="/loding/loding bar.png"
+									src='/loding/loding bar.png'
 									width={20}
 									height={30}
-									alt="loader"
+									alt='loader'
 									style={{
 										width: `${loadingWidth}%`,
 										objectFit: "cover",
@@ -74,7 +74,7 @@ function Loadeing() {
 							</div>
 						</div>
 					</div>
-					<div className="splash_logo"></div>
+					<div className='splash_logo'></div>
 				</div>
 			</div>
 		</main>

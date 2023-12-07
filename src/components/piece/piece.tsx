@@ -4,6 +4,7 @@ import { useAppContext } from "@/arbitar/context/Provider";
 import { arbitar } from "@/arbitar/game/arbitar";
 
 import { makeCandidateMoves, setPicesSqoureInfo, clearPicesSqoureInfo } from "@/arbitar/context/reducer/move";
+import { gameStatus } from "@/arbitar/context/reducer/constant";
 
 type Props = {
 	file: string | number | undefined | null;
@@ -20,7 +21,26 @@ function piece({ file, rank, piece }: Props) {
 	 */
 
 	const onMove = () => {
-		if (appState.opponent !== piece[0] && appState.turn === piece[0]) {
+		// if (appState.movementTurn) {
+		// 	if (appState.status !== gameStatus.gameEnd) {
+		// 		if (appState.opponent !== piece[0] && appState.turn === piece[0]) {
+		// 			dispatch(clearPicesSqoureInfo());
+		// 			const candicateMove = arbitar.getValidMoves({
+		// 				position: currentPosition,
+		// 				prevPosition: appState.position[appState.position.length - 2],
+		// 				castelDirection: appState.castlingdir[appState.turn],
+		// 				rank,
+		// 				file,
+		// 				piece,
+		// 				opponent: appState.opponent,
+		// 			});
+
+		// 			dispatch(setPicesSqoureInfo({ pieces_square_info: `${piece},${rank},${file}` }));
+		// 			dispatch(makeCandidateMoves({ candicateMove }));
+		// 		}
+		// 	}
+		// }
+		if (appState.opponent !== piece[0] && appState.turn === piece[0] && appState.status !== gameStatus.gameEnd) {
 			dispatch(clearPicesSqoureInfo());
 			const candicateMove = arbitar.getValidMoves({
 				position: currentPosition,
@@ -31,7 +51,6 @@ function piece({ file, rank, piece }: Props) {
 				piece,
 				opponent: appState.opponent,
 			});
-
 			dispatch(setPicesSqoureInfo({ pieces_square_info: `${piece},${rank},${file}` }));
 			dispatch(makeCandidateMoves({ candicateMove }));
 		}
@@ -65,9 +84,9 @@ function piece({ file, rank, piece }: Props) {
 	return (
 		<div
 			className={`piece ${piece} p-${appState.opponent}${file}${rank}`}
-			draggable={true}
-			onDragStart={handelDragStart}
-			onDragEnd={handelDragEnd}
+			// draggable={true}
+			// onDragStart={handelDragStart}
+			// onDragEnd={handelDragEnd}
 			onClick={handelClick}></div>
 	);
 }
