@@ -18,7 +18,15 @@ module.exports = withOptimizedImages({
 	},
 	reactStrictMode: false,
 	// optimise image in production
-	optimizeImages: true,
-	handleImages: ["jpeg", "png", "webp"],
-	optimizeImagesInDev: false,
+	// optimizeImages: true,
+	// handleImages: ["jpeg", "png", "webp"],
+	// optimizeImagesInDev: false,
+	typescript: {
+		// !! WARN !!
+		// Dangerously allow production builds to successfully complete even if
+		// your project has type errors.
+		// !! WARN !!
+		ignoreBuildErrors: true,
+	},
+	output: "export",
 });

@@ -17,7 +17,7 @@ import {
 } from "@/arbitar/context/reducer/move";
 import { arbitar } from "@/arbitar/game/arbitar";
 import { getCastlingDir, evaluateBoard } from "@/arbitar/game/getMoves";
-function pieces() {
+function Pieces() {
 	const { appState, dispatch } = useAppContext();
 	const currentPosition = appState.position[appState.position.length - 1];
 
@@ -185,4 +185,4 @@ function pieces() {
 	);
 }
 
-export default pieces;
+export default Pieces;

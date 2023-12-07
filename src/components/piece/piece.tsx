@@ -11,7 +11,7 @@ type Props = {
 	rank: string | number | undefined | null;
 	piece: string | number | undefined | null;
 };
-function piece({ file, rank, piece }: Props) {
+function Piece({ file, rank, piece }: Props) {
 	const { appState, dispatch } = useAppContext();
 
 	const currentPosition = appState.position[appState.position.length - 1];
@@ -91,4 +91,4 @@ function piece({ file, rank, piece }: Props) {
 	);
 }
 
-export default piece;
+export default Piece;

@@ -5,7 +5,7 @@ import { useAppContext } from "@/arbitar/context/Provider";
 import { useRouter } from "next/navigation";
 function Loadeing() {
 	const router = useRouter();
-	const gameMode = localStorage.getItem("game_mode");
+	let gameMode;
 	const { appState, dispatch } = useAppContext();
 
 	const widthRef = React.useRef(0);
@@ -15,6 +15,7 @@ function Loadeing() {
 	React.useEffect(() => {
 		// loading bar
 		let timer = 0;
+		gameMode = localStorage.getItem("game_mode");
 		const loader = () => {
 			timer = setInterval(() => {
 				if (widthRef.current === 100) return;

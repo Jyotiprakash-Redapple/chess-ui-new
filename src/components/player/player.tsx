@@ -5,7 +5,7 @@ type Props = {
 	name: string | null | undefined;
 	image: string | null;
 };
-function player({ name, image }: Props) {
+function Player({ name, image }: Props) {
 	return (
 		<div className={style.player}>
 			<div className={style.player_wrapper}>
@@ -15,7 +15,7 @@ function player({ name, image }: Props) {
 							src={image}
 							width={20}
 							height={20}
-							alt="image"
+							alt='image'
 							style={{
 								width: "100%",
 								height: "100%",
@@ -38,4 +38,4 @@ function player({ name, image }: Props) {
 	);
 }
 
-export default player;
+export default Player;

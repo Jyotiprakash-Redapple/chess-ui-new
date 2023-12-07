@@ -5,7 +5,8 @@ import { useAppContext } from "@/arbitar/context/Provider";
 import "@/style/countdown.css";
 function Countdown() {
 	const [time, setTime] = useState<number>(30);
-	const auth_token = localStorage.getItem("auth_token");
+
+	// const auth_token = localStorage.getItem("auth_token");
 	const countRef = React.useRef(30);
 	const { appState, dispatch } = useAppContext();
 	const router = useRouter();
