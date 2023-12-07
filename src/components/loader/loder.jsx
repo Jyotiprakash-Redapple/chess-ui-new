@@ -29,7 +29,6 @@ function Loadeing() {
 						console.log(appState.socket, "run this==============>");
 						if (appState.socket) {
 							// redom match queue emit
-
 							appState.socket.onRendomMatch();
 							router.push("/match-make", { scroll: false });
 						}

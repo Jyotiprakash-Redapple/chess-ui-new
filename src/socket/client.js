@@ -1,5 +1,12 @@
 import { io } from "socket.io-client";
-import { gameInit, updateBoard, gameTimer, turnTimer, turnUpdate, gameEnd } from "../arbitar/context/reducer/move";
+import {
+	gameInit,
+	updateBoard,
+	gameTimer,
+	turnTimer,
+	turnUpdate,
+	gameEnd,
+} from "../arbitar/context/reducer/move";
 
 class Client {
 	constructor(gameSceneInstance) {
@@ -85,7 +92,7 @@ class Client {
 	}
 	onGameEnd(dispatch) {
 		this.socket.on("game-end", (arg) => {
-			console.log("game end  =============>");
+			console.log("game end  =============>", arg);
 			dispatch(gameEnd(arg));
 		});
 	}
