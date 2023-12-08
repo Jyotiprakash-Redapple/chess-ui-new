@@ -457,31 +457,45 @@ html::before {
 	}
 
 	.splash_wrapper,
-	.search_wrapper {
+	.search_wrapper,
+	.play_wrapper,
+	.load_wrapper {
 		position: relative;
-		width: 100%;
-		height: 100%;
-		background-color: white;
+		width: 100vw;
+		height: 100vh;
+		background-color: #000;
+		display: flex;
+		justify-content: center;
 	}
 	.splash_background {
 		width: 100%;
 		height: 100%;
 		background-image: url("/splashScreen/bg.png");
-		background-size: cover !important;
+		background-size: contain !important;
 		background-repeat: no-repeat;
+		/* background-color: red !important; */
 	}
 	.splash_logo {
 		width: 200px;
 		height: 200px;
 		position: absolute;
-		top: 60px;
-		right: 60px;
+		top: 21%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		z-index: 100;
-
 		/* background-color: #39ac31; */
-		background-image: url("/splashScreen/title.png");
+		background-image: url(/splashScreen/title.png);
 		background-size: cover !important;
 		background-position: center;
 		background-repeat: no-repeat;
+	}
+
+	.load_background {
+		width: 100%;
+		height: 100%;
+		background-image: url("/loding/bg.png");
+		background-repeat: no-repeat;
+		background-size: contain !important;
+		position: relative;
 	}
 }

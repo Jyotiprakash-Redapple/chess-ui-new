@@ -1,4 +1,4 @@
-// File: /home/ratpc-042/Desktop/Jyoti-RedApple/chess-ui-new/src/app/match-make/page.tsx
+// File: D:\Desktop\chess-ui-new\src\app\match-make\page.tsx
 import * as entry from '../../../../src/app/match-make/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

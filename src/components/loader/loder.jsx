@@ -26,7 +26,6 @@ function Loadeing() {
 					if (gameMode === "offline") {
 						router.push("/play-game/ai", { scroll: false });
 					} else if (gameMode === "online") {
-						console.log(appState.socket, "run this==============>");
 						if (appState.socket) {
 							// redom match queue emit
 							appState.socket.onRendomMatch();
