@@ -3,10 +3,6 @@
 	line-height: 1.5;
 	font-weight: 400;
 
-	/* color-scheme: light dark; */
-	/* color: rgba(255, 255, 255, 0.87); */
-	/* background-color: #242424; */
-
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -14,12 +10,9 @@
 	-webkit-text-size-adjust: 100%;
 
 	--tile-size: 40px;
-	/* --light-tiles: #f0d8b7;
-	--dark-tiles: #b48764; */
-	--light-tiles: #fffafa;
-	--dark-tiles: #000;
+	--light-tiles: #72d0ff;
+	--dark-tiles: #4b74a3;
 	--high-light-tiles: #2417d3;
-	/* --highlight-tiles: rgba(0, 0, 0, 0.1); */
 	--check: #feec48;
 
 	--glow-color: hsl(186 100% 69%);
@@ -502,7 +495,7 @@ html::before {
 		width: 100%;
 		height: 100%;
 		background-image: url("/game_play/bg.png");
-		background-size: cover !important;
+		background-size: contain !important;
 		background-position: center;
 		background-repeat: no-repeat;
 	}

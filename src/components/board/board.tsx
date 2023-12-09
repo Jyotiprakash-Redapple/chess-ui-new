@@ -5,6 +5,7 @@ import { useAppContext } from "@/arbitar/context/Provider";
 
 import { arbitar } from "@/arbitar/game/arbitar";
 import { getKingPosition } from "@/arbitar/game/getMoves";
+import Popupbox from "../popup/popupbox";
 function Board() {
 	const { appState } = useAppContext();
 
@@ -62,7 +63,7 @@ function Board() {
 					))
 				)}
 			</div>
-			{/* <Pupup /> */}
+			<Popupbox />
 			<Pieces />
 			{/* <File file={appState.opponent === "w" ? files.reverse() : files} /> */}
 		</>

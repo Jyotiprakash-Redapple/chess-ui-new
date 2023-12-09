@@ -552,6 +552,147 @@
 	transform: translate(700%, 700%) rotate(180deg);
 }
 
+/*===============================pop up ======================================*/
+.popup {
+	z-index: 1;
+	right: 0;
+	top: 0;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	background: transparent;
+	/* background-color: red; */
+}
+
+/*===============================promotion style ======================================*/
+.popup--inner {
+	width: 60%;
+	min-height: 14.5%;
+	background: var(--light-tiles);
+	position: absolute;
+	border: 8px solid var(--light-tiles);
+	box-shadow: 0 0 0 8px var(--dark-tiles);
+}
+.popup--inner__center {
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	padding: 1em 0;
+}
+
+.popup--inner__center h1 {
+	font-size: 2.5em;
+	margin: 0 0 0.5em 0;
+}
+.popup--inner__center p {
+	font-size: 1.2em;
+	margin: 0 0 1em 0;
+}
+
+.promotion-choices {
+	height: 12.5%;
+}
+
+.promotion-choices .piece {
+	width: 25%;
+	height: 100%;
+	border: 1px solid var(--dark-tiles);
+}
+.promotion-choices .piece:hover {
+	box-shadow: 0 0 0 5px var(--dark-tiles) inset;
+	transform: scale(1.05);
+}
+.promotion-choices :is(.wq, .bq) {
+	left: 0;
+}
+.promotion-choices :is(.wr, .br) {
+	left: 25%;
+}
+.promotion-choices :is(.wb, .bb) {
+	left: 50%;
+}
+.promotion-choices :is(.wn, .bn) {
+	left: 75%;
+}
+/*===============================satalement  style ======================================*/
+
+.satalement_modal {
+	z-index: 2;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 300px;
+	height: 150px;
+	border-radius: 5px;
+	overflow: hidden;
+	background: #fff;
+	box-shadow: 3px 3px 18px -8px #263238;
+	color: #424242;
+	margin: 20px auto;
+	padding: 20px;
+	display: inline-block;
+}
+
+.satalement_modal h1 {
+	font-size: 24px;
+	color: #333; /* Set the text color to dark gray */
+	margin-bottom: 10px;
+}
+
+.satalement_modal p {
+	font-size: 16px;
+	color: #666;
+	margin-bottom: 15px;
+}
+
+.new-game-button {
+	background-color: #4caf50;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin-top: 20px;
+	cursor: pointer;
+	/* Add more styles as needed */
+}
+
+/*===============================Winner Style  ======================================*/
+
+.wins {
+	height: var(--tile-size);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.wins.white {
+	background-image: url("/game_play/wk.png");
+}
+.wins.black {
+	background-image: url("/game_play/wk.png");
+}
+.draw {
+	height: var(--tile-size);
+	background-size: contain;
+	background-repeat: no-repeat, no-repeat;
+	background-position: 35% center, 65% center;
+	background-image: url("/game_play/wk.png"), url("/game_play/bk.png");
+}
+.new_game_btn {
+	z-index: 2;
+	cursor: pointer;
+	background: var(--dark-tiles);
+	color: var(--light-tiles);
+	border: 0 none;
+	padding: 10px 30px;
+	margin: 10px 0;
+	font-size: 1.1em;
+}
+
 /*===============================chess board style======================================*/
 
 /* Ai Board*/
