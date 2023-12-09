@@ -10,22 +10,21 @@ function Popupbox() {
 
 	if (appState.status === gameStatus.promoting) {
 		return (
-			<div className="popup">
+			<div
+				className="popup"
+				style={{
+					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
+				}}>
 				<Promoption />
 			</div>
 		);
 	}
-	if (
-		appState.status === gameStatus.stalemet ||
-		appState.status === gameStatus.insufficiant ||
-		appState.status ||
-		gameStatus.gameEnd
-	) {
+	if (appState.status === gameStatus.stalemet || appState.status === gameStatus.insufficiant) {
 		return (
 			<div
 				className="popup"
 				style={{
-					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
+					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
 				}}>
 				<Satalement />
 			</div>
@@ -37,7 +36,7 @@ function Popupbox() {
 			<div
 				className="popup"
 				style={{
-					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
+					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
 				}}>
 				<Winner />
 			</div>

@@ -22,20 +22,22 @@ function Loadeing() {
 				if (widthRef.current === 100) return;
 				widthRef.current = widthRef.current + 1;
 				setLoadingWidth(widthRef.current);
-				if (widthRef.current === 100) {
+				if (widthRef.current === 99) {
 					if (gameMode === "offline") {
 						router.push("/play-game/ai", { scroll: false });
 					} else if (gameMode === "online") {
 						if (appState.socket) {
 							// redom match queue emit
-							appState.socket.getUpdateDetailsFromServer(dispatch);
-							appState.socket.onGmaeTime(dispatch);
-							appState.socket.onTurnTimer(dispatch);
-							appState.socket.onTurnChange(dispatch);
-							appState.socket.onGameEnd(dispatch);
-							appState.socket.getUserDataFromServer(dispatch);
 							appState.socket.onRendomMatch();
+
 							setTimeout(() => {
+								appState.socket.getUpdateDetailsFromServer(dispatch);
+								appState.socket.onGmaeTime(dispatch);
+								appState.socket.onTurnTimer(dispatch);
+								appState.socket.onTurnChange(dispatch);
+								appState.socket.onGameEnd(dispatch);
+								appState.socket.getUserDataFromServer(dispatch);
+								appState.socket.getMatchMakeingDataFromServer(dispatch);
 								router.push("/match-make", { scroll: false });
 							}, 1000);
 						}

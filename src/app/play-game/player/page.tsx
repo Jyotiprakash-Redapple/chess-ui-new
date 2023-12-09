@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import moment from "moment";
 import { IoMdHeart } from "react-icons/io";
 import { FaHeartBroken } from "react-icons/fa";
+import Popupbox from "@/components/popup/popupbox";
 function PlayWithPlayer() {
 	const [quitGame, setQuitGame] = useState(false);
 	const { player, opponent } = app;
@@ -53,6 +54,7 @@ function PlayWithPlayer() {
 		} else {
 		}
 	}, []);
+
 	return (
 		<main>
 			<div className="view_container">
@@ -86,7 +88,7 @@ function PlayWithPlayer() {
 									<div className="g_timer_wrapper">
 										<div className="g_timer_stopwatch"></div>
 										<div className="g_timer_text">
-											{moment.utc(appState.gameTime * 1000).format("mm:ss")}
+											{moment.utc(appState?.gameTime * 1000).format("mm:ss")}
 										</div>
 									</div>
 									<div className="sound_wrapper"></div>
@@ -106,7 +108,7 @@ function PlayWithPlayer() {
 											}}>
 											{appState.pl.user_name}
 										</div>
-										<div style={{ position: "absolute", buttom: "0" }}>
+										<div style={{ position: "absolute", top: "13px", left: 0 }}>
 											{appState.pl.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
 												<FaHeartBroken style={{ color: "#ED5AB3", fontSize: "23px" }} />
 											) : (
@@ -130,7 +132,7 @@ function PlayWithPlayer() {
 														transition: "background 0.3s ease-in-out",
 													}}>
 													<Image
-														src={player.image}
+														src={appState?.pl.profile}
 														width={20}
 														height={20}
 														alt="i"
@@ -143,14 +145,14 @@ function PlayWithPlayer() {
 												</div>
 											) : (
 												<Image
-													src={player.image}
+													src={appState.pl.profile}
 													width={20}
 													height={20}
 													alt="i"
 													style={{
 														width: "40px",
 														height: "40px",
-														border: "2px solid #076aa2",
+														// border: "2px solid #076aa2",
 														borderRadius: "6px",
 													}}
 												/>
@@ -175,7 +177,7 @@ function PlayWithPlayer() {
 														transition: "background 0.3s ease-in-out",
 													}}>
 													<Image
-														src={opponent.image}
+														src={appState.op.profile}
 														width={20}
 														height={20}
 														alt="i"
@@ -189,14 +191,14 @@ function PlayWithPlayer() {
 											) : (
 												<>
 													<Image
-														src={opponent.image}
+														src={appState.op.profile}
 														width={20}
 														height={20}
 														alt="i"
 														style={{
 															width: "40px",
 															height: "40px",
-															border: "2px solid #076aa2",
+															// border: "2px solid #076aa2",
 															borderRadius: "6px",
 														}}
 													/>
@@ -217,7 +219,7 @@ function PlayWithPlayer() {
 											}}>
 											{appState.op.user_name}
 										</div>
-										<div style={{ position: "absolute", buttom: "0", right: 0 }}>
+										<div style={{ position: "absolute", top: "13px", right: 0 }}>
 											{appState.op.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
 												<FaHeartBroken style={{ color: "#ED5AB3", fontSize: "23px" }} />
 											) : (
@@ -227,7 +229,6 @@ function PlayWithPlayer() {
 									</div>
 								</div>
 							</div>
-
 							{/*<--end:: top section ---->*/}
 							{/*<--start:: buttom section ---->*/}
 							<div className="buttom_sec_board">
@@ -242,6 +243,7 @@ function PlayWithPlayer() {
 								{/*<--end:: game board section ---->*/}
 							</div>
 							{/*<--end:: buttom section ---->*/}
+							<Popupbox />
 						</div>
 						{/*<--end::shadow overlay ---->*/}
 					</div>

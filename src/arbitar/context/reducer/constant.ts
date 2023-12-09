@@ -1,12 +1,10 @@
 import { createPosition } from "../../helper/helper";
 let gameStatus = {
 	internetDisconnect: "Internet Disconnect",
-	gameEnd: "game end",
 	pending: "pending",
 	stalemet: "game draws due to stalemet", // no check but no move
 	insufficiant: "game draw due to insufficient mating material.",
 	ongoing: "ongoing",
-	draw: "draw",
 	promoting: "promoting",
 	white: "white wins",
 	black: "black wins",
@@ -24,7 +22,7 @@ let initGame = {
 	moveList: [], // array
 	kill_pices: [],
 	pieces_square_info: "", // string
-	status: gameStatus.stalemet, // enum
+	status: gameStatus.pending, // enum
 	promotion_square_info: null, // object
 	castlingdir: {
 		w: "both",

@@ -78,9 +78,15 @@ let reducer = (state: any, action: any) => {
 				},
 				winner: gameEndObj.winner,
 			});
+			let status = "";
+			if (gameEndObj.winner) {
+				status = gameEndObj.player.colour === "black" ? gameStatus.black : gameStatus.white;
+			} else {
+				status = gameEndObj.opponent.colour === "black" ? gameStatus.black : gameStatus.white;
+			}
 			return {
 				...state,
-				status: gameStatus.gameEnd,
+				status: status,
 			};
 		}
 		case actionTypes.BOARD_UPDATE: {

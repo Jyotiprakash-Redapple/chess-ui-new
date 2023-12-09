@@ -31,5 +31,8 @@ module.exports = {
 	eslint: {
 		ignoreDuringBuilds: true,
 	},
+	images: {
+		domains: ["3.137.86.237"], // Add your IP address or domain here
+	},
 	// output: "export",
 };

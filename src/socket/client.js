@@ -26,6 +26,7 @@ class Client {
 		this._initSocketListeners();
 	}
 	create() {}
+
 	_initSocketListeners() {
 		// console.log('connecting to socket');
 		let ref = this;
@@ -38,6 +39,12 @@ class Client {
 		this.socket.on("user-data", (arg) => {
 			dispatch(getUserData(arg));
 			console.log(arg, "user data get from server");
+		});
+	}
+	getMatchMakeingDataFromServer() {
+		this.socket.on("matchmacking-data", (arg) => {
+			// dispatch(getUserData(arg));
+			console.log(arg, "get match makeing data ==>");
 		});
 	}
 	getGameInitFromServer(dispatch) {
