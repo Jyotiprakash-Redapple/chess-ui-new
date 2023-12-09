@@ -33,7 +33,7 @@ let initGame = {
 	op: {},
 	turnTime: {}, // turn time | counter | life
 	gameTime: 0,
-	movementTurn: false,
+	totalTurnTime: 0,
 };
 
 Object.freeze(initGame);

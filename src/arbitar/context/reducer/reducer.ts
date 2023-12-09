@@ -8,7 +8,9 @@ let reducer = (state: any, action: any) => {
 			let gameInit = {
 				opponent: gameObject.player.colour === "white" ? "b" : "w",
 				position: [createPosition()],
-				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn
+					? gameObject.player.colour.charAt(0).toLowerCase()
+					: gameObject.opponent.colour.charAt(0).toLowerCase(),
 				movementTurn: gameObject.player.colour === "white" ? true : false,
 				status: gameStatus.ongoing,
 				turnTime: {
@@ -16,6 +18,7 @@ let reducer = (state: any, action: any) => {
 					counter: "30.00",
 					life: 3,
 				},
+				totalTurnTime: gameObject.turn_time,
 			};
 			return {
 				...state,
@@ -27,6 +30,7 @@ let reducer = (state: any, action: any) => {
 				op: action.payload.arg.opponent,
 				turnTime: gameInit.turnTime,
 				movementTurn: gameInit.movementTurn,
+				totalTurnTime: gameInit.totalTurnTime,
 			};
 		}
 		case actionTypes.GAME_TIME: {
@@ -40,7 +44,10 @@ let reducer = (state: any, action: any) => {
 			const gameObject = action.payload;
 			return {
 				...state,
-				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+				totalTurnTime: Number(gameObject.turn_time),
+				turn: gameObject.turn
+					? gameObject.player.colour.charAt(0).toLowerCase()
+					: gameObject.opponent.colour.charAt(0).toLowerCase(),
 			};
 		}
 		case actionTypes.GAME_END: {

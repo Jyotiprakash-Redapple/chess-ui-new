@@ -1,8 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // pages/index.js
 import dynamic from "next/dynamic";
-
 const Board = dynamic(() => import("@/components/board/board"), {
 	ssr: false,
 });
@@ -18,20 +17,35 @@ function PlayWithPlayer() {
 	const { player, opponent } = app;
 	const router = useRouter();
 	const { appState, dispatch } = useAppContext();
-
-	/**
-	 * function for calculkate progress bar
-	 */
-	const calculateProgress = (p: any) => {
-		if (p === "0.00") return 0;
-		return Number(p) * 3 + 10;
-	};
 	const handelQuitGame = () => {
 		if (appState.socket) {
 			appState.socket.emitDisConnect();
-			router.push("/", { scroll: false });
 		}
 	};
+	/**
+	 * function for calculkate progress bar
+	 */
+
+	function updateProgressBar(time) {
+		let remainingTime = appState.totalTurnTime - Number(time);
+		let percentageComplete = 100 - (remainingTime / appState.totalTurnTime) * 100;
+		let strokeDashOffsetValue = 100 - percentageComplete;
+
+		// console.log("Percentage Complete:", percentageComplete, "%");
+		// console.log("Remaining Time:", remainingTime, "seconds");
+
+		if (isCloseToOne(percentageComplete, 0.000001)) {
+			percentageComplete = 0;
+		}
+		let colour = percentageComplete < 30 ? "#EF4040" : "#097b17";
+		return `radial-gradient(closest-side, #bb404000 0px, transparent 77%, transparent 80%), conic-gradient(${colour} ${percentageComplete}%, #0062cc 0deg)`;
+	}
+
+	// Function to check if a number is close to one (within a small epsilon)
+	function isCloseToOne(value, epsilon) {
+		return Math.abs(1 - value) < epsilon;
+	}
+
 	useEffect(() => {
 		// Check if the socket is not connected.
 		if (!appState.socket) {
@@ -109,23 +123,27 @@ function PlayWithPlayer() {
 												<div
 													className="progress_bar"
 													style={{
-														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-															appState.turnTime.counter
-														)}%, #cdc7c89c 0deg)`,
+														background: updateProgressBar(appState.turnTime.counter),
 														position: "relative",
-														width: "47px",
-														height: "50px",
+
+														width: "46px",
+														height: "46px",
 														borderRadius: "10px",
 														display: "flex",
 														alignItems: "center",
 														justifyContent: "center",
+														transition: "background 0.3s ease-in-out",
 													}}>
 													<Image
 														src={player.image}
 														width={20}
 														height={20}
 														alt="i"
-														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
+														style={{
+															width: "40px",
+															height: "40px",
+															borderRadius: "6px",
+														}}
 													/>
 												</div>
 											) : (
@@ -151,38 +169,43 @@ function PlayWithPlayer() {
 												<div
 													className="progress_bar"
 													style={{
-														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-															appState.turnTime.counter
-														)}%, #cdc7c89c 0deg)`,
+														background: updateProgressBar(appState.turnTime.counter),
 														position: "relative",
-														width: "47px",
-														height: "50px",
+														width: "46px",
+														height: "46px",
 														borderRadius: "10px",
 														display: "flex",
 														alignItems: "center",
 														justifyContent: "center",
+														transition: "background 0.3s ease-in-out",
 													}}>
 													<Image
 														src={opponent.image}
 														width={20}
 														height={20}
 														alt="i"
-														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
+														style={{
+															width: "40px",
+															height: "40px",
+															borderRadius: "6px",
+														}}
 													/>
 												</div>
 											) : (
-												<Image
-													src={opponent.image}
-													width={20}
-													height={20}
-													alt="i"
-													style={{
-														width: "40px",
-														height: "40px",
-														border: "2px solid #076aa2",
-														borderRadius: "6px",
-													}}
-												/>
+												<>
+													<Image
+														src={opponent.image}
+														width={20}
+														height={20}
+														alt="i"
+														style={{
+															width: "40px",
+															height: "40px",
+															border: "2px solid #076aa2",
+															borderRadius: "6px",
+														}}
+													/>
+												</>
 											)}
 										</div>
 										<div
@@ -208,220 +231,8 @@ function PlayWithPlayer() {
 										</div>
 									</div>
 								</div>
-
-								{/* {appState.opponent === "b" ? (
-									<>
-										<div className="palyer_profile">
-											<div className="p_profile_wrapper">
-												<div
-													className="palyer_name"
-													style={{
-														width: "70%",
-														display: "flex",
-														justifyContent: "flex-end",
-														color: "#fff",
-														fontSize: "15px",
-														fontWeight: "500",
-													}}>
-													{appState.pl.user_name}
-												</div>
-												<div className="player_dp">
-													{appState.pl.id === appState.turnTime.current_player_id ? (
-														<div
-															className="progress_bar"
-															style={{
-																background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-																	appState.turnTime.counter
-																)}%, #cdc7c89c 0deg)`,
-																position: "relative",
-																width: "47px",
-																height: "50px",
-																borderRadius: "10px",
-																display: "flex",
-																alignItems: "center",
-																justifyContent: "center",
-															}}>
-															<Image
-																src={player.image}
-																width={20}
-																height={20}
-																alt="i"
-																style={{ width: "40px", height: "40px", borderRadius: "10px" }}
-															/>
-														</div>
-													) : (
-														<Image
-															src={player.image}
-															width={20}
-															height={20}
-															alt="i"
-															style={{ width: "40px", height: "40px" }}
-														/>
-													)}
-												</div>
-											</div>
-											<div className="vs_wrapper"></div>
-											<div className="o_profile_wrapper">
-												<div className="player_dp">
-													{appState.op.id === appState.turnTime.current_player_id ? (
-														<div
-															className="progress_bar"
-															style={{
-																background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-																	appState.turnTime.counter
-																)}%, #cdc7c89c 0deg)`,
-																position: "relative",
-																width: "47px",
-																height: "50px",
-																borderRadius: "10px",
-																display: "flex",
-																alignItems: "center",
-																justifyContent: "center",
-															}}>
-															<Image
-																src={opponent.image}
-																width={20}
-																height={20}
-																alt="i"
-																style={{ width: "40px", height: "40px", borderRadius: "10px" }}
-															/>
-														</div>
-													) : (
-														<Image
-															src={opponent.image}
-															width={20}
-															height={20}
-															alt="i"
-															style={{ width: "40px", height: "40px" }}
-														/>
-													)}
-												</div>
-												<div
-													className="palyer_name"
-													style={{
-														width: "70%",
-														display: "flex",
-														justifyContent: "flex-start",
-
-														color: "#fff",
-														fontSize: "15px",
-														fontWeight: "500",
-													}}>
-													{appState.op.user_name}
-												</div>
-											</div>
-										</div>
-									</>
-								) : (
-									<>
-										<div className="palyer_profile">
-											<div className="p_profile_wrapper">
-												<div
-													className="palyer_name"
-													style={{
-														width: "70%",
-														display: "flex",
-														justifyContent: "flex-end",
-
-														color: "#fff",
-														fontSize: "15px",
-														fontWeight: "500",
-													}}>
-													{appState.pl.user_name}
-												</div>
-												<div className="player_dp">
-													{appState.pl.id === appState.turnTime.current_player_id ? (
-														<>
-															<div
-																className="progress_bar"
-																style={{
-																	background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-																		appState.turnTime.counter
-																	)}%, #cdc7c89c 0deg)`,
-																	position: "relative",
-																	width: "47px",
-																	height: "50px",
-																	borderRadius: "10px",
-																	display: "flex",
-																	alignItems: "center",
-																	justifyContent: "center",
-																}}>
-																{" "}
-																<Image
-																	src={opponent.image}
-																	width={20}
-																	height={20}
-																	alt="i"
-																	style={{ width: "40px", height: "40px" }}
-																/>
-															</div>
-														</>
-													) : (
-														<Image
-															src={opponent.image}
-															width={20}
-															height={20}
-															alt="i"
-															style={{ width: "40px", height: "40px" }}
-														/>
-													)}
-												</div>
-											</div>
-											<div className="vs_wrapper"></div>
-											<div className="o_profile_wrapper">
-												<div className="player_dp">
-													{appState.op.id === appState.turnTime.current_player_id ? (
-														<div
-															className="progress_bar"
-															style={{
-																background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-																	appState.turnTime.counter
-																)}%, #cdc7c89c 0deg)`,
-																position: "relative",
-																width: "47px",
-																height: "50px",
-																borderRadius: "10px",
-																display: "flex",
-																alignItems: "center",
-																justifyContent: "center",
-															}}>
-															{" "}
-															<Image
-																src={player.image}
-																width={20}
-																height={20}
-																alt="i"
-																style={{ width: "40px", height: "40px", border: "3px solid green" }}
-															/>
-														</div>
-													) : (
-														<Image
-															src={player.image}
-															width={20}
-															height={20}
-															alt="i"
-															style={{ width: "40px", height: "40px", border: "3px solid green" }}
-														/>
-													)}
-												</div>
-												<div
-													className="palyer_name"
-													style={{
-														width: "70%",
-														display: "flex",
-														justifyContent: "flex-start",
-
-														color: "#fff",
-														fontSize: "15px",
-														fontWeight: "500",
-													}}>
-													{appState.op.user_name}
-												</div>
-											</div>
-										</div>
-									</>
-								)} */}
 							</div>
+
 							{/*<--end:: top section ---->*/}
 							{/*<--start:: buttom section ---->*/}
 							<div className="buttom_sec_board">

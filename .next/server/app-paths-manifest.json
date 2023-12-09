@@ -1,5 +1,8 @@
 {
   "/page": "app/page.js",
   "/loader/page": "app/loader/page.js",
-  "/match-make/page": "app/match-make/page.js"
+  "/match-make/page": "app/match-make/page.js",
+  "/play-game/player/page": "app/play-game/player/page.js",
+  "/not-found": "app/not-found.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }
