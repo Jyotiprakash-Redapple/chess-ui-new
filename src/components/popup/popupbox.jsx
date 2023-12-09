@@ -15,7 +15,12 @@ function Popupbox() {
 			</div>
 		);
 	}
-	if (appState.status === gameStatus.stalemet || appState.status === gameStatus.insufficiant) {
+	if (
+		appState.status === gameStatus.stalemet ||
+		appState.status === gameStatus.insufficiant ||
+		appState.status ||
+		gameStatus.gameEnd
+	) {
 		return (
 			<div
 				className="popup"

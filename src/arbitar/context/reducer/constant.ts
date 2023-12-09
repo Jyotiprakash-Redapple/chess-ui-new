@@ -1,5 +1,6 @@
 import { createPosition } from "../../helper/helper";
 let gameStatus = {
+	internetDisconnect: "Internet Disconnect",
 	gameEnd: "game end",
 	pending: "pending",
 	stalemet: "game draws due to stalemet", // no check but no move
@@ -23,7 +24,7 @@ let initGame = {
 	moveList: [], // array
 	kill_pices: [],
 	pieces_square_info: "", // string
-	status: gameStatus.pending, // enum
+	status: gameStatus.stalemet, // enum
 	promotion_square_info: null, // object
 	castlingdir: {
 		w: "both",
@@ -40,6 +41,7 @@ Object.freeze(initGame);
 
 let actionTypes = {
 	NEW_GAME_INIT: "NEW_GAME_INIT",
+	GET_USER_DATA: "GET_USER_DATA",
 	GAME_TIME: "GAME_TIME",
 	TURN_TIME: "TURN_TIME",
 	UPDATE_TURN: "UPDATE_TURN",

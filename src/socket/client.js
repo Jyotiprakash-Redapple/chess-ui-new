@@ -6,6 +6,7 @@ import {
 	turnTimer,
 	turnUpdate,
 	gameEnd,
+	getUserData,
 } from "../arbitar/context/reducer/move";
 
 class Client {
@@ -23,14 +24,6 @@ class Client {
 		this.soundName = null;
 
 		this._initSocketListeners();
-
-		// this.getGameInitFromServer();
-		// this.ListenCurrentState();
-		// this.StartTimerFromServer();
-		// this.GetTimerFromServer();
-		// this.StartDrawFromServer();
-		// this.CurrentDrawNumberFromServer();
-		// this.StopDrawNumberFromServer();
 	}
 	create() {}
 	_initSocketListeners() {
@@ -39,6 +32,12 @@ class Client {
 		this.socket.on("connect", () => {
 			console.log("Successfully connected!======>", this.socket.id);
 			localStorage.setItem("socketId", this.socket.id);
+		});
+	}
+	getUserDataFromServer(dispatch) {
+		this.socket.on("user-data", (arg) => {
+			dispatch(getUserData(arg));
+			console.log(arg, "user data get from server");
 		});
 	}
 	getGameInitFromServer(dispatch) {

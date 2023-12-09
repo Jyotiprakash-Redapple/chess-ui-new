@@ -561,6 +561,11 @@
 	left: 0;
 	bottom: 0;
 	background: transparent;
+	/* background-image: url("/gameQuit/layer.png");
+	background-size: cover;
+	display: flex;
+	align-items: center;
+	justify-content: center; */
 	/* background-color: red; */
 }
 

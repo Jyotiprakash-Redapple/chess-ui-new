@@ -3,6 +3,19 @@ import { actionTypes, gameStatus } from "./constant";
 import { createPosition } from "../../helper/helper";
 let reducer = (state: any, action: any) => {
 	switch (action.type) {
+		case actionTypes.GET_USER_DATA: {
+			const userData = {
+				id: action.payload?.id,
+				user_name: action.payload?.user_name,
+				score: action.payload?.score,
+				colour: action.payload?.colour,
+				profile: action.payload.profile,
+			};
+			return {
+				pl: userData,
+				...state,
+			};
+		}
 		case actionTypes.NEW_GAME_INIT: {
 			const gameObject = action.payload.arg;
 			let gameInit = {
@@ -72,50 +85,6 @@ let reducer = (state: any, action: any) => {
 		}
 		case actionTypes.BOARD_UPDATE: {
 			let board = action.payload.arg.board;
-			console.log(board, "updated board===================================>");
-			// if (state.turn !== state.opponent) {
-			// 	if (board?.status) {
-			// 		if (board.status === gameStatus.newGameInit) {
-			// 			return {
-			// 				...state,
-			// 				movementTurn: state.opponent === "w" ? false : true,
-			// 				opponent: state.opponent === "w" ? "b" : "w",
-			// 				advantage: 0,
-			// 				position: [createPosition()],
-			// 				status: gameStatus.ongoing,
-			// 				turn: "w",
-			// 				moveList: [], // array
-			// 				kill_pices: [],
-			// 				castlingdir: {
-			// 					w: "both",
-			// 					b: "both",
-			// 				},
-			// 			};
-			// 		}
-			// 		let movementTurn = state.movementTurn === true ? false : true;
-			// 		return {
-			// 			...state,
-			// 			status: board.status,
-			// 			advantage: board.advantage,
-			// 		};
-			// 	} else {
-			// 		const newposition = [...state.position, board.position];
-			// 		let movementTurn = state.movementTurn === true ? false : true;
-			// 		return {
-			// 			...state,
-			// 			position: newposition,
-			// 			advantage: board.advantage,
-			// 			moveList: [...board.moveList],
-			// 			kill_pices: [...board.kill_pices],
-			// 			castlingdir: board.castlingDirection,
-			// 		};
-			// 	}
-			// } else {
-			// 	return {
-			// 		...state,
-			// 	};
-			// }
-			console.log("update board run ===============>");
 			if (board?.status) {
 				if (board.status === gameStatus.newGameInit) {
 					return {

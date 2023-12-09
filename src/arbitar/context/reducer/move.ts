@@ -1,5 +1,14 @@
 import { actionTypes, initGame } from "./constant";
-import { Makenewmove, Setpicessqoureinfo, MakecandidateMove, Openpromotionbox, Savekillpices, Newsocketconnect, Newgameinit, Updateboard } from "../type";
+import {
+	Makenewmove,
+	Setpicessqoureinfo,
+	MakecandidateMove,
+	Openpromotionbox,
+	Savekillpices,
+	Newsocketconnect,
+	Newgameinit,
+	Updateboard,
+} from "../type";
 /**
  * make new move with darg and drop
  */
@@ -226,6 +235,17 @@ let gameEnd = (arg: any) => {
 		payload: arg,
 	};
 };
+
+/**
+ * get user data
+ */
+
+let getUserData = (arg: any) => {
+	return {
+		type: actionTypes.GET_USER_DATA,
+		payload: arg,
+	};
+};
 export {
 	makeNewMove,
 	makeCandidateMoves,
@@ -249,4 +269,5 @@ export {
 	turnTimer,
 	turnUpdate,
 	gameEnd,
+	getUserData,
 };

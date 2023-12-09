@@ -49,13 +49,8 @@ function PlayWithPlayer() {
 	useEffect(() => {
 		// Check if the socket is not connected.
 		if (!appState.socket) {
-			router.push("/", { scroll: false });
+			// router.push("/", { scroll: false });
 		} else {
-			appState.socket.getUpdateDetailsFromServer(dispatch);
-			appState.socket.onGmaeTime(dispatch);
-			appState.socket.onTurnTimer(dispatch);
-			appState.socket.onTurnChange(dispatch);
-			appState.socket.onGameEnd(dispatch);
 		}
 	}, []);
 	return (

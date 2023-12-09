@@ -28,8 +28,16 @@ function Loadeing() {
 					} else if (gameMode === "online") {
 						if (appState.socket) {
 							// redom match queue emit
+							appState.socket.getUpdateDetailsFromServer(dispatch);
+							appState.socket.onGmaeTime(dispatch);
+							appState.socket.onTurnTimer(dispatch);
+							appState.socket.onTurnChange(dispatch);
+							appState.socket.onGameEnd(dispatch);
+							appState.socket.getUserDataFromServer(dispatch);
 							appState.socket.onRendomMatch();
-							router.push("/match-make", { scroll: false });
+							setTimeout(() => {
+								router.push("/match-make", { scroll: false });
+							}, 1000);
 						}
 					}
 					clearInterval(timer);
