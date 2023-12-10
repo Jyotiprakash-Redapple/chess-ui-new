@@ -1,5 +1,5 @@
 {
-  "/play-game/player/page": "app/play-game/player/page.js",
+  "/match-make/page": "app/match-make/page.js",
   "/loader/page": "app/loader/page.js",
-  "/match-make/page": "app/match-make/page.js"
+  "/play-game/player/page": "app/play-game/player/page.js"
 }

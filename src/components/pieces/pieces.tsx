@@ -16,6 +16,7 @@ import {
 	updateAdvantage,
 } from "@/arbitar/context/reducer/move";
 import { arbitar } from "@/arbitar/game/arbitar";
+import PiecesDropSound from "@/audio/drop_chess.mp3";
 import { getCastlingDir, evaluateBoard } from "@/arbitar/game/getMoves";
 function Pieces() {
 	const { appState, dispatch } = useAppContext();
@@ -29,8 +30,14 @@ function Pieces() {
 	const calculateCoords = (e) => {
 		const { top, left, width } = picesRef.current.getBoundingClientRect();
 		const size = width / 8;
-		const y = appState.opponent === "b" ? Math.floor((e.clientX - left) / size) : 7 - Math.floor((e.clientX - left) / size);
-		const x = appState.opponent === "b" ? 7 - Math.floor((e.clientY - top) / size) : Math.floor((e.clientY - top) / size);
+		const y =
+			appState.opponent === "b"
+				? Math.floor((e.clientX - left) / size)
+				: 7 - Math.floor((e.clientX - left) / size);
+		const x =
+			appState.opponent === "b"
+				? 7 - Math.floor((e.clientY - top) / size)
+				: Math.floor((e.clientY - top) / size);
 
 		return { x, y };
 	};
@@ -60,12 +67,29 @@ function Pieces() {
 	};
 
 	/**
+	 * play sound
+	 */
+	const playSound = () => {
+		try {
+			var soundPlay = true;
+			if (soundPlay) {
+				soundPlay = !soundPlay;
+				let soundSource = PiecesDropSound;
+				let audio = new Audio(soundSource);
+				audio.play();
+				audio.onended = () => {
+					soundPlay = true;
+				};
+			}
+		} catch (e) {}
+	};
+	/**
 	 * onDrop
 	 */
-
 	const onDrop = (e) => {
 		try {
 			if (appState.pieces_square_info) {
+				// playSound();
 				const { x, y } = calculateCoords(e);
 
 				const [piece, rank, file] = appState.pieces_square_info.split(",");
@@ -78,7 +102,10 @@ function Pieces() {
 					const castelDirection = appState.castlingdir[`${piece.startsWith("w") ? "b" : "w"}`];
 
 					// Open promotion box
-					if ((piece === "wp" && x === 7 && appState.opponent === "b") || (piece === "bp" && x === 0 && appState.opponent === "w")) {
+					if (
+						(piece === "wp" && x === 7 && appState.opponent === "b") ||
+						(piece === "bp" && x === 0 && appState.opponent === "w")
+					) {
 						handelOpenPromotionBox({ rank, file, x, y });
 						return;
 					}
@@ -176,9 +203,23 @@ function Pieces() {
 
 	return (
 		<>
-			<div className='pieces' ref={picesRef} onClick={handelDropClick} onDrop={handelDrop} onDragOver={handeldargOver}>
+			<div
+				className="pieces"
+				ref={picesRef}
+				onClick={handelDropClick}
+				onDrop={handelDrop}
+				onDragOver={handeldargOver}>
 				{currentPosition.map((r, rank) =>
-					r.map((f, file) => (currentPosition[rank][file] ? <Piece key={rank + "-" + file} rank={rank} file={file} piece={currentPosition[rank][file]} /> : null))
+					r.map((f, file) =>
+						currentPosition[rank][file] ? (
+							<Piece
+								key={rank + "-" + file}
+								rank={rank}
+								file={file}
+								piece={currentPosition[rank][file]}
+							/>
+						) : null
+					)
 				)}
 			</div>
 		</>

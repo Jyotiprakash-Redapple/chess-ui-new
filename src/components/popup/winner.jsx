@@ -8,11 +8,9 @@ function Winner() {
 	if (appState.status === gameStatus.ongoing || appState.status === gameStatus.promoting)
 		return null;
 
-	const newGame = () => {
-		dispatch(newGameStart());
-	};
+	console.log(appState, "app state");
 
-	const isWin = status.endsWith("wins");
+	const isWin = appState.status.endsWith("wins");
 
 	const getClassName = () => {
 		if (isWin) {
@@ -33,16 +31,20 @@ function Winner() {
 			}
 		}
 	};
+	console.log(getClassName());
 	return (
-		<div className={`popup--inner`}>
-			<div className={getClassName()}> </div>
-			{/* <h1>{isWin ? status : "Draw"}</h1>
+		<>
+			{" "}
+			<div className={`popup--inner`}>
+				<div className={getClassName()}> </div>
+				{/* <h1>{isWin ? status : "Draw"}</h1>
 			<p>{!isWin && status}</p> */}
-			{/* <div className={`${status}`} /> */}
-			{/* <button className='new_game_btn' onClick={newGame}>
+				{/* <div className={`${status}`} /> */}
+				{/* <button className='new_game_btn' onClick={newGame}>
 				New Game
 			</button> */}
-		</div>
+			</div>
+		</>
 	);
 }
 

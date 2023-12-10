@@ -3,12 +3,24 @@
 .boards {
 	position: relative;
 	display: grid;
-	/* grid-template-columns: calc(0.25 * var(--tile-size)) calc(8 * var(--tile-size));
-	grid-template-rows: calc(8 * var(--tile-size)) calc(0.25 * var(--tile-size)); */
 	grid-template-columns: calc(8 * var(--tile-size));
 	grid-template-rows: calc(8 * var(--tile-size));
-	border-style: groove;
-	box-shadow: rgba(1, 7, 15, 0.3) 0px 0px 0px 3px;
+	background-color: #263238;
+}
+/** 
+for white top 53px black -=65px
+**/
+.board_bg {
+	width: 365px;
+	height: 406px;
+	position: absolute;
+	/* top: -53px;
+	left: -26px; */
+	bottom: 0;
+	background-image: url("/game_play/Board.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	/* ss */
 }
 
 .tiles {
@@ -21,12 +33,12 @@
 	position: relative;
 }
 .tile--light {
-	background-image: url("/game_play/white_layer.png");
-	background-size: contain;
+	/* background-image: url("/game_play/white_layer.png");
+	background-size: contain; */
 }
 .tile--dark {
-	background-image: url("/game_play/black_layer.png");
-	background-size: contain;
+	/* background-image: url("/game_play/black_layer.png");
+	background-size: contain; */
 }
 .rank {
 	display: flex;
@@ -58,6 +70,7 @@
 }
 
 .piece {
+	cursor: pointer;
 	width: 12.5%;
 	height: 12.5%;
 	background-size: contain;

@@ -238,6 +238,13 @@ function PlayWithPlayer() {
 									style={{
 										transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 									}}>
+									<div
+										className="board_bg"
+										style={{
+											transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
+											top: appState.opponent === "w" ? "-31px" : "-56px",
+											left: appState.opponent === "w" ? "-20px" : "-26px",
+										}}></div>
 									<Board />
 								</div>
 								{/*<--end:: game board section ---->*/}
