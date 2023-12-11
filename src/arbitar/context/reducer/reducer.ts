@@ -1,19 +1,28 @@
 import { actionTypes, gameStatus } from "./constant";
 
 import { createPosition } from "../../helper/helper";
+import { act } from "react-dom/test-utils";
 let reducer = (state: any, action: any) => {
 	switch (action.type) {
 		case actionTypes.GET_USER_DATA: {
 			const userData = {
-				id: action.payload?.id,
-				user_name: action.payload?.user_name,
-				score: action.payload?.score,
+				id: action.payload?.user_id,
+				user_name: action.payload?.user_name || "test 1",
+				score: action.payload?.score || 0,
 				colour: action.payload?.colour,
-				profile: action.payload.profile,
+				profile: action.payload?.profile_picture || "/default.png",
 			};
+
 			return {
-				pl: userData,
 				...state,
+				pl: { ...userData },
+			};
+		}
+		case actionTypes.GET_MATCH_MAKEING_DATA: {
+			return {
+				...state,
+				pl: action.payload.player,
+				op: action.payload.opponent,
 			};
 		}
 		case actionTypes.NEW_GAME_INIT: {
@@ -21,9 +30,7 @@ let reducer = (state: any, action: any) => {
 			let gameInit = {
 				opponent: gameObject.player.colour === "white" ? "b" : "w",
 				position: [createPosition()],
-				turn: gameObject.turn
-					? gameObject.player.colour.charAt(0).toLowerCase()
-					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
 				movementTurn: gameObject.player.colour === "white" ? true : false,
 				status: gameStatus.ongoing,
 				turnTime: {
@@ -58,9 +65,7 @@ let reducer = (state: any, action: any) => {
 			return {
 				...state,
 				totalTurnTime: Number(gameObject.turn_time),
-				turn: gameObject.turn
-					? gameObject.player.colour.charAt(0).toLowerCase()
-					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
 			};
 		}
 		case actionTypes.GAME_END: {

@@ -1,14 +1,5 @@
 import { actionTypes, initGame } from "./constant";
-import {
-	Makenewmove,
-	Setpicessqoureinfo,
-	MakecandidateMove,
-	Openpromotionbox,
-	Savekillpices,
-	Newsocketconnect,
-	Newgameinit,
-	Updateboard,
-} from "../type";
+import { Makenewmove, Setpicessqoureinfo, MakecandidateMove, Openpromotionbox, Savekillpices, Newsocketconnect, Newgameinit, Updateboard } from "../type";
 /**
  * make new move with darg and drop
  */
@@ -246,6 +237,13 @@ let getUserData = (arg: any) => {
 		payload: arg,
 	};
 };
+let getMatchMakeingData = (arg: any) => {
+	return {
+		type: actionTypes.GET_MATCH_MAKEING_DATA,
+		payload: arg,
+	};
+};
+
 export {
 	makeNewMove,
 	makeCandidateMoves,
@@ -270,4 +268,5 @@ export {
 	turnUpdate,
 	gameEnd,
 	getUserData,
+	getMatchMakeingData,
 };

@@ -1,13 +1,5 @@
 import { io } from "socket.io-client";
-import {
-	gameInit,
-	updateBoard,
-	gameTimer,
-	turnTimer,
-	turnUpdate,
-	gameEnd,
-	getUserData,
-} from "../arbitar/context/reducer/move";
+import { gameInit, updateBoard, gameTimer, turnTimer, turnUpdate, gameEnd, getUserData, getMatchMakeingData } from "../arbitar/context/reducer/move";
 
 class Client {
 	constructor(gameSceneInstance) {
@@ -22,6 +14,7 @@ class Client {
 		});
 
 		this.soundName = null;
+		this.user_data = null;
 
 		this._initSocketListeners();
 	}
@@ -32,18 +25,18 @@ class Client {
 		let ref = this;
 		this.socket.on("connect", () => {
 			console.log("Successfully connected!======>", this.socket.id);
+			this.socket.on("user-data", (arg) => {
+				this.user_data = arg;
+			});
 			localStorage.setItem("socketId", this.socket.id);
 		});
 	}
 	getUserDataFromServer(dispatch) {
-		this.socket.on("user-data", (arg) => {
-			dispatch(getUserData(arg));
-			console.log(arg, "user data get from server");
-		});
+		dispatch(getUserData(this.user_data));
 	}
-	getMatchMakeingDataFromServer() {
+	getMatchMakeingDataFromServer(dispatch) {
 		this.socket.on("matchmacking-data", (arg) => {
-			// dispatch(getUserData(arg));
+			dispatch(getMatchMakeingData(arg));
 			console.log(arg, "get match makeing data ==>");
 		});
 	}
