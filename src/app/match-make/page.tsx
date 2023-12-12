@@ -8,13 +8,13 @@ import { useAppContext } from "@/arbitar/context/Provider";
 import Countdown from "@/components/countdown/countdown";
 function MatchMackeing() {
 	const { appState, dispatch } = useAppContext();
-	const { player, opponent, imageArray } = app;
+	const { imageArray } = app;
 	const router = useRouter();
 	useEffect(() => {
 		if (appState.socket) {
 			appState.socket.getGameInitFromServer(dispatch);
 		} else {
-			// router.push("/");
+			router.push("/internet-disconnect");
 		}
 	}, []);
 

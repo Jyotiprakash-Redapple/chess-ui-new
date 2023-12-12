@@ -50,7 +50,7 @@ function PlayWithPlayer() {
 	useEffect(() => {
 		// Check if the socket is not connected.
 		if (!appState.socket) {
-			// router.push("/", { scroll: false });
+			router.push("/internet-disconnect");
 		} else {
 		}
 	}, []);
