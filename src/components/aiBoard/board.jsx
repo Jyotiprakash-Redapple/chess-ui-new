@@ -14,10 +14,11 @@ import moment from "moment";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 function AIboard() {
-	const { player, opponent } = app;
-	const boardRef = useRef();
+	let game_auth_token = localStorage.getItem("offline_auth_token");
+	const timeRef = useRef();
 	const router = useRouter();
-	const timeRef = useRef("700.00");
+	const [time, setTime] = useState("");
+
 	const [quitGame, setQuitGame] = useState(false);
 	const [chessMove, setChessMove] = useState({
 		fen: "start",
@@ -29,6 +30,7 @@ function AIboard() {
 		// array of past game moves
 		history: [],
 	});
+
 	/*
 	 * A simple chess AI, by someone who doesn't know how to play chess.
 	 * Uses the chessboard.js and chess.js libraries.
@@ -71,15 +73,7 @@ function AIboard() {
 			// Your browser-specific code here
 			board = new new_(document.getElementById("myBoard"), config);
 		}
-
-		setInterval(() => {
-			let init = timeRef.current;
-			if (init == "0.00") return;
-			timeRef.current = Number(init) - 1;
-		}, 1000);
 	}, []);
-
-	let timer = null;
 
 	const squareStyling = ({ pieceSquare, history }) => {
 		const sourceSquare = history.length && history[history.length - 1].from;
@@ -775,10 +769,8 @@ function AIboard() {
 	 * quit game API end call
 	 */
 	const handelQuitGame = async () => {
-		let token =
-			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX2lkIjoxMywiYmF0dGxlX2lkIjoxLCJ1c2VyX2lkIjozMCwidXNlcl9uYW1lIjoiQWthc2giLCJwcm9maWxlX3BpY3R1cmUiOiJodHRwOi8vMy4xMzcuODYuMjM3OjUwMDAvcHJvZmlsZV9waG90by8xNjkxNTc0ODA0MDUwLWp1c3RnYW1lLnBuZyIsImJvdF9pZCI6bnVsbCwiYm90X25hbWUiOm51bGwsImVudHJ5X2ZlZSI6NTAsIndpbm5pbmdfYW1vdW50Ijo5OCwiaWF0IjoxNjkzMjA3NDk0LCJleHAiOjE3MjQ3NjUwOTR9.c3xwtN1FdVOLRVzBpsWe5R4KLrd_4dy0F6ru9Zf6pmU";
 		const config = {
-			headers: { Authorization: `Bearer ${token}` },
+			headers: { Authorization: `Bearer ${game_auth_token}` },
 		};
 
 		const bodyParameters = {
@@ -792,6 +784,45 @@ function AIboard() {
 			})
 			.catch(() => {});
 	};
+
+	useEffect(() => {
+		let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9asdf";
+		const fetch = async () => {
+			const data = await axios.get("http://3.137.86.237:5000/api/v2/game-setting?game_id=25", {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			let time = data?.data?.data?.game_setting?.GAMETIME;
+
+			setTime(time);
+		};
+		startTimer();
+		fetch();
+		return () => stopTimer();
+	}, []);
+
+	let intervalId;
+
+	function startTimer() {
+		intervalId = setInterval(() => {
+			if (time) {
+				let currentTime = time;
+				if (currentTime <= 0) {
+					clearInterval(intervalId); // Stop the interval when time reaches 0
+					handelQuitGame();
+				} else {
+					let updatedTime = currentTime - 1;
+					setTime(updatedTime);
+				}
+			}
+		}, 10000);
+	}
+
+	// Function to stop the timer
+	function stopTimer() {
+		clearInterval(intervalId);
+	}
+
+	console.log(time, "time updated");
 	return (
 		// <div className="board_container">
 		// 	{" "}
@@ -1041,14 +1072,13 @@ function AIboard() {
 									</div>
 								</div>
 							)}
-
 							{/*<--start:: top section ---->*/}
 							<div className="top_sec_board">
 								<div className="global_timer">
 									<div className="quit_game" onClick={() => setQuitGame(true)}></div>
 									<div className="g_timer_wrapper">
 										<div className="g_timer_stopwatch"></div>
-										<div className="g_timer_text">{moment.utc(timeRef.current * 1000).format("mm:ss")}</div>
+										<div className="g_timer_text">{moment.utc(time * 1000).format("mm:ss")}</div>
 									</div>
 									<div className="sound_wrapper"></div>
 								</div>
@@ -1065,112 +1095,104 @@ function AIboard() {
 												fontWeight: "500",
 												marginRight: "3px",
 											}}>
-											{"Test 0"}
+											{"text0"}
 										</div>
-										<div className="player_dp">
-											{/* {appState.pl.id === appState.turnTime.current_player_id ? (
-												<div
-													className="progress_bar"
-													style={{
-														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-															appState.turnTime.counter
-														)}%, #cdc7c89c 0deg)`,
-														position: "relative",
-														width: "47px",
-														height: "50px",
-														borderRadius: "10px",
-														display: "flex",
-														alignItems: "center",
-														justifyContent: "center",
-													}}>
-													<Image
-														src={player.image}
-														width={20}
-														height={20}
-														alt="i"
-														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
-													/>
-												</div>
+										{/* <div style={{ position: "absolute", top: "13px", left: 0 }}>
+											{appState.pl.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
+												<FaHeartBroken style={{ color: "#ED5AB3", fontSize: "23px" }} />
 											) : (
+												<IoMdHeart style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											)}
+										</div> */}
+										<div className="player_dp">
+											{0 ? (
+												// <div
+												// 	className='progress_bar'
+												// 	style={{
+												// 		background: updateProgressBar(appState.turnTime.counter),
+												// 		position: "relative",
+
+												// 		width: "46px",
+												// 		height: "46px",
+												// 		borderRadius: "10px",
+												// 		display: "flex",
+												// 		alignItems: "center",
+												// 		justifyContent: "center",
+												// 		transition: "background 0.3s ease-in-out",
+												// 	}}>
 												<Image
-													src={player.image}
+													src={"/default.png"}
 													width={20}
 													height={20}
 													alt="i"
 													style={{
 														width: "40px",
 														height: "40px",
-														border: "2px solid #076aa2",
 														borderRadius: "6px",
 													}}
 												/>
-											)} */}
-											<Image
-												src={player.image}
-												width={20}
-												height={20}
-												alt="i"
-												style={{
-													width: "40px",
-													height: "40px",
-													border: "2px solid #076aa2",
-													borderRadius: "6px",
-												}}
-											/>
+											) : (
+												// </div>
+												<Image
+													src={"/default.png"}
+													width={20}
+													height={20}
+													alt="i"
+													style={{
+														width: "40px",
+														height: "40px",
+														// border: "2px solid #076aa2",
+														borderRadius: "6px",
+													}}
+												/>
+											)}
 										</div>
 									</div>
 									<div className="vs_wrapper"></div>
 									<div className="o_profile_wrapper">
 										<div className="player_dp">
-											{/* {false ? (
-												<div
-													className="progress_bar"
-													style={{
-														background: `radial-gradient(closest-side, white 0, transparent 77%, transparent 80%), conic-gradient(rgb(90 234 69) ${calculateProgress(
-															appState.turnTime.counter
-														)}%, #cdc7c89c 0deg)`,
-														position: "relative",
-														width: "47px",
-														height: "50px",
-														borderRadius: "10px",
-														display: "flex",
-														alignItems: "center",
-														justifyContent: "center",
-													}}>
-													<Image
-														src={opponent.image}
-														width={20}
-														height={20}
-														alt="i"
-														style={{ width: "40px", height: "40px", borderRadius: "10px" }}
-													/>
-												</div>
-											) : (
+											{0 ? (
+												// <div
+												// 	className='progress_bar'
+												// 	style={{
+												// 		background: updateProgressBar(appState.turnTime.counter),
+												// 		position: "relative",
+												// 		width: "46px",
+												// 		height: "46px",
+												// 		borderRadius: "10px",
+												// 		display: "flex",
+												// 		alignItems: "center",
+												// 		justifyContent: "center",
+												// 		transition: "background 0.3s ease-in-out",
+												// 	}}>
 												<Image
-													src={opponent.image}
+													src={"/default.png"}
 													width={20}
 													height={20}
 													alt="i"
 													style={{
 														width: "40px",
 														height: "40px",
-														border: "2px solid #076aa2",
 														borderRadius: "6px",
 													}}
 												/>
-											)} */}
-											<Image
-												src={opponent.image}
-												width={20}
-												height={20}
-												alt="i"
-												style={{
-													width: "40px",
-													height: "40px",
-													border: "2px solid #076aa2",
-													borderRadius: "6px",
-												}}
-											/>
+											) : (
+												// </div>
+												<>
+													<Image
+														src={"/default.png"}
+														width={20}
+														height={20}
+														alt="i"
+														style={{
+															width: "40px",
+															height: "40px",
+															// border: "2px solid #076aa2",
+															borderRadius: "6px",
+														}}
+													/>
+												</>
+											)}
 										</div>
 										<div
 											className="palyer_name"
@@ -1184,7 +1206,14 @@ function AIboard() {
 												fontWeight: "500",
 												marginLeft: "3px",
 											}}>
-											{"AI Bot"}
+											{"bot"}
+										</div>
+										<div style={{ position: "absolute", top: "13px", right: 0 }}>
+											{/* {appState.op.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
+												<FaHeartBroken style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											) : (
+												<IoMdHeart style={{ color: "#ED5AB3", fontSize: "23px" }} />
+											)} */}
 										</div>
 									</div>
 								</div>
@@ -1193,199 +1222,196 @@ function AIboard() {
 							{/*<--start:: buttom section ---->*/}
 							<div className="buttom_sec_board">
 								{/*<--start:: game board section ---->*/}
-								<div className="boards">
+								<div
+									className="boards"
+									// style={{
+									// 	transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
+									// }}
+								>
+									<div
+										className="board_bg"
+										style={{
+											// transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
+											// top: appState.opponent === "w" ? "-31px" : "-56px",
+											// left: appState.opponent === "w" ? "-20px" : "-26px",
+											top: "-56px",
+											left: "-26px",
+										}}></div>
 									<div id="myBoard"></div>
-									{/* <Chessboard
-										width={320}
-										position={chessMove.fen}
-										onDrop={onDrop}
-										onMouseOverSquare={onMouseoverSquare}
-										onMouseOutSquare={onMouseoutSquare}
-										boardStyle={{
-											borderRadius: "5px",
-											boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-										}}
-										onSnapEnd={onSnapEnd}
-										// squareStyles={squareStyles}
-										// dropSquareStyle={dropSquareStyle}
-										// onDragOverSquare={onDragOverSquare}
-										onSquareClick={onSquareClick}
-										onSquareRightClick={onSquareRightClick}
-									/> */}
 								</div>
-								{/*<--start:: layer hide ---->*/}
-								<nav
-									className="main-menu"
-									style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
-									<ul>
-										<div id="accordion">
-											<li>
-												<i className={`fa fa-gear  fa-2x `}></i>
-												<span className="nav-text">
-													{" "}
-													<div class="card">
-														<div class="card-header" id="settingsHeading">
-															<h2 class="text-align-center">
-																<button
-																	class="btn btn-header no-outline"
-																	data-toggle="collapse"
-																	data-target="#settings"
-																	aria-expanded="true"
-																	aria-controls="settings">
-																	Settings
-																</button>
-															</h2>
-														</div>
-													</div>{" "}
-													<div
-														id="settings"
-														class="collapse"
-														aria-labelledby="settingsHeading"
-														data-parent="#accordion">
-														<div class="card-body">
-															<div class="row align-items-center justify-content-center">
-																<div class="form-group">
-																	<label for="search-depth">Search Depth (Black):</label>
-																	<select id="search-depth">
-																		<option value="1">1</option>
-																		<option value="2">2</option>
-																		<option value="3" selected>
-																			3
-																		</option>
-																		<option value="4">4</option>
-																		<option value="5">5</option>
-																	</select>
-																</div>
-															</div>
-															<div class="row align-items-center justify-content-center">
-																<div class="form-group">
-																	<label for="search-depth-white">Search Depth (White):</label>
-																	<select id="search-depth-white">
-																		<option value="1">1</option>
-																		<option value="2">2</option>
-																		<option value="3" selected>
-																			3
-																		</option>
-																		<option value="4">4</option>
-																		<option value="5">5</option>
-																	</select>
-																</div>
-															</div>
-															<div class="row align-items-center justify-content-center">
-																<div class="form-group">
-																	<input type="checkbox" id="showHint" name="showHint" value="showHint" />
-																	<label for="showHint">Show Suggested Move (White)</label>
-																</div>
-															</div>
-														</div>
-													</div>
-												</span>
-											</li>
-
-											<li>
-												<i class="fa fa-map-marker fa-2x"></i>
-												<span className="nav-text">
-													{" "}
-													<div class="card">
-														<div class="card-header" id="openingPositionsHeading">
-															<h2 class="text-align-center">
-																<button
-																	class="btn btn-header no-outline"
-																	data-toggle="collapse"
-																	data-target="#openingPositions"
-																	aria-expanded="true"
-																	aria-controls="openingPositions">
-																	Opening Positions
-																</button>
-															</h2>
-														</div>
-													</div>
-													<div
-														id="openingPositions"
-														class="collapse"
-														aria-labelledby="openingPositionsHeading"
-														data-parent="#accordion">
-														<div class="card-body">
-															<div class="row my-3 text-align-center">
-																<div class="col-md-6 my-2">
-																	<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
-																		Ruy Lopez
-																	</button>
-																</div>
-																<div class="col-md-6 my-2">
-																	<button
-																		class="btn btn-primary"
-																		id="italianGameBtn"
-																		onClick={handelItalianGameBtn}>
-																		Italian Game
-																	</button>
-																</div>
-															</div>
-															<div class="row my-3 text-align-center">
-																<div class="col-md-6 my-2">
-																	<button
-																		class="btn btn-primary"
-																		id="sicilianDefenseBtn"
-																		onClick={handelSicilianDefenseBtn}>
-																		Sicilian Defense
-																	</button>
-																</div>
-																<div class="col-md-6 my-2">
-																	<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
-																		Start Position
-																	</button>
-																</div>
-															</div>
-														</div>
-													</div>
-												</span>
-											</li>
-											<li>
-												<i class="fa fa-desktop fa-2x"></i>
-												<span className="nav-text">
-													<div class="card">
-														<div class="card-header" id="compVsCompHeading">
-															<h2 class="text-align-center">
-																<button
-																	class="btn btn-header no-outline"
-																	data-toggle="collapse"
-																	data-target="#compVsComp"
-																	aria-expanded="true"
-																	aria-controls="compVsComp">
-																	Computer vs. Computer
-																</button>
-															</h2>
-														</div>
-													</div>
-													<div
-														id="compVsComp"
-														class="collapse"
-														aria-labelledby="compVsCompHeading"
-														data-parent="#accordion">
-														<div class="card-body">
-															<div class="row text-align-center">
-																<div class="col-md-6 my-2">
-																	<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
-																		Start Game
-																	</button>
-																</div>
-																<div class="col-md-6 my-2">
-																	<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
-																		Stop and Reset
-																	</button>
-																</div>
-															</div>
-														</div>
-													</div>
-												</span>
-											</li>
-										</div>
-									</ul>
-								</nav>
-								{/*<--end:: layer hide ---->*/}
 								{/*<--end:: game board section ---->*/}
 							</div>
+							<nav
+								className="main-menu"
+								style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
+								<ul>
+									<div id="accordion">
+										<li>
+											<i className={`fa fa-gear  fa-2x `}></i>
+											<span className="nav-text">
+												{" "}
+												<div class="card">
+													<div class="card-header" id="settingsHeading">
+														<h2 class="text-align-center">
+															<button
+																class="btn btn-header no-outline"
+																data-toggle="collapse"
+																data-target="#settings"
+																aria-expanded="true"
+																aria-controls="settings">
+																Settings
+															</button>
+														</h2>
+													</div>
+												</div>{" "}
+												<div
+													id="settings"
+													class="collapse"
+													aria-labelledby="settingsHeading"
+													data-parent="#accordion">
+													<div class="card-body">
+														<div class="row align-items-center justify-content-center">
+															<div class="form-group">
+																<label for="search-depth">Search Depth (Black):</label>
+																<select id="search-depth">
+																	<option value="1">1</option>
+																	<option value="2">2</option>
+																	<option value="3" selected>
+																		3
+																	</option>
+																	<option value="4">4</option>
+																	<option value="5">5</option>
+																</select>
+															</div>
+														</div>
+														<div class="row align-items-center justify-content-center">
+															<div class="form-group">
+																<label for="search-depth-white">Search Depth (White):</label>
+																<select id="search-depth-white">
+																	<option value="1">1</option>
+																	<option value="2">2</option>
+																	<option value="3" selected>
+																		3
+																	</option>
+																	<option value="4">4</option>
+																	<option value="5">5</option>
+																</select>
+															</div>
+														</div>
+														<div class="row align-items-center justify-content-center">
+															<div class="form-group">
+																<input type="checkbox" id="showHint" name="showHint" value="showHint" />
+																<label for="showHint">Show Suggested Move (White)</label>
+															</div>
+														</div>
+													</div>
+												</div>
+											</span>
+										</li>
+
+										<li>
+											<i class="fa fa-map-marker fa-2x"></i>
+											<span className="nav-text">
+												{" "}
+												<div class="card">
+													<div class="card-header" id="openingPositionsHeading">
+														<h2 class="text-align-center">
+															<button
+																class="btn btn-header no-outline"
+																data-toggle="collapse"
+																data-target="#openingPositions"
+																aria-expanded="true"
+																aria-controls="openingPositions">
+																Opening Positions
+															</button>
+														</h2>
+													</div>
+												</div>
+												<div
+													id="openingPositions"
+													class="collapse"
+													aria-labelledby="openingPositionsHeading"
+													data-parent="#accordion">
+													<div class="card-body">
+														<div class="row my-3 text-align-center">
+															<div class="col-md-6 my-2">
+																<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
+																	Ruy Lopez
+																</button>
+															</div>
+															<div class="col-md-6 my-2">
+																<button
+																	class="btn btn-primary"
+																	id="italianGameBtn"
+																	onClick={handelItalianGameBtn}>
+																	Italian Game
+																</button>
+															</div>
+														</div>
+														<div class="row my-3 text-align-center">
+															<div class="col-md-6 my-2">
+																<button
+																	class="btn btn-primary"
+																	id="sicilianDefenseBtn"
+																	onClick={handelSicilianDefenseBtn}>
+																	Sicilian Defense
+																</button>
+															</div>
+															<div class="col-md-6 my-2">
+																<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
+																	Start Position
+																</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</span>
+										</li>
+										<li>
+											<i class="fa fa-desktop fa-2x"></i>
+											<span className="nav-text">
+												<div class="card">
+													<div class="card-header" id="compVsCompHeading">
+														<h2 class="text-align-center">
+															<button
+																class="btn btn-header no-outline"
+																data-toggle="collapse"
+																data-target="#compVsComp"
+																aria-expanded="true"
+																aria-controls="compVsComp">
+																Computer vs. Computer
+															</button>
+														</h2>
+													</div>
+												</div>
+												<div
+													id="compVsComp"
+													class="collapse"
+													aria-labelledby="compVsCompHeading"
+													data-parent="#accordion">
+													<div class="card-body">
+														<div class="row text-align-center">
+															<div class="col-md-6 my-2">
+																<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
+																	Start Game
+																</button>
+															</div>
+															<div class="col-md-6 my-2">
+																<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
+																	Stop and Reset
+																</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</span>
+										</li>
+									</div>
+								</ul>
+							</nav>
+							{/*<--end:: layer hide ---->*/}
 							{/*<--end:: buttom section ---->*/}
+							{/* <Popupbox /> */}
 						</div>
 						{/*<--end::shadow overlay ---->*/}
 					</div>

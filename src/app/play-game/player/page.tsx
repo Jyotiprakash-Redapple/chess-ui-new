@@ -54,7 +54,7 @@ function PlayWithPlayer() {
 		} else {
 		}
 	}, []);
-
+	const options = ["q", "r", "b", "n"];
 	return (
 		<main>
 			<div className="view_container">
@@ -246,11 +246,13 @@ function PlayWithPlayer() {
 											left: appState.opponent === "w" ? "-20px" : "-26px",
 										}}></div>
 									<Board />
+									<Popupbox />
 								</div>
 								{/*<--end:: game board section ---->*/}
 							</div>
+
 							{/*<--end:: buttom section ---->*/}
-							<Popupbox />
+							{/* <Popupbox /> */}
 						</div>
 						{/*<--end::shadow overlay ---->*/}
 					</div>

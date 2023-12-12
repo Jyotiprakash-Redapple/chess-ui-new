@@ -64,7 +64,7 @@ function Board() {
 					))
 				)}
 			</div>
-			<Popupbox />
+			{/* <Popupbox /> */}
 			<Pieces />
 			{/* <File file={appState.opponent === "w" ? files.reverse() : files} /> */}
 		</>

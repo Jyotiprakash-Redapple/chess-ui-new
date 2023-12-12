@@ -319,8 +319,9 @@ html::before {
 	align-items: center;
 }
 .quit_game_wrapper {
-	width: 500px;
-	height: 250px;
+	width: 350px;
+	height: 245px;
+
 	background-image: url("/gameQuit/banner.png");
 	background-size: contain;
 	background-repeat: no-repeat;

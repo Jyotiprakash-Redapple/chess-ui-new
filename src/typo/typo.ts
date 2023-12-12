@@ -19,3 +19,7 @@ export interface App {
 	};
 	imageArray: string[];
 }
+export interface Game {
+	playerReturnUrl: string;
+	getGameSettingUrl: string;
+}

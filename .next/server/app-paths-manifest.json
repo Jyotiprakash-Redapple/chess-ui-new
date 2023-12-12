@@ -1,5 +1,9 @@
 {
   "/loader/page": "app/loader/page.js",
+  "/play-game/player/page": "app/play-game/player/page.js",
   "/match-make/page": "app/match-make/page.js",
-  "/play-game/player/page": "app/play-game/player/page.js"
+  "/internet-disconnect/page": "app/internet-disconnect/page.js",
+  "/play-game/ai/page": "app/play-game/ai/page.js",
+  "/not-found": "app/not-found.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }

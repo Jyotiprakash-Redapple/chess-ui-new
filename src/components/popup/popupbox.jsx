@@ -4,9 +4,7 @@ import Satalement from "./satalement";
 import Check from "./check";
 import Winner from "./winner";
 import { useAppContext } from "@/arbitar/context/Provider";
-
 import { gameStatus } from "@/arbitar/context/reducer/constant";
-import { app } from "@/config/appConfig";
 function Popupbox() {
 	const { appState, dispatch } = useAppContext();
 
@@ -15,7 +13,7 @@ function Popupbox() {
 			<div
 				className="popup--check"
 				style={{
-					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
+					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
 				<Check />
 			</div>
@@ -26,29 +24,18 @@ function Popupbox() {
 			<div
 				className="popup--prompt"
 				style={{
-					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
+					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
 				<Promoption />
 			</div>
 		);
 	}
-	if (appState.status === gameStatus.stalemet) {
+	if (appState.status === gameStatus.stalemet || appState.status === gameStatus.insufficiant) {
 		return (
 			<div
 				className="popup--stalemate"
 				style={{
-					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
-				}}>
-				<Satalement />
-			</div>
-		);
-	}
-	if (appState.status === gameStatus.insufficiant) {
-		return (
-			<div
-				className="popup--stalemate"
-				style={{
-					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
+					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
 				<Satalement />
 			</div>
@@ -60,7 +47,7 @@ function Popupbox() {
 			<div
 				className="popup"
 				style={{
-					transform: appState.opponent === "w" ? `rotate(${360}deg)` : `rotate(${0}deg)`,
+					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
 				<Winner />
 			</div>

@@ -44,7 +44,7 @@ function Loadeing() {
 					}
 					clearInterval(timer);
 				}
-			}, 50);
+			}, 20);
 		};
 
 		const handleLoadPage = () => {

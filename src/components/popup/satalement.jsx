@@ -8,29 +8,20 @@ function Satalement() {
 		return null;
 	if (appState.status === gameStatus.insufficiant) {
 		return (
-			<div className="popup--inner">
-				<div className="insufficient">
-					<div>
-						{" "}
-						<h1>INSUFFICIENT MATING MATERIAL MATCH DRAW</h1>{" "}
-					</div>
-				</div>
-				{/* <button className='new_game_btn' onClick={() => handelNewGame()}>
-				New Game
-			</button> */}
+			<div className="insufficient">
+				{" "}
+				<h1>INSUFFICIENT MATING MATERIAL MATCH DRAW</h1>{" "}
 			</div>
 		);
 	}
-	return (
-		<div className="popup--inner">
+	if (appState.status === gameStatus.stalemet) {
+		return (
 			<div className="stalemate">
 				<h1>STALEMATE MATCH DARW</h1> :
 			</div>
-			{/* <button className='new_game_btn' onClick={() => handelNewGame()}>
-				New Game
-			</button> */}
-		</div>
-	);
+		);
+	}
+	return null;
 }
 
 export default Satalement;

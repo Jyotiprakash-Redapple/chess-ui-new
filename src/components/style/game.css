@@ -602,7 +602,7 @@ for white top 53px black -=65px
 	transform: translate(700%, 700%) rotate(180deg);
 }
 
-/*===============================pop up ======================================*/
+/*===============================pop up Check mate ======================================*/
 .popup {
 	width: 100%;
 	height: 100%;
@@ -615,11 +615,37 @@ for white top 53px black -=65px
 	background: transparent;
 	background-image: url("/gameQuit/layer.png");
 }
+.popup--inner {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.popup--inner > .wins {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+
+	background-repeat: no-repeat;
+	background-image: url("/status/win_banner.png");
+}
+.popup--inner > .defect {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	background-image: url("/status/defect_banner.png");
+}
+
+/* ===================Dectate Check==========================*/
 .check_shadow {
 	position: absolute;
 	z-index: 65;
 	width: 80%;
-	height: 20%;
+	height: 30%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -630,16 +656,16 @@ for white top 53px black -=65px
 .check_shadow > .w_check {
 	position: relative;
 	width: 90%;
-	height: 100%;
-	background-size: contain;
+	height: 151px;
+	background-size: 230px 107px;
 	background-repeat: no-repeat;
 	background-image: url("/status/White_base.png");
 }
 .check_shadow > .b_check {
 	position: relative;
-	width: 100%;
-	height: 100%;
-	background-size: contain;
+	width: 90%;
+	height: 151px;
+	background-size: 230px 107px;
 	background-repeat: no-repeat;
 	background-image: url("/status/Black_base.png");
 	display: flex;
@@ -655,33 +681,13 @@ for white top 53px black -=65px
 	font-size: 12px;
 	font-weight: 700;
 	position: absolute;
-	top: 40%;
+	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
-/*===============================promotion style ======================================*/
-.popup--inner {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	/* background: var(--light-tiles);
-	position: absolute;
-	border: 8px solid var(--light-tiles);
-	box-shadow: 0 0 0 8px var(--dark-tiles); */
-}
-.popup--prompt {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 34;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
+
+/* ===================== Satalement Modal =========================*/
+
 .popup--stalemate {
 	width: 100%;
 	height: 100%;
@@ -691,10 +697,49 @@ for white top 53px black -=65px
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	background: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* background: transparent; */
 }
+.popup--stalemate > .stalemate {
+	width: 80%;
+	height: 36%;
+	background-size: 254px 103px;
+	background-repeat: no-repeat;
+	background-image: url("/status/draw_stalemate.png");
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.popup--stalemate > .stalemate h1 {
+	color: #fff;
+	font-weight: 600;
+	font-size: 1rem;
+	margin: 0 0 0.5em 0;
+}
+
+/* ========== Insufficiant mating material ====================*/
+.popup--stalemate > .insufficient {
+	width: 80%;
+	height: 36%;
+	background-size: 254px 103px;
+	background-repeat: no-repeat;
+	background-image: url("/status/draw_stalemate.png");
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.popup--stalemate > .insufficient h1 {
+	color: #fff;
+	font-weight: 600;
+	font-size: 0.5rem;
+	margin: 0 0 0.5em 0;
+}
+
 .popup--check {
-	background-color: red;
 	width: 100%;
 	height: 100%;
 	z-index: 1;
@@ -709,21 +754,6 @@ for white top 53px black -=65px
 	justify-content: center;
 }
 
-.popup--inner > .wins {
-	width: 100%;
-	height: 100%;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-image: url("/status/win_banner.png");
-}
-.popup--inner > .defect {
-	width: 100%;
-	height: 100%;
-	background-size: contain;
-	background-repeat: no-repeat;
-
-	background-image: url("/status/defect_banner.png");
-}
 .popup--inner__center {
 	left: 50%;
 	top: 50%;
@@ -731,28 +761,7 @@ for white top 53px black -=65px
 	text-align: center;
 	padding: 1em 0;
 }
-.popup--inner .stalemate {
-	width: 80%;
-	height: 30%;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-image: url("/status/draw_stalemate.png");
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-.popup--inner .insufficient {
-	width: 80%;
-	height: 30%;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-image: url("/status/draw_stalemate.png");
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
 .popup--inner-check {
 	width: 80%;
 	height: 30%;
@@ -773,12 +782,7 @@ for white top 53px black -=65px
 	font-size: 1rem;
 	margin: 0 0 0.5em 0;
 }
-.popup--inner .stalemate h1 {
-	color: #fff;
-	font-weight: 600;
-	font-size: 1rem;
-	margin: 0 0 0.5em 0;
-}
+
 .popup--inner__center h1 {
 	font-size: 2.5em;
 	margin: 0 0 0.5em 0;
@@ -788,10 +792,23 @@ for white top 53px black -=65px
 	font-size: 1.2em;
 	margin: 0 0 1em 0;
 }
+
+/* ===========Promotion Style =========================*/
+.popup--prompt {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 34;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 .popup--inner-prompt {
 	position: relative;
 	width: 80%;
-	height: 200px;
+	height: 170px;
 
 	background-image: url("/status/Promotion_base.png");
 	background-repeat: no-repeat;
@@ -806,8 +823,9 @@ for white top 53px black -=65px
 	/* position: absolute;
 	top: 0;
 	left: 0; */
-	width: 70%;
+	width: 80%;
 	height: 150px;
+
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -816,7 +834,7 @@ for white top 53px black -=65px
 
 .promotion-choices .piece {
 	width: 37px;
-	height: 120px;
+	height: 90px;
 	border-radius: 50px;
 	border: 1px solid var(--light-tiles);
 }
@@ -825,47 +843,16 @@ for white top 53px black -=65px
 	transform: scale(1.05);
 }
 .promotion-choices :is(.wq, .bq) {
-	left: 15%;
+	left: 10%;
 }
 .promotion-choices :is(.wr, .br) {
-	left: 32%;
+	left: 30%;
 }
 .promotion-choices :is(.wb, .bb) {
-	left: 48%;
+	left: 49%;
 }
 .promotion-choices :is(.wn, .bn) {
-	left: 65%;
-}
-/*===============================satalement  style ======================================*/
-
-.satalement_modal {
-	z-index: 2;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 300px;
-	height: 150px;
-	border-radius: 5px;
-	overflow: hidden;
-	background: #fff;
-	box-shadow: 3px 3px 18px -8px #263238;
-	color: #424242;
-	margin: 20px auto;
-	padding: 20px;
-	display: inline-block;
-}
-
-.satalement_modal h1 {
-	font-size: 24px;
-	color: #333; /* Set the text color to dark gray */
-	margin-bottom: 10px;
-}
-
-.satalement_modal p {
-	font-size: 16px;
-	color: #666;
-	margin-bottom: 15px;
+	left: 70%;
 }
 
 .new-game-button {
@@ -881,39 +868,6 @@ for white top 53px black -=65px
 	cursor: pointer;
 	/* Add more styles as needed */
 }
-
-/*===============================Winner Style  ======================================*/
-
-.wins {
-	height: var(--tile-size);
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-}
-.wins.white {
-	background-image: url("/game_play/wk.png");
-}
-.wins.black {
-	background-image: url("/game_play/wk.png");
-}
-.draw {
-	height: var(--tile-size);
-	background-size: contain;
-	background-repeat: no-repeat, no-repeat;
-	background-position: 35% center, 65% center;
-	background-image: url("/game_play/wk.png"), url("/game_play/bk.png");
-}
-.new_game_btn {
-	z-index: 2;
-	cursor: pointer;
-	background: var(--dark-tiles);
-	color: var(--light-tiles);
-	border: 0 none;
-	padding: 10px 30px;
-	margin: 10px 0;
-	font-size: 1.1em;
-}
-
 /*===============================chess board style======================================*/
 
 /* Ai Board*/

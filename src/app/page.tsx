@@ -13,7 +13,7 @@ export default function SplashScreen() {
 		if (search) {
 			const searchParams = await new URLSearchParams(search);
 			// game mode online
-			if (searchParams.get("auth_token")) {
+			if (searchParams.get("auth_token" && searchParams.size === 1)) {
 				let queryVar = searchParams.get("auth_token");
 				const socket = new Client();
 				dispatch(newSocketConnect({ socket }));
@@ -25,6 +25,8 @@ export default function SplashScreen() {
 				if (searchParams.get("mode")) {
 					let queryVar = searchParams.get("mode");
 					if (queryVar === "offline") {
+						let queryVar = searchParams.get("auth_token");
+						localStorage.setItem("offline_auth_token", queryVar);
 						localStorage.setItem("game_mode", "offline");
 						router.push("/loader", { scroll: false });
 					}
