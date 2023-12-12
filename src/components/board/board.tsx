@@ -41,14 +41,14 @@ function Board() {
 		c += (i + j) % 2 === 0 ? " tile--dark " : " tile--light ";
 		if (appState.candidateMove.find((m) => m[0] === i && m[1] === j)) {
 			if (currentPosition[i][j]) {
-				c += " attacking";
+				c += ` attacking ${appState.opponent}`;
 			} else {
-				c += " highlight";
+				c += ` highlight ${appState.opponent} `;
 			}
 		}
 
 		if (isChecked && isChecked[0] == i && isChecked[1] == j) {
-			c += " checked";
+			c += ` checked ${appState.opponent}`;
 		}
 		return c;
 	};

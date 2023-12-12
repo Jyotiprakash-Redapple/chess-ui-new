@@ -100,7 +100,7 @@ class Client {
 	onGameEnd(dispatch) {
 		this.socket.on("game-end", (arg) => {
 			console.log("game end  =============>", arg);
-			dispatch(gameEnd(arg));
+			// dispatch(gameEnd(arg));
 		});
 	}
 }

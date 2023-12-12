@@ -81,7 +81,7 @@ for white top 53px black -=65px
 	/* background-position: 8px -0.9px; */
 	background-position: center;
 }
-.highlight::after {
+.b.highlight::after {
 	display: block;
 
 	position: absolute;
@@ -94,31 +94,68 @@ for white top 53px black -=65px
 	left: 15%;
 	top: 21%;
 }
+.w.highlight::after {
+	display: block;
 
-.attacking::after {
+	position: absolute;
+	content: "";
+	width: calc(0.5 * 59px);
+	height: calc(0.5 * 60px);
+	background-color: #7e30e1;
+	border-radius: 50%;
+	left: 8%;
+	top: 4%;
+}
+
+.b.attacking::after {
 	display: block;
 	position: absolute;
 	content: "";
 
 	border: 3px solid #ffb000;
-	width: calc(50px - 10px);
-	height: calc(50px - 10px);
+	width: calc(41px - 10px);
+	height: calc(40px - 10px);
 	border-radius: 50%;
-	left: -0.5px;
-	top: -0.5px;
+	left: 1.5px;
+	top: 3.5px;
 }
-.checked::after {
+.w.attacking::after {
+	display: block;
+	position: absolute;
+	content: "";
+
+	border: 3px solid #ffb000;
+	width: calc(40px - 10px);
+	height: calc(40px - 10px);
+	border-radius: 50%;
+	left: -1px;
+	top: -2px;
+}
+.b.checked::after {
 	display: block;
 	position: absolute;
 	content: "";
 	background-color: #ffb000;
 	/* z-index: 1; */
 	border: 3px solid #2b2a4c;
-	width: calc(50px - 10px);
-	height: calc(50px - 10px);
+	width: calc(41px - 10px);
+	height: calc(38px - 10px);
 	border-radius: 50%;
-	left: -0.5px;
-	top: -0.5px;
+	left: 2.5px;
+	top: 4.5px;
+}
+.w.checked::after {
+	display: block;
+	position: absolute;
+	content: "";
+	background-color: #ffb000;
+	/* z-index: 1; */
+	border: 3px solid #2b2a4c;
+	width: calc(41px - 10px);
+	height: calc(38px - 10px);
+	border-radius: 50%;
+	left: -1px;
+	top: -3px;
 }
 /*===============================chess board set image ======================================*/
 .piece.bk {
