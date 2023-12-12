@@ -13,6 +13,7 @@ export interface Getnewmovenotation {
 export interface Makenewmove {
 	newPosition: any;
 	newMove: any;
+	checkStatus: any;
 }
 
 export interface Setpicessqoureinfo {

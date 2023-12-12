@@ -14,31 +14,34 @@ function MatchMackeing() {
 		if (appState.socket) {
 			appState.socket.getGameInitFromServer(dispatch);
 		} else {
-			router.push("/");
+			// router.push("/");
 		}
 	}, []);
 
-	console.log(appState, "app stat");
 	return (
 		<main>
-			<div className='view_container'>
+			<div className="view_container">
 				{/*<--start::match making wrapper---->*/}
-				<div className='search_wrapper'>
+				<div className="search_wrapper">
 					{/*<--start::match making wrapper bg---->*/}
-					<div className='search_banner_bg'>
-						<div className='inner_wrapper'>
+					<div className="search_banner_bg">
+						<div className="inner_wrapper">
 							{/*<--start::match making text box ---->*/}
-							<div className='match_macking'>
+							<div className="match_macking">
 								{" "}
-								<div className='match_macking_bg'></div>
-								<div className='match_macking_logo'></div>
+								<div className="match_macking_bg"></div>
+								<div className="match_macking_logo"></div>
 							</div>
 							{/*<--end::match making text box ---->*/}
 							{/*<--start::match making playr pic and op pic box ---->*/}
-							<div className='match_make_player'>
+							<div className="match_make_player">
 								<Player name={appState?.pl?.user_name} image={appState?.pl?.profile} />
-								<Opponent name={appState?.op?.user_name} image={appState?.op?.profile} imageArray={imageArray} />
-								<span className='player_vs_op'></span>
+								<Opponent
+									name={appState?.op?.user_name}
+									image={appState?.op?.profile}
+									imageArray={imageArray}
+								/>
+								<span className="player_vs_op"></span>
 							</div>
 							{/*<--end::match making playr pic and op pic box ---->*/}
 						</div>

@@ -11,8 +11,10 @@ let gameStatus = {
 	w_check: "Oops white in check",
 	b_check: "Oops Black in check",
 	newGameInit: "new Game init by user ",
+	nietherSide: "nietherSide",
 };
 let initGame = {
+	checkStatus: gameStatus.nietherSide,
 	socket: null,
 	opponent: "", // string
 	advantage: 0,
@@ -33,6 +35,7 @@ let initGame = {
 	turnTime: {}, // turn time | counter | life
 	gameTime: 0,
 	totalTurnTime: 0,
+	check_status: gameStatus.pending,
 };
 
 Object.freeze(initGame);
@@ -57,6 +60,8 @@ let actionTypes = {
 	DECTACT_STALEMET: "DECTACT_STALEMET",
 	DECTACT_INSUFFICIANT_MATARIAL: "DECTACT_INSUFFICIANT_MATARIAL",
 	WIN: "WIN",
+	CHECK: "CHECK",
+	STATUS_CHEANGE: "STATUS_CHANGE",
 	SAVE_KILL_PICES: "SAVE_KILL_PICES",
 	NEW_GAME: "NEW_GAME",
 	GAME_END: "GAME_END",

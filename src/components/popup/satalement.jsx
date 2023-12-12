@@ -3,23 +3,29 @@ import { gameStatus } from "@/arbitar/context/reducer/constant";
 import { newGameStart } from "@/arbitar/context/reducer/move";
 import { useAppContext } from "@/arbitar/context/Provider";
 function Satalement() {
-	const {
-		appState: { status },
-		dispatch,
-	} = useAppContext();
-
-	if (status === gameStatus.ongoing || status === gameStatus.promoting) return null;
-
-	const handelNewGame = () => {
-		dispatch(newGameStart());
-	};
-
-	const isWin = status.endsWith("wins");
+	const { appState, dispatch } = useAppContext();
+	if (appState.status === gameStatus.ongoing || appState.status === gameStatus.promoting)
+		return null;
+	if (appState.status === gameStatus.insufficiant) {
+		return (
+			<div className="popup--inner">
+				<div className="insufficient">
+					<div>
+						{" "}
+						<h1>INSUFFICIENT MATING MATERIAL MATCH DRAW</h1>{" "}
+					</div>
+				</div>
+				{/* <button className='new_game_btn' onClick={() => handelNewGame()}>
+				New Game
+			</button> */}
+			</div>
+		);
+	}
 	return (
-		<div className="popup--inner popup--inner__center">
-			<h1>{isWin ? status : "Draw"}</h1>
-			<p>{!isWin && status}</p>
-			<div className={`${status}`} />
+		<div className="popup--inner">
+			<div className="stalemate">
+				<h1>STALEMATE MATCH DARW</h1> :
+			</div>
 			{/* <button className='new_game_btn' onClick={() => handelNewGame()}>
 				New Game
 			</button> */}

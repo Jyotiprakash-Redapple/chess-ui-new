@@ -1,5 +1,14 @@
 import { io } from "socket.io-client";
-import { gameInit, updateBoard, gameTimer, turnTimer, turnUpdate, gameEnd, getUserData, getMatchMakeingData } from "../arbitar/context/reducer/move";
+import {
+	gameInit,
+	updateBoard,
+	gameTimer,
+	turnTimer,
+	turnUpdate,
+	gameEnd,
+	getUserData,
+	getMatchMakeingData,
+} from "../arbitar/context/reducer/move";
 
 class Client {
 	constructor(gameSceneInstance) {
@@ -37,7 +46,6 @@ class Client {
 	getMatchMakeingDataFromServer(dispatch) {
 		this.socket.on("matchmacking-data", (arg) => {
 			dispatch(getMatchMakeingData(arg));
-			console.log(arg, "get match makeing data ==>");
 		});
 	}
 	getGameInitFromServer(dispatch) {

@@ -1,12 +1,21 @@
 import { actionTypes, initGame } from "./constant";
-import { Makenewmove, Setpicessqoureinfo, MakecandidateMove, Openpromotionbox, Savekillpices, Newsocketconnect, Newgameinit, Updateboard } from "../type";
+import {
+	Makenewmove,
+	Setpicessqoureinfo,
+	MakecandidateMove,
+	Openpromotionbox,
+	Savekillpices,
+	Newsocketconnect,
+	Newgameinit,
+	Updateboard,
+} from "../type";
 /**
  * make new move with darg and drop
  */
-let makeNewMove = ({ newPosition, newMove }: Makenewmove) => {
+let makeNewMove = ({ newPosition, newMove, checkStatus }: Makenewmove) => {
 	return {
 		type: actionTypes.NEW_MOVE,
-		payload: { newPosition, newMove },
+		payload: { newPosition, newMove, checkStatus },
 	};
 };
 
@@ -243,8 +252,21 @@ let getMatchMakeingData = (arg: any) => {
 		payload: arg,
 	};
 };
+let dectateCheck = (arg: boolean) => {
+	return {
+		type: actionTypes.CHECK,
+		payload: arg,
+	};
+};
 
+let updateGameStatus = () => {
+	return {
+		type: actionTypes.STATUS_CHEANGE,
+		payload: "",
+	};
+};
 export {
+	dectateCheck,
 	makeNewMove,
 	makeCandidateMoves,
 	clearCandidates,
@@ -269,4 +291,5 @@ export {
 	gameEnd,
 	getUserData,
 	getMatchMakeingData,
+	updateGameStatus,
 };

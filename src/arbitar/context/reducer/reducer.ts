@@ -1,7 +1,7 @@
 import { actionTypes, gameStatus } from "./constant";
 
 import { createPosition } from "../../helper/helper";
-import { act } from "react-dom/test-utils";
+
 let reducer = (state: any, action: any) => {
 	switch (action.type) {
 		case actionTypes.GET_USER_DATA: {
@@ -30,7 +30,9 @@ let reducer = (state: any, action: any) => {
 			let gameInit = {
 				opponent: gameObject.player.colour === "white" ? "b" : "w",
 				position: [createPosition()],
-				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn
+					? gameObject.player.colour.charAt(0).toLowerCase()
+					: gameObject.opponent.colour.charAt(0).toLowerCase(),
 				movementTurn: gameObject.player.colour === "white" ? true : false,
 				status: gameStatus.ongoing,
 				turnTime: {
@@ -65,7 +67,9 @@ let reducer = (state: any, action: any) => {
 			return {
 				...state,
 				totalTurnTime: Number(gameObject.turn_time),
-				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn
+					? gameObject.player.colour.charAt(0).toLowerCase()
+					: gameObject.opponent.colour.charAt(0).toLowerCase(),
 			};
 		}
 		case actionTypes.GAME_END: {
@@ -96,6 +100,7 @@ let reducer = (state: any, action: any) => {
 		}
 		case actionTypes.BOARD_UPDATE: {
 			let board = action.payload.arg.board;
+			console.log(board, "chess board ================>");
 			if (board?.status) {
 				if (board.status === gameStatus.newGameInit) {
 					return {
@@ -125,6 +130,7 @@ let reducer = (state: any, action: any) => {
 				let movementTurn = state.movementTurn === true ? false : true;
 				return {
 					...state,
+					checkStatus: board?.checkStatus,
 					position: newposition,
 					advantage: board.advantage,
 					moveList: [...board.moveList],
@@ -139,7 +145,7 @@ let reducer = (state: any, action: any) => {
 			//! if last index two size push an element other wise pus new arr
 
 			let newMoveList = [];
-			let movementTurn = state.movementTurn === true ? false : true;
+
 			if (!state.moveList.length) {
 				newMoveList = [[action.payload.newMove]];
 			} else {
@@ -154,8 +160,20 @@ let reducer = (state: any, action: any) => {
 			}
 			const newposition = [...state.position, action.payload.newPosition];
 
+			let checkStatus = "";
+
+			if (action.payload?.checkStatus === "w") {
+				checkStatus = gameStatus.w_check;
+			} else {
+				if (action.payload?.checkStatus === "b") {
+					checkStatus = gameStatus.b_check;
+				} else {
+					checkStatus = action.payload.checkStatus;
+				}
+			}
 			state.socket.onUpdateMove({
 				board: {
+					checkStatus,
 					position: action.payload.newPosition,
 					moveList: newMoveList,
 					advantage: state.advantage,
@@ -172,6 +190,7 @@ let reducer = (state: any, action: any) => {
 				...state,
 				position: newposition,
 				moveList: newMoveList,
+				checkStatus,
 			};
 		}
 		case actionTypes.CANDIDATE_MOVE: {
@@ -228,6 +247,18 @@ let reducer = (state: any, action: any) => {
 			};
 		}
 
+		case actionTypes.CHECK: {
+			return {
+				...state,
+				checkStatusUpdated: action.payload,
+			};
+		}
+		case actionTypes.STATUS_CHEANGE: {
+			return {
+				...state,
+				checkStatus: gameStatus.nietherSide,
+			};
+		}
 		case actionTypes.DECTACT_STALEMET: {
 			state.socket.onUpdateMove({
 				board: {

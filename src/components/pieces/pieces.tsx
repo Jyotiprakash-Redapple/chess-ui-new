@@ -14,10 +14,13 @@ import {
 	dectactCheckmate,
 	saveKillPices,
 	updateAdvantage,
+	dectateCheck,
+	updateGameStatus,
 } from "@/arbitar/context/reducer/move";
 import { arbitar } from "@/arbitar/game/arbitar";
 import PiecesDropSound from "@/audio/drop_chess.mp3";
 import { getCastlingDir, evaluateBoard } from "@/arbitar/game/getMoves";
+import { gameStatus } from "@/arbitar/context/reducer/constant";
 function Pieces() {
 	const { appState, dispatch } = useAppContext();
 	const currentPosition = appState.position[appState.position.length - 1];
@@ -98,6 +101,8 @@ function Pieces() {
 					// Em pasant move when current poition empty
 					const opponet = piece.startsWith("w") ? "b" : "w";
 
+					dispatch(dectateCheck(false));
+
 					// castelDirection
 					const castelDirection = appState.castlingdir[`${piece.startsWith("w") ? "b" : "w"}`];
 
@@ -156,12 +161,19 @@ function Pieces() {
 						moveColor: piece[0],
 						newMove,
 					});
-					console.log(advantages, "advantages");
+
+					const isChecked = arbitar.isPlayerChecked({
+						positionAfterMove: newPosition,
+						player: opponet,
+					});
+
 					dispatch(updateAdvantage(advantages));
+
 					dispatch(
 						makeNewMove({
 							newPosition,
 							newMove,
+							checkStatus: isChecked ? opponet : gameStatus.nietherSide,
 						})
 					);
 					if (arbitar.insufficientMaterial(newPosition)) {
