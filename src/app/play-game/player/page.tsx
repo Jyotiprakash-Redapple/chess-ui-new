@@ -38,7 +38,7 @@ function PlayWithPlayer() {
 		if (isCloseToOne(percentageComplete, 0.000001)) {
 			percentageComplete = 0;
 		}
-		let colour = percentageComplete < 30 ? "#EF4040" : "#097b17";
+		let colour = percentageComplete < 30 ? "#EF4040" : "#A6FF96";
 		return `radial-gradient(closest-side, #bb404000 0px, transparent 77%, transparent 80%), conic-gradient(${colour} ${percentageComplete}%, #0062cc 0deg)`;
 	}
 

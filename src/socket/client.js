@@ -51,13 +51,11 @@ class Client {
 	getGameInitFromServer(dispatch) {
 		this.socket.on("game-start", (arg) => {
 			dispatch(gameInit({ arg }));
-			console.log(arg, "game start from server========>");
 		});
 	}
 	getUpdateDetailsFromServer(dispatch) {
 		this.socket.on("update-details", (arg) => {
 			dispatch(updateBoard({ arg }));
-			console.log("Game Update Details From Server=============>", arg);
 		});
 	}
 	onGmaeTime(dispatch) {
@@ -75,23 +73,18 @@ class Client {
 	onTurnChange(dispatch) {
 		this.socket.on("game-updateTurn", (arg) => {
 			dispatch(turnUpdate(arg));
-			console.log("Game-upadteTurn From server=============>", arg);
 		});
 	}
 	onUpdateMove(cur_game) {
-		console.log("update move emit ===============>", cur_game);
 		this.socket.emit("update-move", cur_game);
 	}
 	onUpdateWin(data) {
-		console.log("result emit ============>", data);
 		this.socket.emit("update-score", data);
 	}
 	onRendomMatch() {
-		console.log("queue-join Emit ============>");
 		this.socket.emit("queue-join");
 	}
 	onQueueLeave() {
-		console.log("queue leave emit =============>");
 		this.socket.emit("queue-leave");
 	}
 	emitDisConnect() {
@@ -99,8 +92,7 @@ class Client {
 	}
 	onGameEnd(dispatch) {
 		this.socket.on("game-end", (arg) => {
-			console.log("game end  =============>", arg);
-			// dispatch(gameEnd(arg));
+			dispatch(gameEnd(arg));
 		});
 	}
 }

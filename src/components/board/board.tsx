@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "@/style/game.css";
 import Pieces from "../pieces/pieces";
 import { useAppContext } from "@/arbitar/context/Provider";
-import { dectateCheck } from "@/arbitar/context/reducer/move";
+
 import { arbitar } from "@/arbitar/game/arbitar";
 import { getKingPosition } from "@/arbitar/game/getMoves";
 import Popupbox from "../popup/popupbox";
-import { app } from "@/config/appConfig";
-import { gameStatus } from "@/arbitar/context/reducer/constant";
 
 function Board() {
-	const { appState, dispatch } = useAppContext();
+	const { appState } = useAppContext();
 
 	const currentPosition = appState.position[appState.position.length - 1];
 	const ranks = Array(8)

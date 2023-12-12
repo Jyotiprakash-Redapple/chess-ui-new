@@ -100,7 +100,7 @@ let reducer = (state: any, action: any) => {
 		}
 		case actionTypes.BOARD_UPDATE: {
 			let board = action.payload.arg.board;
-			console.log(board, "chess board ================>");
+
 			if (board?.status) {
 				if (board.status === gameStatus.newGameInit) {
 					return {
@@ -119,7 +119,7 @@ let reducer = (state: any, action: any) => {
 						},
 					};
 				}
-				let movementTurn = state.movementTurn === true ? false : true;
+
 				return {
 					...state,
 					status: board.status,
@@ -127,7 +127,7 @@ let reducer = (state: any, action: any) => {
 				};
 			} else {
 				const newposition = [...state.position, board.position];
-				let movementTurn = state.movementTurn === true ? false : true;
+
 				return {
 					...state,
 					checkStatus: board?.checkStatus,
@@ -139,7 +139,6 @@ let reducer = (state: any, action: any) => {
 				};
 			}
 		}
-
 		case actionTypes.NEW_MOVE: {
 			//! move list empty  || if move list not empty check last index two size or not
 			//! if last index two size push an element other wise pus new arr

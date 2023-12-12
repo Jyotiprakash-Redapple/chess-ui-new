@@ -35,7 +35,6 @@ let initGame = {
 	turnTime: {}, // turn time | counter | life
 	gameTime: 0,
 	totalTurnTime: 0,
-	check_status: gameStatus.pending,
 };
 
 Object.freeze(initGame);
