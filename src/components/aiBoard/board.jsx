@@ -785,44 +785,37 @@ function AIboard() {
 			.catch(() => {});
 	};
 
+	/**
+	 * Global time Function
+	 */
+
 	useEffect(() => {
 		let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9asdf";
 		const fetch = async () => {
 			const data = await axios.get("http://3.137.86.237:5000/api/v2/game-setting?game_id=25", {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-			let time = data?.data?.data?.game_setting?.GAMETIME;
-
-			setTime(time);
+			let _time = data?.data?.data?.game_setting?.GAMETIME || 600;
+			setTime(_time);
 		};
-		startTimer();
+
 		fetch();
-		return () => stopTimer();
 	}, []);
 
-	let intervalId;
-
-	function startTimer() {
-		intervalId = setInterval(() => {
-			if (time) {
-				let currentTime = time;
-				if (currentTime <= 0) {
-					clearInterval(intervalId); // Stop the interval when time reaches 0
-					handelQuitGame();
-				} else {
-					let updatedTime = currentTime - 1;
-					setTime(updatedTime);
-				}
+	/**
+	 * call back execute page loading
+	 */
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (time === 0) {
+				handelQuitGame();
+				return;
 			}
-		}, 10000);
-	}
+			setTime((prevTime) => Number(prevTime) - 1);
+		}, 1000); // (1000 ms = 1 second)
 
-	// Function to stop the timer
-	function stopTimer() {
-		clearInterval(intervalId);
-	}
-
-	console.log(time, "time updated");
+		return () => clearInterval(intervalId);
+	}, []);
 	return (
 		// <div className="board_container">
 		// 	{" "}

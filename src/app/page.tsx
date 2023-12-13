@@ -13,7 +13,9 @@ export default function SplashScreen() {
 		if (search) {
 			const searchParams = await new URLSearchParams(search);
 			// game mode online
-			if (searchParams.get("auth_token" && searchParams.size === 1)) {
+
+			console.log(searchParams.size, "size");
+			if (searchParams.get("auth_token") && searchParams.size === 1) {
 				let queryVar = searchParams.get("auth_token");
 				const socket = new Client();
 				dispatch(newSocketConnect({ socket }));

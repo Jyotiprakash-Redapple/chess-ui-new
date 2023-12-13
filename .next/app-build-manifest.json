@@ -1,10 +1,5 @@
 {
   "pages": {
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -16,10 +11,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
     "/loader/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/loader/page.js"
+    ],
+    "/play-game/ai/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/play-game/ai/page.js"
     ],
     "/match-make/page": [
       "static/chunks/webpack.js",
@@ -36,11 +41,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/internet-disconnect/page.js"
-    ],
-    "/play-game/ai/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/play-game/ai/page.js"
     ]
   }
 }
