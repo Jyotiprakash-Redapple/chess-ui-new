@@ -55,12 +55,10 @@ function Promot() {
 			setPromotionModal(true);
 			setTimeout(() => {
 				const opponet = appState.promotion_square_info.x === 7 ? "b" : "w";
-				const castelDirection =
-					appState.castlingdir[`${appState.promotion_square_info.x === 7 ? "b" : "w"}`];
+				const castelDirection = appState.castlingdir[`${appState.promotion_square_info.x === 7 ? "b" : "w"}`];
 				const newPosition = copyPosition(appState.position[appState.position.length - 1]);
 				newPosition[appState.promotion_square_info.rank][appState.promotion_square_info.file] = "";
-				newPosition[appState.promotion_square_info.x][appState.promotion_square_info.y] =
-					color + option;
+				newPosition[appState.promotion_square_info.x][appState.promotion_square_info.y] = color + option;
 
 				const isChecked = arbitar.isPlayerChecked({
 					positionAfterMove: newPosition,
@@ -91,12 +89,8 @@ function Promot() {
 					piece: option,
 					prevSum: appState.advantage,
 					opponent: appState.opponent,
-					from_: `${String.fromCharCode(97 + Number(appState.promotion_square_info.file))}${Number(
-						appState.promotion_square_info.rank + 1
-					)}`,
-					to_: `${String.fromCharCode(97 + Number(appState.promotion_square_info.y))}${Number(
-						appState.promotion_square_info.x + 1
-					)}`,
+					from_: `${String.fromCharCode(97 + Number(appState.promotion_square_info.file))}${Number(appState.promotion_square_info.rank + 1)}`,
+					to_: `${String.fromCharCode(97 + Number(appState.promotion_square_info.y))}${Number(appState.promotion_square_info.x + 1)}`,
 					x: Number(appState.promotion_square_info.x),
 					y: Number(appState.promotion_square_info.y),
 					prevPosition: appState.position[appState.position.length - 1],
@@ -117,7 +111,7 @@ function Promot() {
 				}
 				dispatch(clearPromotionSqourInfo());
 				setPromotionModal(false);
-			}, 3500);
+			}, 4000);
 		} catch (e) {
 			console.log(e, "Error happen promotion");
 		}
@@ -125,16 +119,12 @@ function Promot() {
 	return (
 		<>
 			{promotionModal ? (
-				<div className="promotion_bg"></div>
+				<div className='promotion_bg'></div>
 			) : (
-				<div className="popup--inner-prompt ">
-					<div className="promotion-choices">
+				<div className='popup--inner-prompt '>
+					<div className='promotion-choices'>
 						{options.map((option) => (
-							<div
-								key={option}
-								className={`piece ${color}${option}`}
-								onClick={() => handelClick(option)}
-							/>
+							<div key={option} className={`piece ${color}${option}`} onClick={() => handelClick(option)} />
 						))}
 					</div>
 				</div>

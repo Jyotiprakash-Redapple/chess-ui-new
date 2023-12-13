@@ -15,7 +15,7 @@
 # production
 /build
 .next
-
+.vscode
 # misc
 .DS_Store
 *.pem

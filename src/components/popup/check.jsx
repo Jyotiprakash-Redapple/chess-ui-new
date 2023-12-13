@@ -7,10 +7,10 @@ function Check() {
 	if (appState.turn === "w") {
 		setTimeout(() => {
 			dispatch(updateGameStatus());
-		}, 3500);
+		}, 4000);
 		return (
-			<div className="check_shadow">
-				<div className="w_check">
+			<div className='check_shadow'>
+				<div className='w_check'>
 					<p>Oops, White in check !</p>
 				</div>
 			</div>
@@ -19,10 +19,10 @@ function Check() {
 	if (appState.turn === "b") {
 		setTimeout(() => {
 			dispatch(updateGameStatus());
-		}, 3500);
+		}, 4000);
 		return (
-			<div className="check_shadow">
-				<div className="b_check">
+			<div className='check_shadow'>
+				<div className='b_check'>
 					<p>Oops, Black in check !</p>
 				</div>
 			</div>

@@ -1,4 +1,4 @@
-// File: D:\Desktop\chess-ui-new\src\app\page.tsx
+// File: /home/ratpc-042/Desktop/Jyoti-RedApple/chess-ui-new/src/app/page.tsx
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
