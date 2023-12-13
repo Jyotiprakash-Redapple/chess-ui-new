@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const withOptimizedImages = require("next-optimized-images");
 
-module.exports = {
+module.exports = withOptimizedImages({
 	// webpack for know it is server | client
 	webpack: (config, { isServer }) => {
 		if (!isServer) {
@@ -35,14 +35,10 @@ module.exports = {
 	},
 	reactStrictMode: false,
 	// optimise image in production
-	// optimizeImages: true,
-	// handleImages: ["jpeg", "png", "webp"],
-	// optimizeImagesInDev: false,
+	optimizeImages: true,
+	handleImages: ["jpeg", "png", "webp", "jpg"],
+	optimizeImagesInDev: false,
 	typescript: {
-		// !! WARN !!
-		// Dangerously allow production builds to successfully complete even if
-		// your project has type errors.
-		// !! WARN !!
 		ignoreBuildErrors: true,
 	},
 	eslint: {
@@ -51,5 +47,4 @@ module.exports = {
 	images: {
 		domains: ["3.137.86.237"], // Add your IP address or domain here
 	},
-	// output: "export",
-};
+});
