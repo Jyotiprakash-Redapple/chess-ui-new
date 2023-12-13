@@ -116,6 +116,7 @@ function Promot() {
 					dispatch(dectactCheckmate(appState.promotion_square_info.piece[0]));
 				}
 				dispatch(clearPromotionSqourInfo());
+				setPromotionModal(false);
 			}, 3500);
 		} catch (e) {
 			console.log(e, "Error happen promotion");
