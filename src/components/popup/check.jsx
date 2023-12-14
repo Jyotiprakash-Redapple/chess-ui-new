@@ -1,12 +1,13 @@
 import React from "react";
 import { useAppContext } from "@/arbitar/context/Provider";
-import { updateGameStatus } from "@/arbitar/context/reducer/move";
+import { updateCheckStatus } from "@/arbitar/context/reducer/move";
+import { gameStatus } from "@/arbitar/context/reducer/constant";
 function Check() {
 	const { appState, dispatch } = useAppContext();
 
 	if (appState.turn === "w") {
 		setTimeout(() => {
-			dispatch(updateGameStatus());
+			dispatch(updateCheckStatus(gameStatus.nietherSide));
 		}, 4000);
 		return (
 			<div className='check_shadow'>
@@ -18,7 +19,7 @@ function Check() {
 	}
 	if (appState.turn === "b") {
 		setTimeout(() => {
-			dispatch(updateGameStatus());
+			dispatch(updateCheckStatus(gameStatus.nietherSide));
 		}, 4000);
 		return (
 			<div className='check_shadow'>

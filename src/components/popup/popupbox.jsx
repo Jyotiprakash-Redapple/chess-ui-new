@@ -11,7 +11,7 @@ function Popupbox() {
 	if (appState.checkStatus === gameStatus.w_check || appState.checkStatus === gameStatus.b_check) {
 		return (
 			<div
-				className="popup--check"
+				className='popup--check'
 				style={{
 					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
@@ -22,7 +22,7 @@ function Popupbox() {
 	if (appState.status === gameStatus.promoting) {
 		return (
 			<div
-				className="popup--prompt"
+				className='popup--prompt'
 				style={{
 					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
@@ -33,7 +33,7 @@ function Popupbox() {
 	if (appState.status === gameStatus.stalemet || appState.status === gameStatus.insufficiant) {
 		return (
 			<div
-				className="popup--stalemate"
+				className='popup--stalemate'
 				style={{
 					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>
@@ -45,7 +45,7 @@ function Popupbox() {
 	if (appState.status === gameStatus.white || appState.status === gameStatus.black) {
 		return (
 			<div
-				className="popup"
+				className='popup'
 				style={{
 					transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 				}}>

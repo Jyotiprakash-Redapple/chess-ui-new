@@ -1,14 +1,5 @@
 import { io } from "socket.io-client";
-import {
-	gameInit,
-	updateBoard,
-	gameTimer,
-	turnTimer,
-	turnUpdate,
-	gameEnd,
-	getUserData,
-	getMatchMakeingData,
-} from "../arbitar/context/reducer/move";
+import { gameInit, updateBoard, gameTimer, turnTimer, turnUpdate, gameEnd, getUserData, getMatchMakeingData, getCheckStatus } from "../arbitar/context/reducer/move";
 
 class Client {
 	constructor(gameSceneInstance) {
@@ -58,6 +49,11 @@ class Client {
 			dispatch(updateBoard({ arg }));
 		});
 	}
+	getUpdateCheckStatusFromServer(dispatch) {
+		this.socket.on("check-status-details", (arg) => {
+			dispatch(getCheckStatus({ arg }));
+		});
+	}
 	onGmaeTime(dispatch) {
 		this.socket.on("gameTimer", (arg) => {
 			dispatch(gameTimer(arg));
@@ -77,6 +73,9 @@ class Client {
 	}
 	onUpdateMove(cur_game) {
 		this.socket.emit("update-move", cur_game);
+	}
+	onUpdateCheckStatus(status) {
+		this.socket.emit("check-status", status);
 	}
 	onUpdateWin(data) {
 		this.socket.emit("update-score", data);

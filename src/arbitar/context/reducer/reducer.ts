@@ -1,6 +1,7 @@
 import { actionTypes, gameStatus } from "./constant";
 
 import { createPosition } from "../../helper/helper";
+import Board from "@/components/board/board";
 
 let reducer = (state: any, action: any) => {
 	switch (action.type) {
@@ -30,9 +31,7 @@ let reducer = (state: any, action: any) => {
 			let gameInit = {
 				opponent: gameObject.player.colour === "white" ? "b" : "w",
 				position: [createPosition()],
-				turn: gameObject.turn
-					? gameObject.player.colour.charAt(0).toLowerCase()
-					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
 				movementTurn: gameObject.player.colour === "white" ? true : false,
 				status: gameStatus.ongoing,
 				turnTime: {
@@ -44,6 +43,7 @@ let reducer = (state: any, action: any) => {
 			};
 			return {
 				...state,
+				checkStatus: gameStatus.nietherSide,
 				opponent: gameInit.opponent,
 				position: gameInit.position,
 				turn: gameInit.turn,
@@ -67,9 +67,7 @@ let reducer = (state: any, action: any) => {
 			return {
 				...state,
 				totalTurnTime: Number(gameObject.turn_time),
-				turn: gameObject.turn
-					? gameObject.player.colour.charAt(0).toLowerCase()
-					: gameObject.opponent.colour.charAt(0).toLowerCase(),
+				turn: gameObject.turn ? gameObject.player.colour.charAt(0).toLowerCase() : gameObject.opponent.colour.charAt(0).toLowerCase(),
 			};
 		}
 		case actionTypes.GAME_END: {
@@ -139,12 +137,54 @@ let reducer = (state: any, action: any) => {
 				};
 			}
 		}
+
+		case actionTypes.UPDATE_CHECK_STATUS: {
+			let checkStatus = "";
+			if (action.payload === "w") {
+				checkStatus = gameStatus.w_check;
+			} else {
+				if (action.payload === "b") {
+					checkStatus = gameStatus.b_check;
+				} else {
+					checkStatus = action.payload;
+				}
+			}
+			state.socket.onUpdateCheckStatus({
+				board: {
+					checkStatus: checkStatus,
+					advantage: state.advantage,
+				},
+				game_state: {
+					status: state.status,
+					advantage: state.advantage === 0 ? "Neither side" : state.advantage > 0 ? "Black" : "White",
+				},
+			});
+
+			console.log(checkStatus, "check Status from reducer");
+
+			return {
+				...state,
+				checkStatus: checkStatus,
+			};
+		}
+		case actionTypes.GET_CHECK_STATUS: {
+			let board = action.payload.arg.board;
+			if (board?.checkStatus) {
+				return {
+					...state,
+					checkStatus: board?.checkStatus,
+					advantage: board?.advantage,
+				};
+			} else {
+				return {
+					...state,
+				};
+			}
+		}
 		case actionTypes.NEW_MOVE: {
 			//! move list empty  || if move list not empty check last index two size or not
 			//! if last index two size push an element other wise pus new arr
-
 			let newMoveList = [];
-
 			if (!state.moveList.length) {
 				newMoveList = [[action.payload.newMove]];
 			} else {
@@ -159,20 +199,8 @@ let reducer = (state: any, action: any) => {
 			}
 			const newposition = [...state.position, action.payload.newPosition];
 
-			let checkStatus = "";
-
-			if (action.payload?.checkStatus === "w") {
-				checkStatus = gameStatus.w_check;
-			} else {
-				if (action.payload?.checkStatus === "b") {
-					checkStatus = gameStatus.b_check;
-				} else {
-					checkStatus = action.payload.checkStatus;
-				}
-			}
 			state.socket.onUpdateMove({
 				board: {
-					checkStatus,
 					position: action.payload.newPosition,
 					moveList: newMoveList,
 					advantage: state.advantage,
@@ -189,7 +217,6 @@ let reducer = (state: any, action: any) => {
 				...state,
 				position: newposition,
 				moveList: newMoveList,
-				checkStatus,
 			};
 		}
 		case actionTypes.CANDIDATE_MOVE: {
@@ -246,18 +273,6 @@ let reducer = (state: any, action: any) => {
 			};
 		}
 
-		case actionTypes.CHECK: {
-			return {
-				...state,
-				checkStatusUpdated: action.payload,
-			};
-		}
-		case actionTypes.STATUS_CHEANGE: {
-			return {
-				...state,
-				checkStatus: gameStatus.nietherSide,
-			};
-		}
 		case actionTypes.DECTACT_STALEMET: {
 			state.socket.onUpdateMove({
 				board: {

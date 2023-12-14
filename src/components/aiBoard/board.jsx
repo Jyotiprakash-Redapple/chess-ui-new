@@ -15,6 +15,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 function AIboard() {
 	let game_auth_token = localStorage.getItem("offline_auth_token");
+	console.log(game_auth_token, "game auth token=================>");
 	const timeRef = useRef();
 	const router = useRouter();
 	const [time, setTime] = useState("");
@@ -367,15 +368,7 @@ function AIboard() {
 			// Note: in our case, the 'children' are simply modified game states
 			var currPrettyMove = game.ugly_move(currMove);
 			var newSum = evaluateBoard(game, currPrettyMove, sum, color);
-			var [childBestMove, childValue] = minimax(
-				game,
-				depth - 1,
-				alpha,
-				beta,
-				!isMaximizingPlayer,
-				newSum,
-				color
-			);
+			var [childBestMove, childValue] = minimax(game, depth - 1, alpha, beta, !isMaximizingPlayer, newSum, color);
 
 			game.undo();
 
@@ -461,15 +454,7 @@ function AIboard() {
 		}
 
 		var d = new Date().getTime();
-		var [bestMove, bestMoveValue] = minimax(
-			game,
-			depth,
-			Number.NEGATIVE_INFINITY,
-			Number.POSITIVE_INFINITY,
-			true,
-			currSum,
-			color
-		);
+		var [bestMove, bestMoveValue] = minimax(game, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, currSum, color);
 		var d2 = new Date().getTime();
 		var moveTime = d2 - d;
 		var positionsPerS = (positionCount * 1000) / moveTime;
@@ -692,10 +677,7 @@ function AIboard() {
 		if (game.game_over()) return false;
 
 		// or if it's not that side's turn
-		if (
-			(game.turn() === "w" && piece.search(/^b/) !== -1) ||
-			(game.turn() === "b" && piece.search(/^w/) !== -1)
-		) {
+		if ((game.turn() === "w" && piece.search(/^b/) !== -1) || (game.turn() === "b" && piece.search(/^w/) !== -1)) {
 			return false;
 		}
 	}
@@ -1042,23 +1024,23 @@ function AIboard() {
 		// 	</div>
 		// </div>
 		<main>
-			<div className="view_container">
+			<div className='view_container'>
 				{/*<--start::play with player wrapper---->*/}
-				<div className="play_wrapper">
+				<div className='play_wrapper'>
 					{/*<--start::bg screen---->*/}
-					<div className="player_bg">
+					<div className='player_bg'>
 						{/*<--start::shadow overlay ---->*/}
-						<div className="card_over_lay">
+						<div className='card_over_lay'>
 							{quitGame && (
-								<div className="quit_game_bg">
-									<div className="quit_game_wrapper">
-										<div className="quit_game_text"></div>
-										<div className="quit_game_btn">
+								<div className='quit_game_bg'>
+									<div className='quit_game_wrapper'>
+										<div className='quit_game_text'></div>
+										<div className='quit_game_btn'>
 											{" "}
-											<button className="yes" onClick={() => handelQuitGame()}>
+											<button className='yes' onClick={() => handelQuitGame()}>
 												Yes
 											</button>
-											<button className="no" onClick={() => setQuitGame(false)}>
+											<button className='no' onClick={() => setQuitGame(false)}>
 												No
 											</button>
 										</div>
@@ -1066,19 +1048,19 @@ function AIboard() {
 								</div>
 							)}
 							{/*<--start:: top section ---->*/}
-							<div className="top_sec_board">
-								<div className="global_timer">
-									<div className="quit_game" onClick={() => setQuitGame(true)}></div>
-									<div className="g_timer_wrapper">
-										<div className="g_timer_stopwatch"></div>
-										<div className="g_timer_text">{moment.utc(time * 1000).format("mm:ss")}</div>
+							<div className='top_sec_board'>
+								<div className='global_timer'>
+									<div className='quit_game' onClick={() => setQuitGame(true)}></div>
+									<div className='g_timer_wrapper'>
+										<div className='g_timer_stopwatch'></div>
+										<div className='g_timer_text'>{moment.utc(time * 1000).format("mm:ss")}</div>
 									</div>
-									<div className="sound_wrapper"></div>
+									<div className='sound_wrapper'></div>
 								</div>
-								<div className="palyer_profile">
-									<div className="p_profile_wrapper">
+								<div className='palyer_profile'>
+									<div className='p_profile_wrapper'>
 										<div
-											className="palyer_name"
+											className='palyer_name'
 											style={{
 												width: "70%",
 												display: "flex",
@@ -1097,7 +1079,7 @@ function AIboard() {
 												<IoMdHeart style={{ color: "#ED5AB3", fontSize: "23px" }} />
 											)}
 										</div> */}
-										<div className="player_dp">
+										<div className='player_dp'>
 											{0 ? (
 												// <div
 												// 	className='progress_bar'
@@ -1117,7 +1099,7 @@ function AIboard() {
 													src={"/default.png"}
 													width={20}
 													height={20}
-													alt="i"
+													alt='i'
 													style={{
 														width: "40px",
 														height: "40px",
@@ -1130,7 +1112,7 @@ function AIboard() {
 													src={"/default.png"}
 													width={20}
 													height={20}
-													alt="i"
+													alt='i'
 													style={{
 														width: "40px",
 														height: "40px",
@@ -1141,9 +1123,9 @@ function AIboard() {
 											)}
 										</div>
 									</div>
-									<div className="vs_wrapper"></div>
-									<div className="o_profile_wrapper">
-										<div className="player_dp">
+									<div className='vs_wrapper'></div>
+									<div className='o_profile_wrapper'>
+										<div className='player_dp'>
 											{0 ? (
 												// <div
 												// 	className='progress_bar'
@@ -1162,7 +1144,7 @@ function AIboard() {
 													src={"/default.png"}
 													width={20}
 													height={20}
-													alt="i"
+													alt='i'
 													style={{
 														width: "40px",
 														height: "40px",
@@ -1176,7 +1158,7 @@ function AIboard() {
 														src={"/default.png"}
 														width={20}
 														height={20}
-														alt="i"
+														alt='i'
 														style={{
 															width: "40px",
 															height: "40px",
@@ -1188,7 +1170,7 @@ function AIboard() {
 											)}
 										</div>
 										<div
-											className="palyer_name"
+											className='palyer_name'
 											style={{
 												width: "70%",
 												display: "flex",
@@ -1213,16 +1195,16 @@ function AIboard() {
 							</div>
 							{/*<--end:: top section ---->*/}
 							{/*<--start:: buttom section ---->*/}
-							<div className="buttom_sec_board">
+							<div className='buttom_sec_board'>
 								{/*<--start:: game board section ---->*/}
 								<div
-									className="boards"
+									className='boards'
 									// style={{
 									// 	transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 									// }}
 								>
 									<div
-										className="board_bg"
+										className='board_bg'
 										style={{
 											// transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 											// top: appState.opponent === "w" ? "-31px" : "-56px",
@@ -1230,71 +1212,60 @@ function AIboard() {
 											top: "-56px",
 											left: "-26px",
 										}}></div>
-									<div id="myBoard"></div>
+									<div id='myBoard'></div>
 								</div>
 								{/*<--end:: game board section ---->*/}
 							</div>
-							<nav
-								className="main-menu"
-								style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
+							<nav className='main-menu' style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
 								<ul>
-									<div id="accordion">
+									<div id='accordion'>
 										<li>
 											<i className={`fa fa-gear  fa-2x `}></i>
-											<span className="nav-text">
+											<span className='nav-text'>
 												{" "}
-												<div class="card">
-													<div class="card-header" id="settingsHeading">
-														<h2 class="text-align-center">
-															<button
-																class="btn btn-header no-outline"
-																data-toggle="collapse"
-																data-target="#settings"
-																aria-expanded="true"
-																aria-controls="settings">
+												<div class='card'>
+													<div class='card-header' id='settingsHeading'>
+														<h2 class='text-align-center'>
+															<button class='btn btn-header no-outline' data-toggle='collapse' data-target='#settings' aria-expanded='true' aria-controls='settings'>
 																Settings
 															</button>
 														</h2>
 													</div>
 												</div>{" "}
-												<div
-													id="settings"
-													class="collapse"
-													aria-labelledby="settingsHeading"
-													data-parent="#accordion">
-													<div class="card-body">
-														<div class="row align-items-center justify-content-center">
-															<div class="form-group">
-																<label for="search-depth">Search Depth (Black):</label>
-																<select id="search-depth">
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3" selected>
+												<div id='settings' class='collapse' aria-labelledby='settingsHeading' data-parent='#accordion'>
+													<div class='card-body'>
+														<div class='row align-items-center justify-content-center'>
+															<div class='form-group'>
+																<label for='search-depth'>Search Depth (Black):</label>
+																<select id='search-depth'>
+																	<option value='1'>1</option>
+																	<option value='2'>2</option>
+																	<option value='3' selected>
 																		3
 																	</option>
-																	<option value="4">4</option>
-																	<option value="5">5</option>
+																	<option value='4'>4</option>
+																	<option value='5'>5</option>
 																</select>
 															</div>
 														</div>
-														<div class="row align-items-center justify-content-center">
-															<div class="form-group">
-																<label for="search-depth-white">Search Depth (White):</label>
-																<select id="search-depth-white">
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3" selected>
+														<div class='row align-items-center justify-content-center'>
+															<div class='form-group'>
+																<label for='search-depth-white'>Search Depth (White):</label>
+																<select id='search-depth-white'>
+																	<option value='1'>1</option>
+																	<option value='2'>2</option>
+																	<option value='3' selected>
 																		3
 																	</option>
-																	<option value="4">4</option>
-																	<option value="5">5</option>
+																	<option value='4'>4</option>
+																	<option value='5'>5</option>
 																</select>
 															</div>
 														</div>
-														<div class="row align-items-center justify-content-center">
-															<div class="form-group">
-																<input type="checkbox" id="showHint" name="showHint" value="showHint" />
-																<label for="showHint">Show Suggested Move (White)</label>
+														<div class='row align-items-center justify-content-center'>
+															<div class='form-group'>
+																<input type='checkbox' id='showHint' name='showHint' value='showHint' />
+																<label for='showHint'>Show Suggested Move (White)</label>
 															</div>
 														</div>
 													</div>
@@ -1303,55 +1274,40 @@ function AIboard() {
 										</li>
 
 										<li>
-											<i class="fa fa-map-marker fa-2x"></i>
-											<span className="nav-text">
+											<i class='fa fa-map-marker fa-2x'></i>
+											<span className='nav-text'>
 												{" "}
-												<div class="card">
-													<div class="card-header" id="openingPositionsHeading">
-														<h2 class="text-align-center">
-															<button
-																class="btn btn-header no-outline"
-																data-toggle="collapse"
-																data-target="#openingPositions"
-																aria-expanded="true"
-																aria-controls="openingPositions">
+												<div class='card'>
+													<div class='card-header' id='openingPositionsHeading'>
+														<h2 class='text-align-center'>
+															<button class='btn btn-header no-outline' data-toggle='collapse' data-target='#openingPositions' aria-expanded='true' aria-controls='openingPositions'>
 																Opening Positions
 															</button>
 														</h2>
 													</div>
 												</div>
-												<div
-													id="openingPositions"
-													class="collapse"
-													aria-labelledby="openingPositionsHeading"
-													data-parent="#accordion">
-													<div class="card-body">
-														<div class="row my-3 text-align-center">
-															<div class="col-md-6 my-2">
-																<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
+												<div id='openingPositions' class='collapse' aria-labelledby='openingPositionsHeading' data-parent='#accordion'>
+													<div class='card-body'>
+														<div class='row my-3 text-align-center'>
+															<div class='col-md-6 my-2'>
+																<button class='btn btn-primary' id='ruyLopezBtn' onClick={handelruLopezBtn}>
 																	Ruy Lopez
 																</button>
 															</div>
-															<div class="col-md-6 my-2">
-																<button
-																	class="btn btn-primary"
-																	id="italianGameBtn"
-																	onClick={handelItalianGameBtn}>
+															<div class='col-md-6 my-2'>
+																<button class='btn btn-primary' id='italianGameBtn' onClick={handelItalianGameBtn}>
 																	Italian Game
 																</button>
 															</div>
 														</div>
-														<div class="row my-3 text-align-center">
-															<div class="col-md-6 my-2">
-																<button
-																	class="btn btn-primary"
-																	id="sicilianDefenseBtn"
-																	onClick={handelSicilianDefenseBtn}>
+														<div class='row my-3 text-align-center'>
+															<div class='col-md-6 my-2'>
+																<button class='btn btn-primary' id='sicilianDefenseBtn' onClick={handelSicilianDefenseBtn}>
 																	Sicilian Defense
 																</button>
 															</div>
-															<div class="col-md-6 my-2">
-																<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
+															<div class='col-md-6 my-2'>
+																<button class='btn btn-primary' id='startBtn' onClick={handelStartBtn}>
 																	Start Position
 																</button>
 															</div>
@@ -1361,36 +1317,27 @@ function AIboard() {
 											</span>
 										</li>
 										<li>
-											<i class="fa fa-desktop fa-2x"></i>
-											<span className="nav-text">
-												<div class="card">
-													<div class="card-header" id="compVsCompHeading">
-														<h2 class="text-align-center">
-															<button
-																class="btn btn-header no-outline"
-																data-toggle="collapse"
-																data-target="#compVsComp"
-																aria-expanded="true"
-																aria-controls="compVsComp">
+											<i class='fa fa-desktop fa-2x'></i>
+											<span className='nav-text'>
+												<div class='card'>
+													<div class='card-header' id='compVsCompHeading'>
+														<h2 class='text-align-center'>
+															<button class='btn btn-header no-outline' data-toggle='collapse' data-target='#compVsComp' aria-expanded='true' aria-controls='compVsComp'>
 																Computer vs. Computer
 															</button>
 														</h2>
 													</div>
 												</div>
-												<div
-													id="compVsComp"
-													class="collapse"
-													aria-labelledby="compVsCompHeading"
-													data-parent="#accordion">
-													<div class="card-body">
-														<div class="row text-align-center">
-															<div class="col-md-6 my-2">
-																<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
+												<div id='compVsComp' class='collapse' aria-labelledby='compVsCompHeading' data-parent='#accordion'>
+													<div class='card-body'>
+														<div class='row text-align-center'>
+															<div class='col-md-6 my-2'>
+																<button class='btn btn-success' id='compVsCompBtn' onClick={handelComVsComBtn}>
 																	Start Game
 																</button>
 															</div>
-															<div class="col-md-6 my-2">
-																<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
+															<div class='col-md-6 my-2'>
+																<button class='btn btn-danger' id='resetBtn' onClick={handelResetBtn}>
 																	Stop and Reset
 																</button>
 															</div>

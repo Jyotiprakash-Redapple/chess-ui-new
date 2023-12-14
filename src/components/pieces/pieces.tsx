@@ -14,8 +14,8 @@ import {
 	dectactCheckmate,
 	saveKillPices,
 	updateAdvantage,
-	dectateCheck,
 	updateGameStatus,
+	updateCheckStatus,
 } from "@/arbitar/context/reducer/move";
 import { arbitar } from "@/arbitar/game/arbitar";
 import PiecesDropSound from "@/audio/drop_chess.mp3";
@@ -33,14 +33,8 @@ function Pieces() {
 	const calculateCoords = (e) => {
 		const { top, left, width } = picesRef.current.getBoundingClientRect();
 		const size = width / 8;
-		const y =
-			appState.opponent === "b"
-				? Math.floor((e.clientX - left) / size)
-				: 7 - Math.floor((e.clientX - left) / size);
-		const x =
-			appState.opponent === "b"
-				? 7 - Math.floor((e.clientY - top) / size)
-				: Math.floor((e.clientY - top) / size);
+		const y = appState.opponent === "b" ? Math.floor((e.clientX - left) / size) : 7 - Math.floor((e.clientX - left) / size);
+		const x = appState.opponent === "b" ? 7 - Math.floor((e.clientY - top) / size) : Math.floor((e.clientY - top) / size);
 
 		return { x, y };
 	};
@@ -100,17 +94,11 @@ function Pieces() {
 				if (appState.candidateMove.find((m) => m[0] === x && m[1] === y)) {
 					// Em pasant move when current poition empty
 					const opponet = piece.startsWith("w") ? "b" : "w";
-
-					dispatch(dectateCheck(false));
-
 					// castelDirection
 					const castelDirection = appState.castlingdir[`${piece.startsWith("w") ? "b" : "w"}`];
 
 					// Open promotion box
-					if (
-						(piece === "wp" && x === 7 && appState.opponent === "b") ||
-						(piece === "bp" && x === 0 && appState.opponent === "w")
-					) {
+					if ((piece === "wp" && x === 7 && appState.opponent === "b") || (piece === "bp" && x === 0 && appState.opponent === "w")) {
 						handelOpenPromotionBox({ rank, file, x, y });
 						return;
 					}
@@ -166,6 +154,7 @@ function Pieces() {
 						positionAfterMove: newPosition,
 						player: opponet,
 					});
+					console.log(isChecked, "dectate is check or not pices");
 
 					dispatch(updateAdvantage(advantages));
 
@@ -173,7 +162,6 @@ function Pieces() {
 						makeNewMove({
 							newPosition,
 							newMove,
-							checkStatus: isChecked ? opponet : gameStatus.nietherSide,
 						})
 					);
 					if (arbitar.insufficientMaterial(newPosition)) {
@@ -182,9 +170,13 @@ function Pieces() {
 						dispatch(dectactStalemet());
 					} else if (arbitar.isCheckMate(newPosition, opponet, castelDirection)) {
 						dispatch(dectactCheckmate(piece[0]));
+					} else if (isChecked) {
+						console.log("function calll picess");
+						let status = isChecked ? opponet : gameStatus.nietherSide;
+
+						dispatch(updateCheckStatus(status));
 					}
 				}
-
 				dispatch(clearCandidates());
 				dispatch(clearPicesSqoureInfo());
 			}
@@ -215,23 +207,9 @@ function Pieces() {
 
 	return (
 		<>
-			<div
-				className="pieces"
-				ref={picesRef}
-				onClick={handelDropClick}
-				onDrop={handelDrop}
-				onDragOver={handeldargOver}>
+			<div className='pieces' ref={picesRef} onClick={handelDropClick} onDrop={handelDrop} onDragOver={handeldargOver}>
 				{currentPosition.map((r, rank) =>
-					r.map((f, file) =>
-						currentPosition[rank][file] ? (
-							<Piece
-								key={rank + "-" + file}
-								rank={rank}
-								file={file}
-								piece={currentPosition[rank][file]}
-							/>
-						) : null
-					)
+					r.map((f, file) => (currentPosition[rank][file] ? <Piece key={rank + "-" + file} rank={rank} file={file} piece={currentPosition[rank][file]} /> : null))
 				)}
 			</div>
 		</>

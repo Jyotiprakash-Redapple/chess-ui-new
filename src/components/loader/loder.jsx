@@ -29,7 +29,6 @@ function Loadeing() {
 						if (appState.socket) {
 							// redom match queue emit
 							appState.socket.onRendomMatch();
-
 							setTimeout(() => {
 								appState.socket.getUpdateDetailsFromServer(dispatch);
 								appState.socket.onGmaeTime(dispatch);
@@ -38,6 +37,7 @@ function Loadeing() {
 								appState.socket.onGameEnd(dispatch);
 								appState.socket.getUserDataFromServer(dispatch);
 								appState.socket.getMatchMakeingDataFromServer(dispatch);
+								appState.socket.getUpdateCheckStatusFromServer(dispatch);
 								router.push("/match-make", { scroll: false });
 							}, 1000);
 						}
@@ -62,18 +62,18 @@ function Loadeing() {
 
 	return (
 		<main>
-			<div className="view_container">
-				<div className="load_wrapper">
-					<div className="load_background">
-						<div className="inner_wrapper">
-							<div className="loadeing_text"></div>
-							<div className="loadeing_bg">
+			<div className='view_container'>
+				<div className='load_wrapper'>
+					<div className='load_background'>
+						<div className='inner_wrapper'>
+							<div className='loadeing_text'></div>
+							<div className='loadeing_bg'>
 								<img
 									key={widthRef.current}
-									src="/loding/lodeing_bg_active.png"
+									src='/loding/lodeing_bg_active.png'
 									width={20}
 									height={30}
-									alt="loader"
+									alt='loader'
 									style={{
 										width: `${loadingWidth}%`,
 										objectFit: "cover",
@@ -84,7 +84,7 @@ function Loadeing() {
 							</div>
 						</div>
 					</div>
-					<div className="splash_logo"></div>
+					<div className='splash_logo'></div>
 				</div>
 			</div>
 		</main>
