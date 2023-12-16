@@ -8,6 +8,16 @@ export default function SplashScreen() {
 	const router = useRouter();
 	const { appState, dispatch } = useAppContext();
 	// check query string
+
+	// navigator.vibrate =
+	// 	navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
+
+	// if (navigator?.vibrate) {
+	// 	// vibration API supported
+	// 	navigator.vibrate(5000);
+	// } else {
+	// 	console.log("vibrate not supported this device===>");
+	// }
 	const checkQuery = async () => {
 		const search = window.location.search;
 		if (search) {

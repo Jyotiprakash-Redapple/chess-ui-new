@@ -67,7 +67,11 @@ function Piece({ file, rank, piece }: Props) {
 	 * click event handel
 	 */
 	const handelClick = (e) => {
-		onMove();
+		try {
+			onMove();
+		} catch (e) {
+			console.log("Error in Click", e);
+		}
 	};
 
 	return (

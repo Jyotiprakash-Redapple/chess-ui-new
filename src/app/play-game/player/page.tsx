@@ -1,4 +1,5 @@
 "use client";
+import SoundAlert from "../../../audio/alert.mp3";
 import React, { useEffect, useState } from "react";
 // pages/index.js
 import dynamic from "next/dynamic";
@@ -13,6 +14,7 @@ import moment from "moment";
 import { IoMdHeart } from "react-icons/io";
 import { FaHeartBroken } from "react-icons/fa";
 import Popupbox from "@/components/popup/popupbox";
+var soundPlay = true;
 function PlayWithPlayer() {
 	const [quitGame, setQuitGame] = useState(false);
 	const { player, opponent } = app;
@@ -47,14 +49,27 @@ function PlayWithPlayer() {
 		return Math.abs(1 - value) < epsilon;
 	}
 
+	// const playSound = () => {
+	// 	try {
+	// 		if (soundPlay) {
+	// 			soundPlay = !soundPlay;
+	// 			let soundSource = SoundAlert;
+	// 			let audio = new Audio(soundSource);
+	// 			audio.play();
+	// 			audio.onended = () => {
+	// 				soundPlay = true;
+	// 			};
+	// 		}
+	// 	} catch (e) {}
+	// };
+
 	useEffect(() => {
-		// Check if the socket is not connected.
 		if (!appState.socket) {
 			router.push("/internet-disconnect");
 		} else {
 		}
 	}, []);
-	const options = ["q", "r", "b", "n"];
+
 	return (
 		<main>
 			<div className="view_container">
@@ -106,7 +121,15 @@ function PlayWithPlayer() {
 												fontWeight: "500",
 												marginRight: "3px",
 											}}>
-											{appState.pl.user_name}
+											<p
+												style={{
+													whiteSpace: "nowrap",
+													width: "60%",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+												}}>
+												{appState.pl.user_name}
+											</p>
 										</div>
 										<div style={{ position: "absolute", top: "13px", left: 0 }}>
 											{appState.pl.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (
@@ -217,7 +240,15 @@ function PlayWithPlayer() {
 												fontWeight: "500",
 												marginLeft: "3px",
 											}}>
-											{appState.op.user_name}
+											<p
+												style={{
+													whiteSpace: "nowrap",
+													width: "60%",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+												}}>
+												{appState.op.user_name}
+											</p>
 										</div>
 										<div style={{ position: "absolute", top: "13px", right: 0 }}>
 											{appState.op.id === appState.turnTime.current_player_id && !appState.turnTime.life ? (

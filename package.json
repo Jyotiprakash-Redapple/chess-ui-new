@@ -12,6 +12,7 @@
 		"axios": "^1.6.2",
 		"bootstrap": "^5.3.2",
 		"chessboardjsx": "^2.4.7",
+		"cordova-plugin-vibration": "^3.1.1",
 		"expose-loader": "^4.1.0",
 		"jquery": "^3.7.1",
 		"moment": "^2.29.4",

@@ -65,11 +65,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
 					crossOrigin="anonymous"
 				/>
-				<script
+				{/* <script
 					defer
 					src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
 					integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
-					crossOrigin="anonymous"></script>
+					crossOrigin="anonymous"></script> */}
 				{/* <script defer src="/chessboard.js"></script> */}
 				{/* <!-- Bootstrap JS --> */}
 				<script
