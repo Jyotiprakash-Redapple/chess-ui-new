@@ -21,7 +21,8 @@ export default function SplashScreen() {
 	const checkQuery = () => {
 		const search = window.location.search;
 		if (search) {
-			const searchParams = await new URLSearchParams(search);
+			const searchParams = new URLSearchParams(search);
+			console.log(searchParams, "search parasmm");
 			// game mode online
 
 			console.log(searchParams.size, "size");
