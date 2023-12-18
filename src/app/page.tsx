@@ -18,7 +18,7 @@ export default function SplashScreen() {
 	// } else {
 	// 	console.log("vibrate not supported this device===>");
 	// }
-	const checkQuery = async () => {
+	const checkQuery = () => {
 		const search = window.location.search;
 		if (search) {
 			const searchParams = await new URLSearchParams(search);
@@ -45,10 +45,7 @@ export default function SplashScreen() {
 				}
 			}
 		} else {
-			console.log(
-				"%cAuthentication Faild",
-				"background-color: white; color: red; font-size: larger; font-weight: 700"
-			);
+			console.log("%cAuthentication Faild", "background-color: white; color: red; font-size: larger; font-weight: 700");
 		}
 	};
 
@@ -68,10 +65,10 @@ export default function SplashScreen() {
 	/* run when component mount in dom */
 	return (
 		<main>
-			<div className="view_container">
-				<div className="splash_wrapper">
-					<div className="splash_background"></div>
-					<div className="splash_logo"></div>
+			<div className='view_container'>
+				<div className='splash_wrapper'>
+					<div className='splash_background'></div>
+					<div className='splash_logo'></div>
 				</div>
 			</div>
 		</main>
