@@ -69,6 +69,7 @@ class Client {
 	onTurnChange(dispatch) {
 		this.socket.on("game-updateTurn", (arg) => {
 			dispatch(turnUpdate(arg));
+			console.log("GameTurnTimer From Server===========>", arg);
 		});
 	}
 	onUpdateMove(cur_game) {

@@ -32,7 +32,7 @@ module.exports = {
 
 		return config;
 	},
-	reactStrictMode: true,
+	reactStrictMode: false,
 	// optimise image in production
 	typescript: {
 		ignoreBuildErrors: true,
