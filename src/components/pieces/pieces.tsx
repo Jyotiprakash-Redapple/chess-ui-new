@@ -32,14 +32,8 @@ function Pieces() {
 	const calculateCoords = (e) => {
 		const { top, left, width } = picesRef.current.getBoundingClientRect();
 		const size = width / 8;
-		const y =
-			appState.opponent === "b"
-				? Math.floor((e.clientX - left) / size)
-				: 7 - Math.floor((e.clientX - left) / size);
-		const x =
-			appState.opponent === "b"
-				? 7 - Math.floor((e.clientY - top) / size)
-				: Math.floor((e.clientY - top) / size);
+		const y = appState.opponent === "b" ? Math.floor((e.clientX - left) / size) : 7 - Math.floor((e.clientX - left) / size);
+		const x = appState.opponent === "b" ? 7 - Math.floor((e.clientY - top) / size) : Math.floor((e.clientY - top) / size);
 
 		return { x, y };
 	};
@@ -84,7 +78,8 @@ function Pieces() {
 				};
 			}
 		} catch (e) {
-			console.log(e);
+			console.log(e, "Error In Play Sound Fn");
+			alert("Error in Sound Play");
 		}
 	};
 	/**
@@ -105,10 +100,7 @@ function Pieces() {
 					const castelDirection = appState.castlingdir[`${piece.startsWith("w") ? "b" : "w"}`];
 
 					// Open promotion box
-					if (
-						(piece === "wp" && x === 7 && appState.opponent === "b") ||
-						(piece === "bp" && x === 0 && appState.opponent === "w")
-					) {
+					if ((piece === "wp" && x === 7 && appState.opponent === "b") || (piece === "bp" && x === 0 && appState.opponent === "w")) {
 						handelOpenPromotionBox({ rank, file, x, y });
 						return;
 					}
@@ -191,7 +183,8 @@ function Pieces() {
 				dispatch(clearPicesSqoureInfo());
 			}
 		} catch (e) {
-			console.log(e, "error Occored");
+			console.log("error Occored", e);
+			alert("Error Happen in OnDrp", e?.message);
 		}
 	};
 	/**
@@ -217,23 +210,9 @@ function Pieces() {
 
 	return (
 		<>
-			<div
-				className="pieces"
-				ref={picesRef}
-				onClick={handelDropClick}
-				onDrop={handelDrop}
-				onDragOver={handeldargOver}>
+			<div className='pieces' ref={picesRef} onClick={handelDropClick} onDrop={handelDrop} onDragOver={handeldargOver}>
 				{currentPosition.map((r, rank) =>
-					r.map((f, file) =>
-						currentPosition[rank][file] ? (
-							<Piece
-								key={rank + "-" + file}
-								rank={rank}
-								file={file}
-								piece={currentPosition[rank][file]}
-							/>
-						) : null
-					)
+					r.map((f, file) => (currentPosition[rank][file] ? <Piece key={rank + "-" + file} rank={rank} file={file} piece={currentPosition[rank][file]} /> : null))
 				)}
 			</div>
 		</>

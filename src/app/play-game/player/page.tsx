@@ -72,23 +72,23 @@ function PlayWithPlayer() {
 
 	return (
 		<main>
-			<div className="view_container">
+			<div className='view_container'>
 				{/*<--start::play with player wrapper---->*/}
-				<div className="play_wrapper">
+				<div className='play_wrapper'>
 					{/*<--start::bg screen---->*/}
-					<div className="player_bg">
+					<div className='player_bg'>
 						{/*<--start::shadow overlay ---->*/}
-						<div className="card_over_lay">
+						<div className='card_over_lay'>
 							{quitGame && (
-								<div className="quit_game_bg">
-									<div className="quit_game_wrapper">
-										<div className="quit_game_text"></div>
-										<div className="quit_game_btn">
+								<div className='quit_game_bg'>
+									<div className='quit_game_wrapper'>
+										<div className='quit_game_text'></div>
+										<div className='quit_game_btn'>
 											{" "}
-											<button className="yes" onClick={() => handelQuitGame()}>
+											<button className='yes' onClick={() => handelQuitGame()}>
 												Yes
 											</button>
-											<button className="no" onClick={() => setQuitGame(false)}>
+											<button className='no' onClick={() => setQuitGame(false)}>
 												No
 											</button>
 										</div>
@@ -97,21 +97,19 @@ function PlayWithPlayer() {
 							)}
 
 							{/*<--start:: top section ---->*/}
-							<div className="top_sec_board">
-								<div className="global_timer">
-									<div className="quit_game" onClick={() => setQuitGame(true)}></div>
-									<div className="g_timer_wrapper">
-										<div className="g_timer_stopwatch"></div>
-										<div className="g_timer_text">
-											{moment.utc(appState?.gameTime * 1000).format("mm:ss")}
-										</div>
+							<div className='top_sec_board'>
+								<div className='global_timer'>
+									<div className='quit_game' onClick={() => setQuitGame(true)}></div>
+									<div className='g_timer_wrapper'>
+										<div className='g_timer_stopwatch'></div>
+										<div className='g_timer_text'>{moment.utc(appState?.gameTime * 1000).format("mm:ss")}</div>
 									</div>
-									<div className="sound_wrapper"></div>
+									<div className='sound_wrapper'></div>
 								</div>
-								<div className="palyer_profile">
-									<div className="p_profile_wrapper">
+								<div className='palyer_profile'>
+									<div className='p_profile_wrapper'>
 										<div
-											className="palyer_name"
+											className='palyer_name'
 											style={{
 												width: "70%",
 												display: "flex",
@@ -138,10 +136,10 @@ function PlayWithPlayer() {
 												<IoMdHeart style={{ color: "#ED5AB3", fontSize: "23px" }} />
 											)}
 										</div>
-										<div className="player_dp">
+										<div className='player_dp'>
 											{appState.pl.id === appState.turnTime.current_player_id && appState.turnTime.life ? (
 												<div
-													className="progress_bar"
+													className='progress_bar'
 													style={{
 														background: updateProgressBar(appState.turnTime.counter),
 														position: "relative",
@@ -158,7 +156,7 @@ function PlayWithPlayer() {
 														src={appState?.pl.profile}
 														width={20}
 														height={20}
-														alt="i"
+														alt='i'
 														style={{
 															width: "40px",
 															height: "40px",
@@ -171,7 +169,7 @@ function PlayWithPlayer() {
 													src={appState.pl.profile}
 													width={20}
 													height={20}
-													alt="i"
+													alt='i'
 													style={{
 														width: "40px",
 														height: "40px",
@@ -182,12 +180,12 @@ function PlayWithPlayer() {
 											)}
 										</div>
 									</div>
-									<div className="vs_wrapper"></div>
-									<div className="o_profile_wrapper">
-										<div className="player_dp">
+									<div className='vs_wrapper'></div>
+									<div className='o_profile_wrapper'>
+										<div className='player_dp'>
 											{appState.op.id === appState.turnTime.current_player_id && appState.turnTime.life ? (
 												<div
-													className="progress_bar"
+													className='progress_bar'
 													style={{
 														background: updateProgressBar(appState.turnTime.counter),
 														position: "relative",
@@ -203,7 +201,7 @@ function PlayWithPlayer() {
 														src={appState.op.profile}
 														width={20}
 														height={20}
-														alt="i"
+														alt='i'
 														style={{
 															width: "40px",
 															height: "40px",
@@ -217,7 +215,7 @@ function PlayWithPlayer() {
 														src={appState.op.profile}
 														width={20}
 														height={20}
-														alt="i"
+														alt='i'
 														style={{
 															width: "40px",
 															height: "40px",
@@ -229,7 +227,7 @@ function PlayWithPlayer() {
 											)}
 										</div>
 										<div
-											className="palyer_name"
+											className='palyer_name'
 											style={{
 												width: "70%",
 												display: "flex",
@@ -262,15 +260,15 @@ function PlayWithPlayer() {
 							</div>
 							{/*<--end:: top section ---->*/}
 							{/*<--start:: buttom section ---->*/}
-							<div className="buttom_sec_board">
+							<div className='buttom_sec_board'>
 								{/*<--start:: game board section ---->*/}
 								<div
-									className="boards"
+									className='boards'
 									style={{
 										transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 									}}>
 									<div
-										className="board_bg"
+										className='board_bg'
 										style={{
 											transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 											top: appState.opponent === "w" ? "-31px" : "-56px",

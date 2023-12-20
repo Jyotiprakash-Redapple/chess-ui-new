@@ -3,11 +3,7 @@ import { useAppContext } from "@/arbitar/context/Provider";
 
 import { arbitar } from "@/arbitar/game/arbitar";
 
-import {
-	makeCandidateMoves,
-	setPicesSqoureInfo,
-	clearPicesSqoureInfo,
-} from "@/arbitar/context/reducer/move";
+import { makeCandidateMoves, setPicesSqoureInfo, clearPicesSqoureInfo } from "@/arbitar/context/reducer/move";
 import { gameStatus } from "@/arbitar/context/reducer/constant";
 
 type Props = {
@@ -25,11 +21,7 @@ function Piece({ file, rank, piece }: Props) {
 	 */
 
 	const onMove = () => {
-		if (
-			appState.opponent !== piece[0] &&
-			appState.turn === piece[0] &&
-			appState.status !== gameStatus.internetDisconnect
-		) {
+		if (appState.opponent !== piece[0] && appState.turn === piece[0] && appState.status !== gameStatus.internetDisconnect) {
 			dispatch(clearPicesSqoureInfo());
 			const candicateMove = arbitar.getValidMoves({
 				position: currentPosition,
@@ -71,16 +63,19 @@ function Piece({ file, rank, piece }: Props) {
 			onMove();
 		} catch (e) {
 			console.log("Error in Click", e);
+			alert("Error in Click", e?.message);
 		}
 	};
 
 	return (
 		<div
-			className={`piece ${piece} p-${appState.opponent}${file}${rank}`}
+			className={`piece  p-${appState.opponent}${file}${rank}`}
 			// draggable={true}
 			// onDragStart={handelDragStart}
 			// onDragEnd={handelDragEnd}
-			onClick={handelClick}></div>
+			onClick={handelClick}>
+			<div className={`img_ ${piece}`}></div>
+		</div>
 	);
 }
 

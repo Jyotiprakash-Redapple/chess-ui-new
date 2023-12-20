@@ -10,6 +10,8 @@
 	-webkit-text-size-adjust: 100%;
 
 	--tile-size: 40px;
+	--pices-size-x: 20px;
+	--pices-size-y: 25px;
 	--light-tiles: #72d0ff;
 	--dark-tiles: #4b74a3;
 	--high-light-tiles: #2417d3;

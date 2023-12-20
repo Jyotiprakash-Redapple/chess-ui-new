@@ -25,7 +25,7 @@ export default function SplashScreen() {
 			console.log(searchParams, "search parasmm");
 			// game mode online
 
-			console.log(searchParams.size, "size");
+			console.log(searchParams.size, "Game start based on token");
 			if (searchParams.get("auth_token") && searchParams.size === 1) {
 				let queryVar = searchParams.get("auth_token");
 				const socket = new Client();
