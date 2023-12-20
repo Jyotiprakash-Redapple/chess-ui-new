@@ -172,8 +172,8 @@ for white top 53px black -=65px
 .img_.bq {
 	background-image: url("/game_play/bq.png");
 	background-position: 9px -2px;
-	width: calc(1.8 * var(--pices-size-x));
-	height: calc(1.7 * var(--pices-size-y));
+	width: calc(1.6 * var(--pices-size-x));
+	height: calc(1.52 * var(--pices-size-y));
 }
 .img_.br {
 	background-image: url("/game_play/br.png");
@@ -217,8 +217,8 @@ for white top 53px black -=65px
 .img_.wq {
 	background-image: url("/game_play/wq.png");
 	background-position: 9px -2px;
-	width: calc(1.8 * var(--pices-size-x));
-	height: calc(1.7 * var(--pices-size-y));
+	width: calc(1.6 * var(--pices-size-x));
+	height: calc(1.52 * var(--pices-size-y));
 }
 .img_.wr {
 	background-image: url("/game_play/wr.png");
