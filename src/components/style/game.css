@@ -18,9 +18,25 @@ for white top 53px black -=65px
 	left: -26px; */
 	bottom: 0;
 	background-image: url("/game_play/Board.png");
+	/* background-image: url("/Board.png"); */
 	background-size: cover;
 	background-repeat: no-repeat;
 	/* ss */
+}
+
+div[data-testid="white-square"] {
+	background-color: transparent !important;
+	/* border: 1px solid red; */
+}
+div[data-testid="black-square"] {
+	background-color: transparent !important;
+	/* border: 1px solid red; */
+}
+div[data-testid] {
+	/* display: flex;
+	align-items: center;
+	justify-content: center; */
+	position: relative;
 }
 
 .tiles {
@@ -244,6 +260,66 @@ for white top 53px black -=65px
 	background-position: 5px 1.2px;
 	width: calc(1 * var(--pices-size-x));
 	height: calc(1 * var(--pices-size-y));
+}
+
+img[data-piece="bK"] {
+	width: calc(2.1 * var(--pices-size-x)) !important;
+	height: calc(1.9 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="bQ"] {
+	width: calc(1.6 * var(--pices-size-x)) !important;
+	height: calc(1.52 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="bR"] {
+	width: calc(1.2 * var(--pices-size-x)) !important;
+	height: calc(1.2 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="bB"] {
+	width: calc(1.5 * var(--pices-size-x)) !important;
+	height: calc(1.4 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="bN"] {
+	width: calc(1.3 * var(--pices-size-x)) !important;
+	height: calc(1.2 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="bP"] {
+	/* width: calc(1 * var(--pices-size-x)) !important;
+	height: calc(1 * var(--pices-size-y)) !important; */
+}
+
+img[data-piece="wK"] {
+	width: calc(2.1 * var(--pices-size-x)) !important;
+	height: calc(1.9 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="wQ"] {
+	width: calc(1.6 * var(--pices-size-x)) !important;
+	height: calc(1.52 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="wR"] {
+	width: calc(1.2 * var(--pices-size-x)) !important;
+	height: calc(1.2 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="wB"] {
+	width: calc(1.5 * var(--pices-size-x)) !important;
+	height: calc(1.4 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="wN"] {
+	width: calc(1.3 * var(--pices-size-x)) !important;
+	height: calc(1.2 * var(--pices-size-y)) !important;
+}
+
+img[data-piece="wP"] {
+	/* width: calc(1 * var(--pices-size-x)) !important;
+	height: calc(1 * var(--pices-size-y)) !important; */
 }
 
 /*===============================chess board style move x = 100 each box======================================*/

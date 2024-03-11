@@ -228,4 +228,6 @@ export {
 	pstOpponent,
 	pstSelf,
 	weights,
+	pst_b,
+	pst_w,
 };

@@ -2,245 +2,112 @@
 import "@/style/game.css";
 import { useEffect, useState, useRef } from "react";
 import React from "react";
-import $ from "jquery";
-
 import { Chess } from "@/arbitar/lib/chess";
-
-import { ChessBoard } from "@/arbitar/lib/chessboard";
 import Chessboard from "chessboardjsx";
+import { updateProgressBar, isImageUrl, IconPices, pst_b, pst_w, weights } from "../../arbitar/helper/helper";
+
 import Image from "next/image";
-import { app } from "@/config/appConfig";
 import moment from "moment";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 function AIboard() {
+	//! call use hook
 	let game_auth_token = localStorage.getItem("offline_auth_token");
-
-	const timeRef = useRef();
+	const boardRef = useRef();
 	const router = useRouter();
-	const [time, setTime] = useState("");
+	let globalSum = useRef(0);
 
+	//! global variable game
+	var STACK_SIZE = 50;
+	var positionCount;
+	var pstOpponent = { w: pst_b, b: pst_w };
+	var pstSelf = { w: pst_w, b: pst_b };
+
+	//!handel game state
+	const [time, setTime] = useState("");
+	const [parentWidth, setParentWidth] = useState(0);
+	const [parentHeight, setParentHeight] = useState(0);
 	const [quitGame, setQuitGame] = useState(false);
-	const [chessMove, setChessMove] = useState({
+	const [state, setState] = useState({
 		fen: "start",
+		dropSquareStyle: {},
 		squareStyles: {},
-		// square with the currently clicked piece
 		pieceSquare: "",
-		// currently clicked square
 		square: "",
-		// array of past game moves
 		history: [],
+		game: null,
+		validmove: [],
 	});
 
-	/*
-	 * A simple chess AI, by someone who doesn't know how to play chess.
-	 * Uses the chessboard.js and chess.js libraries.
-	 *
-	 * Copyright (c) 2020 Zhang Zeyu
-	 */
-
-	// maximum size of undo stack
-
-	var board = null;
-	var $board = $("#myBoard");
-
-	var game = new Chess();
-
-	// var _ChessBoard = ChessBoard();
-	var globalSum = 0; // always from black's perspective. Negative for white's perspective.
-	var whiteSquareGrey = "#a9a9a9";
-	var blackSquareGrey = "#696969";
-	var STACK_SIZE = 50;
-	var squareClass = "square-55d63";
-	var squareToHighlight = null;
-	var colorToHighlight = null;
-	var positionCount;
+	//! call when your component mount
 	useEffect(() => {
-		var config = {
-			draggable: true,
-			position: "start",
-			onDragStart: onDragStart,
-			onDrop: onDrop,
-			onMouseoutSquare: onMouseoutSquare,
-			onMouseoverSquare: onMouseoverSquare,
-			onSnapEnd: onSnapEnd,
-			// pieceTheme: metro_theme,
-			// boardTheme: metro_board_theme,
-			// onSquareClick: onSquareClick,
-			// onSquareRightClick: onSquareRightClick,
-		};
-		let new_ = ChessBoard();
-		if (typeof document !== "undefined") {
-			// Your browser-specific code here
-			board = new new_(document.getElementById("myBoard"), config);
-		}
+		setState((prevState) => {
+			return { ...prevState, game: new Chess() };
+		});
 	}, []);
 
+	/**
+	 * info: remove highlight from chess board sqour
+	 */
+	const removeHighlightSquare = () => {
+		setState((prevState) => ({
+			...prevState,
+			squareStyles: {},
+			// squareStyles: squareStyling({
+			// 	pieceSquare: prevState.pieceSquare,
+			// 	history: prevState.history,
+			// }),
+		}));
+	};
+
+	/**
+	 * info: highlight chessboardSqour | style of single sqour
+	 */
+	const highlightSquare = (sourceSquare, squaresToHighlight) => {
+		const highlightStyles = [sourceSquare, ...squaresToHighlight].reduce((a, c) => {
+			return {
+				...a,
+				...{
+					[c]: {
+						background: "rgba(255, 255, 0, 0.4)",
+						// background: "#85a832",
+						// border: "2px solid #a83232",
+						//  background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
+						// borderRadius: "50%",
+					},
+				},
+				// ...squareStyling({
+				// 	history: state.history,
+				// 	pieceSquare: state.pieceSquare,
+				// }),
+			};
+		}, {});
+
+		setState((prevState) => ({
+			...prevState,
+			squareStyles: { ...highlightStyles },
+		}));
+	};
 	const squareStyling = ({ pieceSquare, history }) => {
-		const sourceSquare = history.length && history[history.length - 1].from;
-		const targetSquare = history.length && history[history.length - 1].to;
+		const sourceSquare = history && history.length && history[history.length - 1].from;
+		const targetSquare = history && history.length && history[history.length - 1].to;
 
 		return {
 			[pieceSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)" },
-			...(history.length && {
-				[sourceSquare]: {
-					backgroundColor: "rgba(255, 255, 0, 0.4)",
-				},
-			}),
-			...(history.length && {
-				[targetSquare]: {
-					backgroundColor: "rgba(255, 255, 0, 0.4)",
-				},
-			}),
+			...(history &&
+				history.length && {
+					[sourceSquare]: {
+						backgroundColor: "rgba(255, 255, 0, 0.4)",
+					},
+				}),
+			...(history &&
+				history.length && {
+					[targetSquare]: {
+						backgroundColor: "rgba(255, 255, 0, 0.4)",
+					},
+				}),
 		};
 	};
-	const onSquareClick = (square) => {
-		setChessMove((history) => {
-			return {
-				squareStyles: squareStyling({ pieceSquare: square, history }),
-				pieceSquare: square,
-			};
-		});
-
-		let move = game.move({
-			from: chessMove.pieceSquare,
-			to: square,
-			promotion: "q", // always promote to a queen for example simplicity
-		});
-
-		// Illegal move
-		if (move === null) return "snapback";
-
-		setChessMove(() => {
-			return {
-				fen: game.fen(),
-				history: game.history({ verbose: true }),
-				pieceSquare: "",
-			};
-		});
-
-		// undo_stack = [];
-
-		globalSum = evaluateBoard(game, move, globalSum, "b");
-		updateAdvantage();
-
-		// Highlight latest move
-		$board.find("." + squareClass).removeClass("highlight-white");
-
-		$board.find(".square-" + move.from).addClass("highlight-white");
-		squareToHighlight = move.to;
-		colorToHighlight = "white";
-
-		$board.find(".square-" + squareToHighlight).addClass("highlight-" + colorToHighlight);
-
-		if (!checkStatus("black"));
-		{
-			// Make the best move for black
-			window.setTimeout(function () {
-				makeBestMove("b");
-				window.setTimeout(function () {
-					showHint();
-				}, 250);
-			}, 250);
-		}
-	};
-
-	const onSquareRightClick = (square) =>
-		setChessMove({
-			squareStyles: { [square]: { backgroundColor: "deepPink" } },
-		});
-	/*
-	 * Piece Square Tables, adapted from Sunfish.py:
-	 * https://github.com/thomasahle/sunfish/blob/master/sunfish.py
-	 */
-
-	var weights = { p: 100, n: 280, b: 320, r: 479, q: 929, k: 60000, k_e: 60000 };
-	var pst_w = {
-		p: [
-			[100, 100, 100, 100, 105, 100, 100, 100],
-			[78, 83, 86, 73, 102, 82, 85, 90],
-			[7, 29, 21, 44, 40, 31, 44, 7],
-			[-17, 16, -2, 15, 14, 0, 15, -13],
-			[-26, 3, 10, 9, 6, 1, 0, -23],
-			[-22, 9, 5, -11, -10, -2, 3, -19],
-			[-31, 8, -7, -37, -36, -14, 3, -31],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-		],
-		n: [
-			[-66, -53, -75, -75, -10, -55, -58, -70],
-			[-3, -6, 100, -36, 4, 62, -4, -14],
-			[10, 67, 1, 74, 73, 27, 62, -2],
-			[24, 24, 45, 37, 33, 41, 25, 17],
-			[-1, 5, 31, 21, 22, 35, 2, 0],
-			[-18, 10, 13, 22, 18, 15, 11, -14],
-			[-23, -15, 2, 0, 2, 0, -23, -20],
-			[-74, -23, -26, -24, -19, -35, -22, -69],
-		],
-		b: [
-			[-59, -78, -82, -76, -23, -107, -37, -50],
-			[-11, 20, 35, -42, -39, 31, 2, -22],
-			[-9, 39, -32, 41, 52, -10, 28, -14],
-			[25, 17, 20, 34, 26, 25, 15, 10],
-			[13, 10, 17, 23, 17, 16, 0, 7],
-			[14, 25, 24, 15, 8, 25, 20, 15],
-			[19, 20, 11, 6, 7, 6, 20, 16],
-			[-7, 2, -15, -12, -14, -15, -10, -10],
-		],
-		r: [
-			[35, 29, 33, 4, 37, 33, 56, 50],
-			[55, 29, 56, 67, 55, 62, 34, 60],
-			[19, 35, 28, 33, 45, 27, 25, 15],
-			[0, 5, 16, 13, 18, -4, -9, -6],
-			[-28, -35, -16, -21, -13, -29, -46, -30],
-			[-42, -28, -42, -25, -25, -35, -26, -46],
-			[-53, -38, -31, -26, -29, -43, -44, -53],
-			[-30, -24, -18, 5, -2, -18, -31, -32],
-		],
-		q: [
-			[6, 1, -8, -104, 69, 24, 88, 26],
-			[14, 32, 60, -10, 20, 76, 57, 24],
-			[-2, 43, 32, 60, 72, 63, 43, 2],
-			[1, -16, 22, 17, 25, 20, -13, -6],
-			[-14, -15, -2, -5, -1, -10, -20, -22],
-			[-30, -6, -13, -11, -16, -11, -16, -27],
-			[-36, -18, 0, -19, -15, -15, -21, -38],
-			[-39, -30, -31, -13, -31, -36, -34, -42],
-		],
-		k: [
-			[4, 54, 47, -99, -99, 60, 83, -62],
-			[-32, 10, 55, 56, 56, 55, 10, 3],
-			[-62, 12, -57, 44, -67, 28, 37, -31],
-			[-55, 50, 11, -4, -19, 13, 0, -49],
-			[-55, -43, -52, -28, -51, -47, -8, -50],
-			[-47, -42, -43, -79, -64, -32, -29, -32],
-			[-4, 3, -14, -50, -57, -18, 13, 4],
-			[17, 30, -3, -14, 6, -1, 40, 18],
-		],
-
-		// Endgame King Table
-		k_e: [
-			[-50, -40, -30, -20, -20, -30, -40, -50],
-			[-30, -20, -10, 0, 0, -10, -20, -30],
-			[-30, -10, 20, 30, 30, 20, -10, -30],
-			[-30, -10, 30, 40, 40, 30, -10, -30],
-			[-30, -10, 30, 40, 40, 30, -10, -30],
-			[-30, -10, 20, 30, 30, 20, -10, -30],
-			[-30, -30, 0, 0, 0, 0, -30, -30],
-			[-50, -30, -30, -30, -30, -30, -30, -50],
-		],
-	};
-	var pst_b = {
-		p: pst_w["p"].slice().reverse(),
-		n: pst_w["n"].slice().reverse(),
-		b: pst_w["b"].slice().reverse(),
-		r: pst_w["r"].slice().reverse(),
-		q: pst_w["q"].slice().reverse(),
-		k: pst_w["k"].slice().reverse(),
-		k_e: pst_w["k_e"].slice().reverse(),
-	};
-
-	var pstOpponent = { w: pst_b, b: pst_w };
-	var pstSelf = { w: pst_w, b: pst_b };
 
 	/*
 	 * Evaluates the board at this point in time,
@@ -281,10 +148,10 @@ function AIboard() {
 			if (move.piece === "k") {
 				move.piece = "k_e";
 			}
-			// Kings can never be captured
-			// else if (move.captured === 'k') {
-			//   move.captured = 'k_e';
-			// }
+			//Kings can never be captured
+			else if (move.captured === "k") {
+				move.captured = "k_e";
+			}
 		}
 
 		if ("captured" in move) {
@@ -297,30 +164,33 @@ function AIboard() {
 				prevSum -= weights[move.captured] + pstSelf[move.color][move.captured][to[0]][to[1]];
 			}
 		}
+		try {
+			if (move.flags.includes("p")) {
+				// NOTE: promote to queen for simplicity
+				move.promotion = "q";
 
-		if (move.flags.includes("p")) {
-			// NOTE: promote to queen for simplicity
-			move.promotion = "q";
-
-			// Our piece was promoted (good for us)
-			if (move.color === color) {
-				prevSum -= weights[move.piece] + pstSelf[move.color][move.piece][from[0]][from[1]];
-				prevSum += weights[move.promotion] + pstSelf[move.color][move.promotion][to[0]][to[1]];
-			}
-			// Opponent piece was promoted (bad for us)
-			else {
-				prevSum += weights[move.piece] + pstSelf[move.color][move.piece][from[0]][from[1]];
-				prevSum -= weights[move.promotion] + pstSelf[move.color][move.promotion][to[0]][to[1]];
-			}
-		} else {
-			// The moved piece still exists on the updated board, so we only need to update the position value
-			if (move.color !== color) {
-				prevSum += pstSelf[move.color][move.piece][from[0]][from[1]];
-				prevSum -= pstSelf[move.color][move.piece][to[0]][to[1]];
+				// Our piece was promoted (good for us)
+				if (move.color === color) {
+					prevSum -= weights[move.piece] + pstSelf[move.color][move.piece][from[0]][from[1]];
+					prevSum += weights[move.promotion] + pstSelf[move.color][move.promotion][to[0]][to[1]];
+				}
+				// Opponent piece was promoted (bad for us)
+				else {
+					prevSum += weights[move.piece] + pstSelf[move.color][move.piece][from[0]][from[1]];
+					prevSum -= weights[move.promotion] + pstSelf[move.color][move.promotion][to[0]][to[1]];
+				}
 			} else {
-				prevSum -= pstSelf[move.color][move.piece][from[0]][from[1]];
-				prevSum += pstSelf[move.color][move.piece][to[0]][to[1]];
+				// The moved piece still exists on the updated board, so we only need to update the position value
+				if (move.color !== color) {
+					prevSum += pstSelf[move.color][move.piece][from[0]][from[1]];
+					prevSum -= pstSelf[move.color][move.piece][to[0]][to[1]];
+				} else {
+					prevSum -= pstSelf[move.color][move.piece][from[0]][from[1]];
+					prevSum += pstSelf[move.color][move.piece][to[0]][to[1]];
+				}
 			}
+		} catch (e) {
+			console.log(e, "line No");
 		}
 
 		return prevSum;
@@ -404,18 +274,19 @@ function AIboard() {
 	}
 
 	function checkStatus(color) {
-		if (game.in_checkmate()) {
-			// $("#status").html(`<b>Checkmate!</b> Oops, <b>${color}</b> lost.`);
-		} else if (game.insufficient_material()) {
-			// $("#status").html(`It's a <b>draw!</b> (Insufficient Material)`);
-		} else if (game.in_threefold_repetition()) {
-			// $("#status").html(`It's a <b>draw!</b> (Threefold Repetition)`);
-		} else if (game.in_stalemate()) {
-			// $("#status").html(`It's a <b>draw!</b> (Stalemate)`);
-		} else if (game.in_draw()) {
-			// $("#status").html(`It's a <b>draw!</b> (50-move Rule)`);
-		} else if (game.in_check()) {
-			// $("#status").html(`Oops, <b>${color}</b> is in <b>check!</b>`);
+		if (!state.game) return;
+
+		if (state.game.in_checkmate()) {
+			// dispatch(dectactCheckmate(color[0] === "w" ? "b" : "w"));
+		} else if (state.game.insufficient_material()) {
+			// dispatch(dectactInSufficiantMatarial());
+		} else if (state.game.in_threefold_repetition()) {
+		} else if (state.game.in_stalemate()) {
+			// dispatch(dectactStalemet());
+		} else if (state.game.in_draw()) {
+			// dispatch(dectactStalemet());
+		} else if (state.game.in_check()) {
+			// dispatch(updateCheckStatus(color[0]));
 			return false;
 		} else {
 			// $("#status").html(`No check, checkmate, or draw.`);
@@ -424,11 +295,25 @@ function AIboard() {
 		return true;
 	}
 
+	const [cpaturePicesBlack, setcapturePicesBlack] = useState({ p: 0, n: 0, b: 0, r: 0, q: 0 });
+	const [capturePicesWhite, setCapturePicesWhite] = useState({ p: 0, n: 0, b: 0, r: 0, q: 0 });
+	function get_captured_pieces(game, color) {
+		const captured = { p: 0, n: 0, b: 0, r: 0, q: 0 };
+
+		for (const move of game.history({ verbose: true })) {
+			if (move.hasOwnProperty("captured") && move.color !== color[0]) {
+				captured[move.captured]++;
+			}
+		}
+
+		return captured;
+	}
+
 	function updateAdvantage() {
-		if (globalSum > 0) {
+		if (globalSum.current > 0) {
 			// $("#advantageColor").text("Black");
 			// $("#advantageNumber").text(globalSum);
-		} else if (globalSum < 0) {
+		} else if (globalSum.current < 0) {
 			// $("#advantageColor").text("White");
 			// $("#advantageNumber").text(-globalSum);
 		} else {
@@ -444,11 +329,12 @@ function AIboard() {
 	/*
 	 * Calculates the best legal move for the given color.
 	 */
+
 	function getBestMove(game, color, currSum) {
 		positionCount = 0;
 
 		if (color === "b") {
-			var depth = 3;
+			var depth = 2; // 3 is temp
 		} else {
 			var depth = 3;
 		}
@@ -459,9 +345,9 @@ function AIboard() {
 		var moveTime = d2 - d;
 		var positionsPerS = (positionCount * 1000) / moveTime;
 
-		$("#position-count").text(positionCount);
-		$("#time").text(moveTime / 1000);
-		$("#positions-per-s").text(Math.round(positionsPerS));
+		// $("#position-count").text(positionCount);
+		// $("#time").text(moveTime / 1000);
+		// $("#positions-per-s").text(Math.round(positionsPerS));
 
 		return [bestMove, bestMoveValue];
 	}
@@ -469,321 +355,306 @@ function AIboard() {
 	/*
 	 * Makes the best legal move for the given color.
 	 */
+
+	function checkPicesCapture(x, y) {
+		return JSON.stringify(x) === JSON.stringify(y);
+	}
+	let __play = 0;
+
 	function makeBestMove(color) {
+		console.log("BEST MOVE COLOR", color);
+
+		if (!state.game) return;
 		if (color === "b") {
-			var move = getBestMove(game, color, globalSum)[0];
+			console.log("colore", color, state.game, globalSum.current);
+			var move = getBestMove(state.game, color, globalSum.current)[0];
+			console.log(move, "current move ");
 		} else {
-			var move = getBestMove(game, color, -globalSum)[0];
+			var move = getBestMove(state.game, color, -globalSum.current)[0];
 		}
 
-		globalSum = evaluateBoard(game, move, globalSum, "b");
-		updateAdvantage();
-
-		game.move(move);
-		board.position(game.fen());
-
 		if (color === "b") {
-			checkStatus("black");
+			setTimeout(() => {
+				globalSum.current = evaluateBoard(state.game, move, globalSum.current, "b");
+				updateAdvantage();
 
-			// Highlight black move
-			$board.find("." + squareClass).removeClass("highlight-black");
-			$board.find(".square-" + move.from).addClass("highlight-black");
-			squareToHighlight = move.to;
-			colorToHighlight = "black";
+				state.game.move(move);
 
-			$board.find(".square-" + squareToHighlight).addClass("highlight-" + colorToHighlight);
+				// let mute = soundManager.getMute();
+
+				// if (mute !== "1") {
+				// 	// soundManager.playSound(ChessPicesMoveSound, false, 0);
+
+				// 	soundManager.playChessPicesMoveSound();
+				// }
+
+				let capture = get_captured_pieces(state.game, "white");
+
+				setState((prevState) => {
+					return { ...prevState, fen: state.game.fen() };
+				});
+
+				// soundManager.pauseSound();
+				setCapturePicesWhite(capture);
+
+				setState((prevState) => ({
+					...prevState,
+					// squareStyles: squareStyling({
+					// 	pieceSquare: move.to,
+					// 	history: prevState.history,
+					// }),
+					pieceSquare: move.to,
+				}));
+				checkStatus("white");
+			}, 4000);
 		} else {
 			checkStatus("white");
 
-			// Highlight white move
-			$board.find("." + squareClass).removeClass("highlight-white");
-			$board.find(".square-" + move.from).addClass("highlight-white");
-			squareToHighlight = move.to;
-			colorToHighlight = "white";
-
-			$board.find(".square-" + squareToHighlight).addClass("highlight-" + colorToHighlight);
+			setState((prevState) => ({
+				...prevState,
+				// squareStyles: squareStyling({
+				// 	pieceSquare: move.to,
+				// 	history: prevState.history,
+				// }),
+				pieceSquare: move.to,
+			}));
 		}
 	}
-
-	/*
-	 * Plays Computer vs. Computer, starting with a given color.
-	 */
-	function compVsComp(color) {
-		if (!checkStatus({ w: "white", b: "black" }[color])) {
-			timer = window.setTimeout(function () {
-				makeBestMove(color);
-				if (color === "w") {
-					color = "b";
-				} else {
-					color = "w";
-				}
-				compVsComp(color);
-			}, 250);
-		}
-	}
-
-	/*
-	 * Resets the game to its initial state.
-	 */
-	function reset() {
-		game.reset();
-		globalSum = 0;
-		$board.find("." + squareClass).removeClass("highlight-white");
-		$board.find("." + squareClass).removeClass("highlight-black");
-		$board.find("." + squareClass).removeClass("highlight-hint");
-		board.position(game.fen());
-		$("#advantageColor").text("Neither side");
-		$("#advantageNumber").text(globalSum);
-
-		// Kill the Computer vs. Computer callback
-		if (timer) {
-			clearTimeout(timer);
-			timer = null;
-		}
-	}
-
-	/*
-	 * Event listeners for various buttons.
-	 */
-	const handelruLopezBtn = () => {
-		reset();
-		game.load("r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1");
-		board.position(game.fen());
-		window.setTimeout(function () {
-			makeBestMove("b");
-		}, 250);
-	};
-
-	const handelItalianGameBtn = () => {
-		reset();
-		game.load("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1");
-		board.position(game.fen());
-		window.setTimeout(function () {
-			makeBestMove("b");
-		}, 250);
-	};
-
-	const handelSicilianDefenseBtn = () => {
-		reset();
-		game.load("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
-		board.position(game.fen());
-	};
-
-	const handelStartBtn = () => {
-		reset();
-	};
-
-	const handelComVsComBtn = () => {
-		reset();
-		compVsComp("w");
-	};
-
-	const handelResetBtn = () => {
-		reset();
-	};
 
 	var undo_stack = [];
+	// const playMoveSound = () => {
+	// 	try {
+	// 		var soundPlay = true;
+	// 		if (soundPlay) {
+	// 			soundPlay = !soundPlay;
+	// 			let soundSource = ChessPicesMoveSound;
+	// 			let audio = new Audio(soundSource);
+	// 			audio.play();
+	// 			audio.onended = () => {
+	// 				soundPlay = true;
+	// 			};
+	// 		}
+	// 	} catch (e) {
+	// 		console.log(e);
+	// 	}
+	// };
 
-	function undo() {
-		var move = game.undo();
-		undo_stack.push(move);
-
-		// Maintain a maximum stack size
-		if (undo_stack.length > STACK_SIZE) {
-			undo_stack.shift();
-		}
-		board.position(game.fen());
-	}
-
-	const handelUndoBtn = () => {
-		if (game.history().length >= 2) {
-			$board.find("." + squareClass).removeClass("highlight-white");
-			$board.find("." + squareClass).removeClass("highlight-black");
-			$board.find("." + squareClass).removeClass("highlight-hint");
-
-			// Undo twice: Opponent's latest move, followed by player's latest move
-			undo();
-			window.setTimeout(function () {
-				undo();
-				window.setTimeout(function () {
-					showHint();
-				}, 250);
-			}, 250);
+	const onSquareClick = (square = undefined) => {
+		// if (isPlaying && isSupported) {
+		// 	pause();
+		// }
+		if (!state.game) return;
+		let __play = 1;
+		if ("b" === "w") {
+			// flagForBlackPicesMovement.current = 1;
+			// window.setTimeout(function () {
+			// 	makeBestMove("b");
+			// 	window.setTimeout(function () {
+			// 		// showHint();
+			// 	}, 250);
+			// }, 3000);
 		} else {
-			alert("Nothing to undo.");
-		}
-	};
+			if (state.validmove.length >= 1) {
+				let validSqoure = state.validmove[0];
+				let _to = validSqoure.to;
+				let _form = validSqoure.form;
+				let checkValidity = state.game.move({
+					from: _to,
+					to: square,
+					promotion: "q",
+				});
+				if (checkValidity === null) {
+					let checkValidMoves = state.game.moves({
+						square: square,
+						verbose: true,
+					});
 
-	function redo() {
-		game.move(undo_stack.pop());
-		board.position(game.fen());
-	}
+					if (checkValidMoves.length === 0) return;
 
-	const handelRedoBtn = () => {
-		if (undo_stack.length >= 2) {
-			// Redo twice: Player's last move, followed by opponent's last move
-			redo();
-			window.setTimeout(function () {
-				redo();
-				window.setTimeout(function () {
-					showHint();
-				}, 250);
-			}, 250);
-		} else {
-			alert("Nothing to redo.");
-		}
-	};
+					removeHighlightSquare();
 
-	$("#showHint").change(function () {
-		window.setTimeout(showHint, 250);
-	});
+					highlightSquare(
+						square,
+						checkValidMoves.map((el) => el.to)
+					);
+					setState((prevState) => {
+						return {
+							...prevState,
+							validmove: [{ to: square, from: checkValidMoves.map((el) => el.to) }],
+						};
+					});
+				} else {
+					removeHighlightSquare();
 
-	function showHint() {
-		if (typeof document !== undefined) {
-			var showHint = document.getElementById("showHint");
-			$board.find("." + squareClass).removeClass("highlight-hint");
+					let capture = get_captured_pieces(state.game, "black");
 
-			// Show hint (best move for white)
-			if (showHint.checked) {
-				var move = getBestMove(game, "w", -globalSum)[0];
+					// let mute = soundManager.getMute();
+					// if (mute !== "1") {
+					// 	// soundManager.playSound(ChessPicesMoveSound, false, 0);
 
-				$board.find(".square-" + move.from).addClass("highlight-hint");
-				$board.find(".square-" + move.to).addClass("highlight-hint");
+					// 	soundManager.playChessPicesMoveSound();
+					// }
+					setState((prevState) => ({
+						...prevState,
+						fen: state.game.fen(),
+						// history: state.game.history({ verbose: true }),
+						pieceSquare: "",
+						validmove: [],
+					}));
+
+					setcapturePicesBlack(capture);
+
+					// dispatch(
+					// 	makeNewMove({
+					// 		newPosition: [],
+					// 		newMove: [],
+					// 	})
+					// );
+					removeHighlightSquare();
+
+					// soundManager.pauseSound();
+					// if (__play == 1) {
+					// 	exposedDataKill.pause();
+					// } else {
+					// 	exposedDataMove.pause();
+					// }
+					globalSum.current = evaluateBoard(state.game, checkValidity, globalSum.current, "b");
+					updateAdvantage();
+
+					if (!checkStatus("black"));
+					{
+						// Make the best move for black
+						window.setTimeout(function () {
+							makeBestMove("b");
+							window.setTimeout(function () {
+								// showHint();
+							}, 250);
+						}, 3000);
+					}
+				}
+			} else {
+				let checkValidMoves = state.game.moves({
+					square: square,
+					verbose: true,
+				});
+
+				if (checkValidMoves.length === 0) return;
+				removeHighlightSquare();
+
+				highlightSquare(
+					square,
+					checkValidMoves.map((el) => el.to)
+				);
+				setState((prevState) => {
+					return {
+						...prevState,
+						validmove: [{ to: square, from: checkValidMoves.map((el) => el.to) }],
+					};
+				});
 			}
 		}
-	}
-
-	/*
-	 * The remaining code is adapted from chessboard.js examples #5000 through #5005:
-	 * https://chessboardjs.com/examples#5000
-	 */
-	function removeGreySquares() {
-		$("#myBoard .square-55d63").css("background", "");
-	}
-
-	function greySquare(square) {
-		var $square = $("#myBoard .square-" + square);
-
-		var background = whiteSquareGrey;
-		if ($square.hasClass("black-3c85d")) {
-			background = blackSquareGrey;
-		}
-
-		$square.css("background", background);
-	}
-
-	function onDragStart(source, piece) {
-		// do not pick up pieces if the game is over
-		if (game.game_over()) return false;
-
-		// or if it's not that side's turn
-		if ((game.turn() === "w" && piece.search(/^b/) !== -1) || (game.turn() === "b" && piece.search(/^w/) !== -1)) {
-			return false;
-		}
-	}
-
-	function onDrop(source, target) {
-		undo_stack = [];
-		removeGreySquares();
-
-		// see if the move is legal
-		var move = game.move({
-			from: source,
-			to: target,
-			promotion: "q", // NOTE: always promote to a queen for example simplicity
-		});
-
-		// Illegal move
-		if (move === null) return "snapback";
-
-		globalSum = evaluateBoard(game, move, globalSum, "b");
-		updateAdvantage();
-
-		// Highlight latest move
-		$board.find("." + squareClass).removeClass("highlight-white");
-
-		$board.find(".square-" + move.from).addClass("highlight-white");
-		squareToHighlight = move.to;
-		colorToHighlight = "white";
-
-		$board.find(".square-" + squareToHighlight).addClass("highlight-" + colorToHighlight);
-
-		if (!checkStatus("black"));
-		{
-			// Make the best move for black
-			window.setTimeout(function () {
-				makeBestMove("b");
-				window.setTimeout(function () {
-					showHint();
-				}, 250);
-			}, 250);
-		}
-	}
-
-	function onMouseoverSquare(square, piece) {
-		// get list of possible moves for this square
-		var moves = game.moves({
-			square: square,
-			verbose: true,
-		});
-
-		// exit if there are no moves available for this square
-		if (moves.length === 0) return;
-
-		// highlight the square they moused over
-		greySquare(square);
-
-		// highlight the possible squares for this piece
-		for (var i = 0; i < moves.length; i++) {
-			greySquare(moves[i].to);
-		}
-	}
-
-	function onMouseoutSquare(square, piece) {
-		removeGreySquares();
-	}
-
-	function onSnapEnd() {
-		board.position(game.fen());
-	}
+	};
 
 	/**
 	 * quit game API end call
 	 */
-	const handelQuitGame = () => {
-		const config = {
-			headers: { Authorization: `Bearer ${game_auth_token}` },
-		};
-
-		const bodyParameters = {
-			key: "value",
-		};
-
-		axios
-			.post("http://3.137.86.237:5000/api/v2/player-return", bodyParameters, config)
-			.then((data) => {
-				router.push("/");
-			})
-			.catch(() => {
-				console.log("error in HandelQuitGame");
-			});
+	const handelQuitGame = async () => {
+		// if (appState.socket) {
+		// 	// let mute = soundManager.getMute();
+		// 	// if (mute != "1") {
+		// 	// 	// soundManager.playSound(BtnClickSound, false, 0);
+		// 	// 	soundManager.playBtnClickSound();
+		// 	// }
+		// 	appState.socket.emitDisConnect();
+		// }
+		try {
+			const { data } = await axios.post(
+				"http://3.137.86.237:5000/api/v2/player-return",
+				{},
+				{
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+						Authorization: `Bearer ${game_auth_token}`,
+					},
+				}
+			);
+		} catch (e) {}
 	};
+
+	function handelResize() {
+		const boardElement = boardRef.current;
+		if (boardElement) {
+			const { width, height } = boardElement.getBoundingClientRect();
+			console.log("Parent width:", width);
+			console.log("Parent height:", height);
+			setParentWidth(width);
+			setParentHeight(height);
+			// Use width and height as needed
+		}
+	}
+
+	useEffect(() => {
+		window.addEventListener("resize", handelResize);
+
+		const boardElement = boardRef.current;
+		if (boardElement) {
+			const { width, height } = boardElement.getBoundingClientRect();
+			console.log("Parent width:", width);
+			console.log("Parent height:", height);
+			setParentWidth(width);
+			setParentHeight(height);
+			// Use width and height as needed
+		}
+
+		return () => {
+			window.removeEventListener("resize", handelResize);
+		};
+	}, []);
 
 	/**
 	 * Global time Function
 	 */
 
-	useEffect(() => {
-		let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9asdf";
-		const fetch = async () => {
-			const data = await axios.get("http://3.137.86.237:5000/api/v2/game-setting?game_id=25", {
-				headers: { Authorization: `Bearer ${token}` },
-			});
-			let _time = data?.data?.data?.game_setting?.GAMETIME || 600;
-			setTime(_time);
-		};
+	const [username, setUserName] = useState("--");
+	const [profilePicture, setProfilePicture] = useState("/default.png");
 
-		fetch();
+	useEffect(() => {
+		try {
+			let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9asdf";
+			const fetch = async () => {
+				const data = await axios.get("http://3.137.86.237:5000/api/v2/game-setting?game_id=25", {
+					headers: { Authorization: `Bearer ${token}` },
+				});
+				console.log(data, "dataS");
+				let _time = data?.data?.data?.game_setting?.GAMETIME || 600;
+				setTime(_time);
+			};
+
+			const verifyGameToken = async () => {
+				const data = await axios.post(
+					"http://3.137.86.237:5000/api/v2/verify-game-token",
+					{
+						token:
+							"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX2lkIjoxMywiYmF0dGxlX2lkIjoxLCJ1c2VyX2lkIjozMCwidXNlcl9uYW1lIjoiQWthc2giLCJwcm9maWxlX3BpY3R1cmUiOiJodHRwOi8vMy4xMzcuODYuMjM3OjUwMDAvcHJvZmlsZV9waG90by8xNjkxNTc0ODA0MDUwLWp1c3RnYW1lLnBuZyIsImJvdF9pZCI6bnVsbCwiYm90X25hbWUiOm51bGwsImVudHJ5X2ZlZSI6NTAsIndpbm5pbmdfYW1vdW50Ijo5OCwiaWF0IjoxNjkzMjA3NDk0LCJleHAiOjE3MjQ3NjUwOTR9.c3xwtN1FdVOLRVzBpsWe5R4KLrd_4dy0F6ru9Zf6pmU",
+					},
+					{
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+							Authorization: `Bearer ${game_auth_token}`,
+						},
+					}
+				);
+				console.log(data, "datadddddS");
+
+				setUserName(data?.data?.data?.user_name);
+
+				setProfilePicture(data?.data?.data?.profile_picture);
+			};
+
+			verifyGameToken();
+
+			fetch();
+		} catch (e) {}
 	}, []);
 
 	/**
@@ -801,230 +672,6 @@ function AIboard() {
 		return () => clearInterval(intervalId);
 	}, []);
 	return (
-		// <div className="board_container">
-		// 	{" "}
-		// 	<div
-		// 		className="board_cont_inn"
-		// 		style={{
-		// 			width: "100%",
-		// 			height: "100%",
-		// 			display: "flex",
-		// 			justifyContent: "space-between",
-		// 		}}>
-		// 		{/* <div className="ai_sidebar_suggestion">
-		// 			{" "}
-		// 			<div class="row text-align-center upper_txt mar-top">
-		// 				<div class="col-md-12">
-		// 					<h2>Advantage</h2>
-		// 					<p>
-		// 						<span id="advantageColor">Neither side</span> has the advantage (+
-		// 						<span id="advantageNumber">0</span>).
-		// 					</p>
-		// 					<div class="progress">
-		// 						<div
-		// 							class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
-		// 							role="progressbar"
-		// 							aria-valuenow="0"
-		// 							style={{ width: "50%" }}
-		// 							aria-valuemin="-2000"
-		// 							aria-valuemax="4000"
-		// 							id="advantageBar"></div>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 			<div class="row text-align-center upper_txt mar-top">
-		// 				<div class="col-md-12">
-		// 					<h2>Status</h2>
-		// 					<p>
-		// 						<span id="status">No check, checkmate, or draw.</span>
-		// 					</p>
-		// 				</div>
-		// 			</div>
-		// 		</div> */}
-		// 		<div className="ai_chess_board">
-		// 			<div class="col-md-6 col-sm-12">
-		// 				<div id="myBoard"></div>
-		// 				<div class="row my-3 text-align-center">
-		// 					<div class="col-md-6 my-2 col-6">
-		// 						<button class="btn btn-danger" id="undoBtn" onClick={handelUndoBtn}>
-		// 							Undo
-		// 						</button>
-		// 					</div>
-		// 					<div class="col-md-6 my-2 col-6">
-		// 						<button class="btn btn-success" id="redoBtn" onClick={handelRedoBtn}>
-		// 							Redo
-		// 						</button>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 		{/* <div className="ai_sidebar_menu">
-		// 			<nav className="main-menu">
-		// 				<ul>
-		// 					<div id="accordion">
-		// 						<li>
-		// 							<i className={`fa fa-gear  fa-2x `}></i>
-		// 							<span className="nav-text">
-		// 								{" "}
-		// 								<div class="card">
-		// 									<div class="card-header" id="settingsHeading">
-		// 										<h2 class="text-align-center">
-		// 											<button
-		// 												class="btn btn-header no-outline"
-		// 												data-toggle="collapse"
-		// 												data-target="#settings"
-		// 												aria-expanded="true"
-		// 												aria-controls="settings">
-		// 												Settings
-		// 											</button>
-		// 										</h2>
-		// 									</div>
-		// 								</div>{" "}
-		// 								<div
-		// 									id="settings"
-		// 									class="collapse"
-		// 									aria-labelledby="settingsHeading"
-		// 									data-parent="#accordion">
-		// 									<div class="card-body">
-		// 										<div class="row align-items-center justify-content-center">
-		// 											<div class="form-group">
-		// 												<label for="search-depth">Search Depth (Black):</label>
-		// 												<select id="search-depth">
-		// 													<option value="1">1</option>
-		// 													<option value="2">2</option>
-		// 													<option value="3" selected>
-		// 														3
-		// 													</option>
-		// 													<option value="4">4</option>
-		// 													<option value="5">5</option>
-		// 												</select>
-		// 											</div>
-		// 										</div>
-		// 										<div class="row align-items-center justify-content-center">
-		// 											<div class="form-group">
-		// 												<label for="search-depth-white">Search Depth (White):</label>
-		// 												<select id="search-depth-white">
-		// 													<option value="1">1</option>
-		// 													<option value="2">2</option>
-		// 													<option value="3" selected>
-		// 														3
-		// 													</option>
-		// 													<option value="4">4</option>
-		// 													<option value="5">5</option>
-		// 												</select>
-		// 											</div>
-		// 										</div>
-		// 										<div class="row align-items-center justify-content-center">
-		// 											<div class="form-group">
-		// 												<input type="checkbox" id="showHint" name="showHint" value="showHint" />
-		// 												<label for="showHint">Show Suggested Move (White)</label>
-		// 											</div>
-		// 										</div>
-		// 									</div>
-		// 								</div>
-		// 							</span>
-		// 						</li>
-
-		// 						<li>
-		// 							<i class="fa fa-map-marker fa-2x"></i>
-		// 							<span className="nav-text">
-		// 								{" "}
-		// 								<div class="card">
-		// 									<div class="card-header" id="openingPositionsHeading">
-		// 										<h2 class="text-align-center">
-		// 											<button
-		// 												class="btn btn-header no-outline"
-		// 												data-toggle="collapse"
-		// 												data-target="#openingPositions"
-		// 												aria-expanded="true"
-		// 												aria-controls="openingPositions">
-		// 												Opening Positions
-		// 											</button>
-		// 										</h2>
-		// 									</div>
-		// 								</div>
-		// 								<div
-		// 									id="openingPositions"
-		// 									class="collapse"
-		// 									aria-labelledby="openingPositionsHeading"
-		// 									data-parent="#accordion">
-		// 									<div class="card-body">
-		// 										<div class="row my-3 text-align-center">
-		// 											<div class="col-md-6 my-2">
-		// 												<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
-		// 													Ruy Lopez
-		// 												</button>
-		// 											</div>
-		// 											<div class="col-md-6 my-2">
-		// 												<button class="btn btn-primary" id="italianGameBtn" onClick={handelItalianGameBtn}>
-		// 													Italian Game
-		// 												</button>
-		// 											</div>
-		// 										</div>
-		// 										<div class="row my-3 text-align-center">
-		// 											<div class="col-md-6 my-2">
-		// 												<button
-		// 													class="btn btn-primary"
-		// 													id="sicilianDefenseBtn"
-		// 													onClick={handelSicilianDefenseBtn}>
-		// 													Sicilian Defense
-		// 												</button>
-		// 											</div>
-		// 											<div class="col-md-6 my-2">
-		// 												<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
-		// 													Start Position
-		// 												</button>
-		// 											</div>
-		// 										</div>
-		// 									</div>
-		// 								</div>
-		// 							</span>
-		// 						</li>
-		// 						<li>
-		// 							<i class="fa fa-desktop fa-2x"></i>
-		// 							<span className="nav-text">
-		// 								<div class="card">
-		// 									<div class="card-header" id="compVsCompHeading">
-		// 										<h2 class="text-align-center">
-		// 											<button
-		// 												class="btn btn-header no-outline"
-		// 												data-toggle="collapse"
-		// 												data-target="#compVsComp"
-		// 												aria-expanded="true"
-		// 												aria-controls="compVsComp">
-		// 												Computer vs. Computer
-		// 											</button>
-		// 										</h2>
-		// 									</div>
-		// 								</div>
-		// 								<div
-		// 									id="compVsComp"
-		// 									class="collapse"
-		// 									aria-labelledby="compVsCompHeading"
-		// 									data-parent="#accordion">
-		// 									<div class="card-body">
-		// 										<div class="row text-align-center">
-		// 											<div class="col-md-6 my-2">
-		// 												<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
-		// 													Start Game
-		// 												</button>
-		// 											</div>
-		// 											<div class="col-md-6 my-2">
-		// 												<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
-		// 													Stop and Reset
-		// 												</button>
-		// 											</div>
-		// 										</div>
-		// 									</div>
-		// 								</div>
-		// 							</span>
-		// 						</li>
-		// 					</div>
-		// 				</ul>
-		// 			</nav>
-		// 		</div> */}
-		// 	</div>
-		// </div>
 		<main>
 			<div className='view_container'>
 				{/*<--start::play with player wrapper---->*/}
@@ -1079,7 +726,7 @@ function AIboard() {
 													overflow: "hidden",
 													textOverflow: "ellipsis",
 												}}>
-												{"Text 0"}
+												{username}
 											</p>
 											{/* {"text0"} */}
 										</div>
@@ -1107,7 +754,7 @@ function AIboard() {
 												// 		transition: "background 0.3s ease-in-out",
 												// 	}}>
 												<Image
-													src={"/default.png"}
+													src={profilePicture}
 													width={20}
 													height={20}
 													alt='i'
@@ -1120,7 +767,7 @@ function AIboard() {
 											) : (
 												// </div>
 												<Image
-													src={"/default.png"}
+													src={profilePicture}
 													width={20}
 													height={20}
 													alt='i'
@@ -1218,6 +865,7 @@ function AIboard() {
 								{/*<--start:: game board section ---->*/}
 								<div
 									className='boards'
+									ref={boardRef}
 									// style={{
 									// 	transform: appState.opponent === "w" ? `rotate(${180}deg)` : `rotate(${0}deg)`,
 									// }}
@@ -1231,60 +879,255 @@ function AIboard() {
 											top: "-56px",
 											left: "-26px",
 										}}></div>
-									<div id='myBoard'></div>
+									<Chessboard
+										id='humanVsHuman'
+										width={parentWidth}
+										// height={382}
+										allowDrag={() => false}
+										position={state.fen}
+										// onDrop={onDrop}
+										// onMouseOverSquare={onMouseOverSquare}
+										// onMouseOutSquare={onMouseOutSquare}
+										boardStyle={{
+											backgroundColor: "transparent",
+											position: "absolute",
+											// width: "100%",
+											// height: "100%",
+											borderRadius: "5px",
+
+											boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+										}}
+										// onSquareRightClick={onSquareRightClick}
+										showNotation={false}
+										pieces={{
+											// wK: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/wk.png"} alt={"wK"} style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+											// wQ: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/wq.png"} alt={"wQ"} style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+											// wR: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/wr.png"} alt={"wR"} style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+											// wB: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/wb.png"} alt={"wB"} style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+											// wN: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/wn.png"} alt={"wN"} style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+											// wP: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/wp.png"} alt={"wP"} style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+
+											wK: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/wk.png"}
+													alt={"wK"}
+													data-piece='wK'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "30%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											wQ: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/wq.png"}
+													alt={"wQ"}
+													data-piece='wQ'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "35%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											wR: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/wr.png"}
+													alt={"wR"}
+													data-piece='wR'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "40%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											wB: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/wb.png"}
+													alt={"wB"}
+													data-piece='wB'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "37%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											wN: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/wn.png"}
+													alt={"wN"}
+													data-piece='wN'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "43%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											wP: ({ squareWidth, isDragging }) => <img src={"/game_play/wp.png"} alt={"wP"} style={{ width: "90%", height: "90%", objectFit: "contain" }} />,
+
+											bK: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/bk.png"}
+													alt={"bK"}
+													data-piece='bK'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "30%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											bQ: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/bq.png"}
+													alt={"bQ"}
+													data-piece='bQ'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "35%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											bR: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/br.png"}
+													alt={"bR"}
+													data-piece='bR'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "40%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											bB: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/bb.png"}
+													alt={"bB"}
+													data-piece='bB'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "37%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											bN: ({ squareWidth, isDragging }) => (
+												<img
+													src={"/game_play/bn.png"}
+													alt={"bN"}
+													data-piece='bN'
+													style={{
+														objectFit: "contain",
+														position: "absolute",
+														top: "43%",
+														left: "50%",
+														transform: "translate(-50%,-50%)",
+													}}
+												/>
+											),
+											bP: ({ squareWidth, isDragging }) => <img src={"/game_play/bp.png"} alt={"bP"} style={{ width: "90%", height: "90%", objectFit: "contain" }} />,
+
+											// bK: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/bk.png"} alt={"bK"} style={{ width: "100%", height: "100%" }} />,
+											// bQ: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/bq.png"} alt={"bQ"} style={{ width: "95%", height: "95%" }} />,
+											// bR: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/br.png"} alt={"bR"} style={{ width: "85%", height: "85%" }} />,
+											// bB: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/bb.png"} alt={"bB"} style={{ width: "90%", height: "90%" }} />,
+											// bN: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/bn.png"} alt={"bN"} style={{ width: "87%", height: "87%" }} />,
+											// bP: ({ squareWidth, isDragging }) => <img src={"/asset/game_play/bp.png"} alt={"bP"} style={{ width: "98%", height: "98%" }} />,
+										}}
+										draggable={false}
+										squareStyles={state.squareStyles}
+										dropSquareStyle={state.dropSquareStyle}
+										// onDragOverSquare={onDragOverSquare}
+										onSquareClick={onSquareClick}
+									/>
 								</div>
 								{/*<--end:: game board section ---->*/}
 							</div>
-							<nav className='main-menu' style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
+							{/* <nav
+								className="main-menu"
+								style={{ position: "absolute", top: -100, opacity: 0, height: "30px" }}>
 								<ul>
-									<div id='accordion'>
+									<div id="accordion">
 										<li>
 											<i className={`fa fa-gear  fa-2x `}></i>
-											<span className='nav-text'>
+											<span className="nav-text">
 												{" "}
-												<div class='card'>
-													<div class='card-header' id='settingsHeading'>
-														<h2 class='text-align-center'>
-															<button class='btn btn-header no-outline' data-toggle='collapse' data-target='#settings' aria-expanded='true' aria-controls='settings'>
+												<div class="card">
+													<div class="card-header" id="settingsHeading">
+														<h2 class="text-align-center">
+															<button
+																class="btn btn-header no-outline"
+																data-toggle="collapse"
+																data-target="#settings"
+																aria-expanded="true"
+																aria-controls="settings">
 																Settings
 															</button>
 														</h2>
 													</div>
 												</div>{" "}
-												<div id='settings' class='collapse' aria-labelledby='settingsHeading' data-parent='#accordion'>
-													<div class='card-body'>
-														<div class='row align-items-center justify-content-center'>
-															<div class='form-group'>
-																<label for='search-depth'>Search Depth (Black):</label>
-																<select id='search-depth'>
-																	<option value='1'>1</option>
-																	<option value='2'>2</option>
-																	<option value='3' selected>
+												<div
+													id="settings"
+													class="collapse"
+													aria-labelledby="settingsHeading"
+													data-parent="#accordion">
+													<div class="card-body">
+														<div class="row align-items-center justify-content-center">
+															<div class="form-group">
+																<label for="search-depth">Search Depth (Black):</label>
+																<select id="search-depth">
+																	<option value="1">1</option>
+																	<option value="2">2</option>
+																	<option value="3" selected>
 																		3
 																	</option>
-																	<option value='4'>4</option>
-																	<option value='5'>5</option>
+																	<option value="4">4</option>
+																	<option value="5">5</option>
 																</select>
 															</div>
 														</div>
-														<div class='row align-items-center justify-content-center'>
-															<div class='form-group'>
-																<label for='search-depth-white'>Search Depth (White):</label>
-																<select id='search-depth-white'>
-																	<option value='1'>1</option>
-																	<option value='2'>2</option>
-																	<option value='3' selected>
+														<div class="row align-items-center justify-content-center">
+															<div class="form-group">
+																<label for="search-depth-white">Search Depth (White):</label>
+																<select id="search-depth-white">
+																	<option value="1">1</option>
+																	<option value="2">2</option>
+																	<option value="3" selected>
 																		3
 																	</option>
-																	<option value='4'>4</option>
-																	<option value='5'>5</option>
+																	<option value="4">4</option>
+																	<option value="5">5</option>
 																</select>
 															</div>
 														</div>
-														<div class='row align-items-center justify-content-center'>
-															<div class='form-group'>
-																<input type='checkbox' id='showHint' name='showHint' value='showHint' />
-																<label for='showHint'>Show Suggested Move (White)</label>
+														<div class="row align-items-center justify-content-center">
+															<div class="form-group">
+																<input type="checkbox" id="showHint" name="showHint" value="showHint" />
+																<label for="showHint">Show Suggested Move (White)</label>
 															</div>
 														</div>
 													</div>
@@ -1293,40 +1136,55 @@ function AIboard() {
 										</li>
 
 										<li>
-											<i class='fa fa-map-marker fa-2x'></i>
-											<span className='nav-text'>
+											<i class="fa fa-map-marker fa-2x"></i>
+											<span className="nav-text">
 												{" "}
-												<div class='card'>
-													<div class='card-header' id='openingPositionsHeading'>
-														<h2 class='text-align-center'>
-															<button class='btn btn-header no-outline' data-toggle='collapse' data-target='#openingPositions' aria-expanded='true' aria-controls='openingPositions'>
+												<div class="card">
+													<div class="card-header" id="openingPositionsHeading">
+														<h2 class="text-align-center">
+															<button
+																class="btn btn-header no-outline"
+																data-toggle="collapse"
+																data-target="#openingPositions"
+																aria-expanded="true"
+																aria-controls="openingPositions">
 																Opening Positions
 															</button>
 														</h2>
 													</div>
 												</div>
-												<div id='openingPositions' class='collapse' aria-labelledby='openingPositionsHeading' data-parent='#accordion'>
-													<div class='card-body'>
-														<div class='row my-3 text-align-center'>
-															<div class='col-md-6 my-2'>
-																<button class='btn btn-primary' id='ruyLopezBtn' onClick={handelruLopezBtn}>
+												<div
+													id="openingPositions"
+													class="collapse"
+													aria-labelledby="openingPositionsHeading"
+													data-parent="#accordion">
+													<div class="card-body">
+														<div class="row my-3 text-align-center">
+															<div class="col-md-6 my-2">
+																<button class="btn btn-primary" id="ruyLopezBtn" onClick={handelruLopezBtn}>
 																	Ruy Lopez
 																</button>
 															</div>
-															<div class='col-md-6 my-2'>
-																<button class='btn btn-primary' id='italianGameBtn' onClick={handelItalianGameBtn}>
+															<div class="col-md-6 my-2">
+																<button
+																	class="btn btn-primary"
+																	id="italianGameBtn"
+																	onClick={handelItalianGameBtn}>
 																	Italian Game
 																</button>
 															</div>
 														</div>
-														<div class='row my-3 text-align-center'>
-															<div class='col-md-6 my-2'>
-																<button class='btn btn-primary' id='sicilianDefenseBtn' onClick={handelSicilianDefenseBtn}>
+														<div class="row my-3 text-align-center">
+															<div class="col-md-6 my-2">
+																<button
+																	class="btn btn-primary"
+																	id="sicilianDefenseBtn"
+																	onClick={handelSicilianDefenseBtn}>
 																	Sicilian Defense
 																</button>
 															</div>
-															<div class='col-md-6 my-2'>
-																<button class='btn btn-primary' id='startBtn' onClick={handelStartBtn}>
+															<div class="col-md-6 my-2">
+																<button class="btn btn-primary" id="startBtn" onClick={handelStartBtn}>
 																	Start Position
 																</button>
 															</div>
@@ -1336,27 +1194,36 @@ function AIboard() {
 											</span>
 										</li>
 										<li>
-											<i class='fa fa-desktop fa-2x'></i>
-											<span className='nav-text'>
-												<div class='card'>
-													<div class='card-header' id='compVsCompHeading'>
-														<h2 class='text-align-center'>
-															<button class='btn btn-header no-outline' data-toggle='collapse' data-target='#compVsComp' aria-expanded='true' aria-controls='compVsComp'>
+											<i class="fa fa-desktop fa-2x"></i>
+											<span className="nav-text">
+												<div class="card">
+													<div class="card-header" id="compVsCompHeading">
+														<h2 class="text-align-center">
+															<button
+																class="btn btn-header no-outline"
+																data-toggle="collapse"
+																data-target="#compVsComp"
+																aria-expanded="true"
+																aria-controls="compVsComp">
 																Computer vs. Computer
 															</button>
 														</h2>
 													</div>
 												</div>
-												<div id='compVsComp' class='collapse' aria-labelledby='compVsCompHeading' data-parent='#accordion'>
-													<div class='card-body'>
-														<div class='row text-align-center'>
-															<div class='col-md-6 my-2'>
-																<button class='btn btn-success' id='compVsCompBtn' onClick={handelComVsComBtn}>
+												<div
+													id="compVsComp"
+													class="collapse"
+													aria-labelledby="compVsCompHeading"
+													data-parent="#accordion">
+													<div class="card-body">
+														<div class="row text-align-center">
+															<div class="col-md-6 my-2">
+																<button class="btn btn-success" id="compVsCompBtn" onClick={handelComVsComBtn}>
 																	Start Game
 																</button>
 															</div>
-															<div class='col-md-6 my-2'>
-																<button class='btn btn-danger' id='resetBtn' onClick={handelResetBtn}>
+															<div class="col-md-6 my-2">
+																<button class="btn btn-danger" id="resetBtn" onClick={handelResetBtn}>
 																	Stop and Reset
 																</button>
 															</div>
@@ -1367,7 +1234,7 @@ function AIboard() {
 										</li>
 									</div>
 								</ul>
-							</nav>
+							</nav> */}
 							{/*<--end:: layer hide ---->*/}
 							{/*<--end:: buttom section ---->*/}
 							{/* <Popupbox /> */}
