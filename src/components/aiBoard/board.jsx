@@ -635,7 +635,7 @@ function AIboard() {
 					"http://3.137.86.237:5000/api/v2/verify-game-token",
 					{
 						token:
-							"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX2lkIjoxMywiYmF0dGxlX2lkIjoxLCJ1c2VyX2lkIjozMCwidXNlcl9uYW1lIjoiQWthc2giLCJwcm9maWxlX3BpY3R1cmUiOiJodHRwOi8vMy4xMzcuODYuMjM3OjUwMDAvcHJvZmlsZV9waG90by8xNjkxNTc0ODA0MDUwLWp1c3RnYW1lLnBuZyIsImJvdF9pZCI6bnVsbCwiYm90X25hbWUiOm51bGwsImVudHJ5X2ZlZSI6NTAsIndpbm5pbmdfYW1vdW50Ijo5OCwiaWF0IjoxNjkzMjA3NDk0LCJleHAiOjE3MjQ3NjUwOTR9.c3xwtN1FdVOLRVzBpsWe5R4KLrd_4dy0F6ru9Zf6pmU",
+						game_auth_token,
 					},
 					{
 						headers: {
