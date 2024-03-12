@@ -9,6 +9,7 @@ import { updateProgressBar, isImageUrl, IconPices, pst_b, pst_w, weights } from 
 import Image from "next/image";
 import moment from "moment";
 import axios from "axios";
+import {gameConfig} from "../../config/gameConfig"
 import { useRouter } from "next/navigation";
 function AIboard() {
 	//! call use hook
@@ -569,7 +570,7 @@ function AIboard() {
 		// }
 		try {
 			const { data } = await axios.post(
-				"http://3.137.86.237:5000/api/v2/player-return",
+				gameConfig.playerReturnUrl,
 				{},
 				{
 					headers: {
@@ -622,7 +623,7 @@ function AIboard() {
 		try {
 			let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9asdf";
 			const fetch = async () => {
-				const data = await axios.get("http://3.137.86.237:5000/api/v2/game-setting?game_id=25", {
+				const data = await axios.get(gameConfig.getGameSettingUrl + "?game_id=" + gameConfig.chessGameId , {
 					headers: { Authorization: `Bearer ${token}` },
 				});
 				console.log(data, "dataS");
@@ -632,7 +633,7 @@ function AIboard() {
 
 			const verifyGameToken = async () => {
 				const data = await axios.post(
-					"http://3.137.86.237:5000/api/v2/verify-game-token",
+					gameConfig.verifyToken,
 					{
 						token:
 						game_auth_token,

@@ -6,7 +6,7 @@ class Client {
 		this.gameSceneRefence = gameSceneInstance;
 		this.urlParams = new URLSearchParams(window.location.search);
 		this.token = this.urlParams.get("auth_token");
-		this.baseUrl = "http://16.163.81.210:5003/chessio";
+		this.baseUrl = "http://3.137.86.237:5002/chessio";
 		this.socket = io(this.baseUrl, {
 			query: {
 				auth_token: this.token,

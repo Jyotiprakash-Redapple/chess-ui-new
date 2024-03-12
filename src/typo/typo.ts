@@ -22,4 +22,8 @@ export interface App {
 export interface Game {
 	playerReturnUrl: string;
 	getGameSettingUrl: string;
+
+	chessGameId: number;
+
+	verifyToken: string;
 }
