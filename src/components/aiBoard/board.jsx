@@ -335,7 +335,7 @@ function AIboard() {
 		positionCount = 0;
 
 		if (color === "b") {
-			var depth = 2; // 3 is temp
+			var depth = 1; // 3 is temp
 		} else {
 			var depth = 3;
 		}
@@ -407,7 +407,7 @@ function AIboard() {
 					pieceSquare: move.to,
 				}));
 				checkStatus("white");
-			}, 4000);
+			}, 1000);
 		} else {
 			checkStatus("white");
 
@@ -444,9 +444,11 @@ function AIboard() {
 		// if (isPlaying && isSupported) {
 		// 	pause();
 		// }
+
+		
 		if (!state.game) return;
 		let __play = 1;
-		if ("b" === "w") {
+		if (state.game.turn() !== "w") {
 			// flagForBlackPicesMovement.current = 1;
 			// window.setTimeout(function () {
 			// 	makeBestMove("b");
@@ -530,7 +532,7 @@ function AIboard() {
 							window.setTimeout(function () {
 								// showHint();
 							}, 250);
-						}, 3000);
+						}, 1500);
 					}
 				}
 			} else {
@@ -635,17 +637,17 @@ function AIboard() {
 				const data = await axios.post(
 					gameConfig.verifyToken,
 					{
-						token:
-						game_auth_token,
+						token:game_auth_token
+						// game_auth_token,
 					},
 					{
 						headers: {
 							"Content-Type": "application/x-www-form-urlencoded",
-							Authorization: `Bearer ${game_auth_token}`,
+							// Authorization: `Bearer ${game_auth_token}`,
 						},
 					}
 				);
-				console.log(data, "datadddddS");
+				console.log(data, "user profile data ");
 
 				setUserName(data?.data?.data?.user_name);
 
